@@ -3,15 +3,15 @@ const db = require('../../../connectionbd')
 const md5 = require('md5')
 module.exports = {
     login: (params, callback) => {
-        db.query('SELECT * FROM account where username = $1', [params.username.toUpperCase()], (err, r) => {
+        db.query('SELECT * FROM cuenta where usuario = $1', [params.usuario.toUpperCase()], (err, r) => {
             if (err) {
                 return callback(err, undefined)
             }
-            var account = r.rowCount > 0 ? r.rows[0] : undefined
-            if (account != undefined) {
-                if (account.password == md5(params.password+'_08')) {
-                    account["password"] = ''
-                    callback(err, account)
+            var cuenta = r.rowCount > 0 ? r.rows[0] : undefined
+            if (cuenta != undefined) {
+                if (cuenta.contrasena == md5(params.contrasena+'_08')) {
+                    cuenta["contrasena"] = ''
+                    callback(err, cuenta)
                 }else{
                     callback('Verifique sus datos', undefined)    
                 }

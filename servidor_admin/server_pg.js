@@ -30,13 +30,13 @@ app.get('/', function (req, res) {
 })
 app.post('/login_', function (req, res) {
 	//call Model account
-	const account = require('./models/account')
+	const cuenta = require('./models/cuenta')
 	//set params
-	const params = { username: req.body.username, password: req.body.password }
+	const params = { usuario: req.body.usuario, contrasena: req.body.contrasena }
 	//call Model.login function
-	account.login(params, function (err, account) {
+	cuenta.login(params, function (err, cuenta) {
 		if (err) return res.json({err})
-		return res.json({account})
+		return res.json({cuenta})
 	})
 })
 //Routes

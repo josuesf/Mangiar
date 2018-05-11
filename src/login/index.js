@@ -18,14 +18,14 @@ function Ver() {
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
-                            <input id="username" type="text" class="validate">
-                            <label for="text" data-error="wrong" >Username</label>
+                            <input id="usuario" type="text" class="validate">
+                            <label for="text" data-error="wrong" >Usuario</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
-                            <input id="password" type="password" class="validate">
-                            <label for="password">Password</label>
+                            <input id="contrasena" type="password" class="validate">
+                            <label for="password">Contraseña</label>
                         </div>
                     </div>
                 </form>
@@ -39,6 +39,7 @@ function Ver() {
     return el
 }
 function Ingresar() {
+    ShowLoader()
     const parametros = {
         method: 'POST',
         headers: {
@@ -46,8 +47,8 @@ function Ingresar() {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            username: document.getElementById('username').value,
-            password: document.getElementById('password').value
+            usuario: document.getElementById('usuario').value,
+            contrasena: document.getElementById('contrasena').value
         })
     }
     fetch('http://localhost:5000/login_', parametros)
@@ -57,9 +58,10 @@ function Ingresar() {
                 $('#text_error').text(res.err)
                 $('#box_error').show()
             } else {
-                navegador(res.account.username)
+                navegador(res.cuenta.usuario)
                 inicio()
             }
+            HideLoader()
         })
 
 }

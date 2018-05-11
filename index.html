@@ -45,7 +45,12 @@
 }
 </style>
 <body style="background-color: #f1f1f1">
-    <div class="fakeloader"></div>
+    <div class="fakeloader">
+        <div class="fl spinner1">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+        </div>
+    </div>
     
     <div class="navbar-fixed" style="-webkit-app-region: drag;">
         <nav>
@@ -216,12 +221,7 @@
     <script src="assets/js/materialize.min.js"></script>
     <script src="assets/js/fakeLoader.js"></script>
     <script type="text/javascript">
-        $(".fakeloader").fakeLoader({
-            timeToHide: 1000,
-            spinner: "spinner1",
-            bgColor: "#2c2c54"
-            //imagePath:"yourPath/customizedImage.gif"
-        });
+        
         const remote = require('electron').remote;
         const window_cu = remote.getCurrentWindow();
         document.getElementById("min-btn").addEventListener("click", function (e) {
@@ -238,6 +238,59 @@
         document.getElementById("close-btn").addEventListener("click", function (e) {
             window_cu.close();
         });
+        //FakeLoader
+        ShowLoader()
+        HideLoader()
+        function HideLoader(){
+            
+            setTimeout(function(){
+            $('.fakeloader').css({
+                'backgroundColor': '',
+                'zIndex': '',
+                'width': '',
+                'height': '',
+                'position': '',
+                'top': '',
+                'left': '',
+                'display':''
+            });
+           }, 1200);
+        }
+       
+        function ShowLoader() {
+            $('.fakeloader').css({
+                'backgroundColor': '#2c2c54',
+                'zIndex': '999',
+                'width': '100%',
+                'height': '100%',
+                'position': 'fixed',
+                'top': '0px',
+                'left': '0px'
+            });
+            centerLoader()
+            function centerLoader() {
+
+                var winW = $(window).width();
+                var winH = $(window).height();
+
+                var spinnerW = $('.fl').outerWidth();
+                var spinnerH = $('.fl').outerHeight();
+
+                $('.fl').css({
+                    'position': 'absolute',
+                    'left': (winW / 2) - (spinnerW / 2),
+                    'top': (winH / 2) - (spinnerH / 2)
+                });
+
+            }
+
+            $(window).load(function () {
+                centerLoader();
+                $(window).resize(function () {
+                    centerLoader();
+                });
+            });
+        }
     </script>
     <script src="public/app.js"></script>
 </body>
