@@ -3,7 +3,7 @@ const db = require('../../../connectionbd')
 const md5 = require('md5')
 module.exports = {
     login: (params, callback) => {
-        db.query('SELECT * FROM cuenta where usuario = $1', [params.usuario.toUpperCase()], (err, r) => {
+        db.query('SELECT * FROM eseguridad.cuenta where usuario = $1', [params.usuario.toUpperCase()], (err, r) => {
             if (err) {
                 return callback(err, undefined)
             }
