@@ -21,7 +21,7 @@ module.exports = {
         })
     },
     getCuentas: (params, callback) => {
-        db.query('SELECT * FROM fn_GetCuentas($1,$2,$3)', params, (err, r) => {
+        db.query('SELECT * FROM eseguridad.fn_GetCuentas($1,$2,$3)', params, (err, r) => {
             if (err) {
                 return callback(err.name+":"+err.code+" "+err.routine, undefined)
             }
