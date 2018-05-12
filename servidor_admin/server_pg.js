@@ -40,9 +40,7 @@ app.post('/login_', function (req, res) {
 	})
 })
 //Routes
-
-// Routes Procesos
-// var compra_venta_moneda_extranjera_api = require('./routes/api-compra-venta-moneda-extranjera')
+var cuentas_api = require('./routes/api-cuentas')
 
 // function authChecker(req, res, next) {
 //   if ((req.session && req.session.authenticated)||req.path==='/login') {
@@ -51,7 +49,7 @@ app.post('/login_', function (req, res) {
 //       res.render('login.ejs', { title: 'iFacturacion - Usuarios' });
 //   }
 // }
-// app.use('/usuarios_api',usuarios_api);
+app.use('/cuentas_api',cuentas_api);
 
 
 //Listen Server

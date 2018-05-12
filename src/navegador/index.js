@@ -4,6 +4,7 @@ import { productos } from '../productos'
 import { inicio } from '../inicio'
 import { sub_navegador } from '../sub_navegador'
 import { login } from '../login'
+import {cuentas} from '../eseguridad.cuenta'
 function Ver(login) {
     var el = login ? yo`
         <nav>
@@ -25,6 +26,9 @@ function Ver(login) {
                             </li>
                             <li>
                                 <a href="#!">Clientes</a>
+                            </li>
+                            <li>
+                                <a onclick="${() => cuentas()}">Usuarios</a>
                             </li>
                         </ul>
                     </li>
