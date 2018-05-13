@@ -94,8 +94,7 @@ function cuentas() {
         .then(req => req.json())
         .then(res => {
             if (res.err) {
-                $('#text_error').text(res.err)
-                $('#box_error').show()
+                console.log(res.err)
             } else {
                 Ver(res.cuentas)
             }

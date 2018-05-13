@@ -28,5 +28,13 @@ module.exports = {
             callback(err, r.rows)
         })
     },
+    save :(params,callback)=>{
+        db.query("SELECT * FROM eseguridad.fn_SaveCuenta($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)", params, (err, r) => {
+            if (err) {
+                return callback(err.name+":"+err.code+" "+err.routine, undefined)
+            }
+            callback(err, r.rows)
+        })
+    }
     //...More functions
 }

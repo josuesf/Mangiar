@@ -59,8 +59,8 @@ LANGUAGE 'plpgsql';
 FUNCTION eseguridad.fn_SaveCuenta
 Descripcion: Guarda o aactualiza una cuenta
 Parametros: necesarios para una cuenta
-Ejecucion: SELECT * FROM  eseguridad.fn_SaveCuenta(-1,'PRESF','5453535435','PRUEBA@HOTMAIL.COM',
-	'91234234',NULL,NULL,NULL,'ACTIVO','ADMIN')
+Ejecucion: SELECT * FROM  eseguridad.fn_SaveCuenta(11,'LITZ','"708f0ce9e8d98c9a0722d50287d6397c"','PRUEBA@HOTMAIL.COM',
+	'984551995',NULL,NULL,NULL,'ACTIVO','ADMIN')
 */
 CREATE OR REPLACE FUNCTION eseguridad.fn_SaveCuenta
 (
@@ -151,3 +151,28 @@ END IF;
 END;
 $BODY$
 LANGUAGE 'plpgsql';
+
+/*
+FUNCTION eseguridad.fn_DeleteCuenta
+Descripcion: Eliminar cuenta
+Parametros: usuario_id
+Ejecucion: SELECT eseguridad.fn_DeleteCuenta(11) "RESPUESTA"
+DROP: DROP FUNCTION IF EXISTS eseguridad.fn_DeleteCuenta(int)
+*/
+CREATE OR REPLACE FUNCTION eseguridad.fn_DeleteCuenta(int)
+RETURNS varchar(100) AS $$
+DECLARE _respuesta varchar(100);
+BEGIN
+IF((select count(*) from eseguridad.cuenta where usuario_id = $1) = 1) THEN
+  delete from eseguridad.cuenta
+	where eseguridad.cuenta.usuario_id = $1;
+	_respuesta='Se elimino correctamente';
+ELSE
+  _respuesta='No existe el usuario';
+END IF;
+
+ RETURN _respuesta;
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
