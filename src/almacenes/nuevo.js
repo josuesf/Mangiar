@@ -30,10 +30,10 @@ function Ver(almacen) {
                             </div>
                         </div>
                          <div class="row">
-                            ${almacen ? yo`` : yo`<div class="input-field col s6">
-                                                    <input id="almacen_cod" type="text" class="validate">
-                                                    <label class="active">Codigo Almacen</label>
-                                                   </div>` }
+                            <div class="input-field col s6">
+                             <input id="almacen_cod" value="${almacen.cod}" type="text" class="validate">
+                             <label class="active">Codigo Almacen</label>
+                            </div>
                             <div class="input-field col s6">
                                 <input value="${almacen ? almacen.descripcion : ''}" id="descripcion" type="text">
                                 <label for="descripcion" class="active">Descripcion</label>

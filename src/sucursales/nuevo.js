@@ -79,7 +79,7 @@ function Ver(sucursal) {
                             </div>
                             <div class="input-field col s6">
                                 <select id="departamento">
-                                    <option value="D001">cusco</option>
+                                    <option value=null></option>
                                 </select>
                                 <label>Departamento</label>
                             </div>
@@ -87,13 +87,13 @@ function Ver(sucursal) {
                          <div class="row">
                             <div class="input-field col s6">
                                 <select id="provincia">
-                                    <option value="P001">cusco</option>
+                                    <option  value=null></option>
                                 </select>
                                 <label>Provincia</label>
                             </div>
                             <div class="input-field col s6">
                                 <select id="distrito">
-                                    <option value='D001'>cusco</option>
+                                    <option  value=null></option>
                                 </select>
                                 <label>Distrito</label>
                             </div>

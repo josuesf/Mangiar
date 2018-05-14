@@ -132,7 +132,7 @@ function Ver(persona) {
     empty(container).appendChild(el);
     var sub_nav = yo`
     <div class="collection">
-        <a onclick="${almacenes}" class="collection-item">Todas las Personas</a>
+        <a onclick="${personas}" class="collection-item">Todas las Personas</a>
         <a href="#!" class="collection-item active">Nueva Persona</a>
     </div>
         `;

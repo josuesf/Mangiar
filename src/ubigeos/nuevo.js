@@ -19,15 +19,15 @@ function Ver(ubigeo) {
                          
                         <div class="row">
                             <div class="input-field col s4">
-                                <input value="${ubigeo ? ubigeo.cod_departamento : ''}" id="cod_departamento" type="text">
+                                <input value="${ubigeo ? ubigeo.cod_departamento : ''}" id="cod_departamento" type="text" data-length="2">
                                 <label for="cod_departamento" class="active">Codigo Departamento</label>
                             </div>
                             <div class="input-field col s4">
-                                <input value="${ubigeo ? ubigeo.cod_provincia : ''}" id="cod_provincia" type="text" class="validate">
+                                <input value="${ubigeo ? ubigeo.cod_provincia : ''}" id="cod_provincia" type="text" data-length="2">
                                 <label for="cod_provincia" class="active">Codigo Provincia</label>
                             </div>
                             <div class="input-field col s4">
-                                <input value="${ubigeo ? ubigeo.cod_distrito : ''}" id="cod_distrito" type="text" class="validate">
+                                <input value="${ubigeo ? ubigeo.cod_distrito : ''}" id="cod_distrito" type="text" data-length="2">
                                 <label for="cod_distrito" class="active">Codigo Distrito</label>
                             </div>
                         </div>
