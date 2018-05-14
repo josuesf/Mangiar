@@ -35,6 +35,14 @@ module.exports = {
             }
             callback(err, r.rows)
         })
-    }
+    },
+    delete:(params,callback)=>{
+        db.query("SELECT * FROM eseguridad.fn_DeleteCuenta($1)", params, (err, r) => {
+            if (err) {
+                return callback(err.name+":"+err.code+" "+err.routine, undefined)
+            }
+            callback(err, r.rows)
+        })
+    },
     //...More functions
 }
