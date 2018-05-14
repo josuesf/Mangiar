@@ -2,7 +2,7 @@
 FUNCTION fn_GetCuentas
 Descripcion: Recupera todas las cuentas 
 Parametros: - tamano_pagina integer,numero_pagina integer
-Ejecucion: SELECT * FROM  fn_GetCuentas(20,1,'')
+Ejecucion: SELECT * FROM  eseguridad.fn_GetCuentas(20,1,'')
 */
 CREATE OR REPLACE FUNCTION eseguridad.fn_GetCuentas
 (
@@ -59,7 +59,7 @@ LANGUAGE 'plpgsql';
 FUNCTION eseguridad.fn_SaveCuenta
 Descripcion: Guarda o aactualiza una cuenta
 Parametros: necesarios para una cuenta
-Ejecucion: SELECT * FROM  eseguridad.fn_SaveCuenta(11,'LITZ','"708f0ce9e8d98c9a0722d50287d6397c"','PRUEBA@HOTMAIL.COM',
+Ejecucion: SELECT * FROM  eseguridad.fn_SaveCuenta(11,'LITZ','708f0ce9e8d98c9a0722d50287d6397c','PRUEBA@HOTMAIL.COM',
 	'984551995',NULL,NULL,NULL,'ACTIVO','ADMIN')
 */
 CREATE OR REPLACE FUNCTION eseguridad.fn_SaveCuenta

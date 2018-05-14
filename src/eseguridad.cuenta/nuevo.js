@@ -67,6 +67,11 @@ function Ver(usuario) {
                             <div class="col s6">
                                 <a onclick=${() => Guardar(usuario)} class="waves-effect waves-light btn">Guardar Usuario</a>
                             </div>
+                            ${usuario?yo`
+                            <div class="col s6">
+                                <a onclick=${() => Eliminar(usuario)} class="waves-effect waves-light btn red lighten-3">Eliminar Usuario</a>
+                            </div>
+                            `:yo``}
                         </div>
                     </form>
                 </div>
@@ -78,7 +83,7 @@ function Ver(usuario) {
     empty(container).appendChild(el);
     var sub_nav = yo`
     <div class="collection">
-        <a onclick="${cuentas}" class="collection-item">Todos los usuarios</a>
+        <a href="#!" onclick="${cuentas}" class="collection-item">Todos los usuarios</a>
         <a href="#!" class="collection-item active">Nuevo Usuario</a>
     </div>
         `;
@@ -88,13 +93,13 @@ function Ver(usuario) {
 }
 function Guardar(u) {
     ShowLoader()
-    const usuario_id = u?u.usuario_id:'-1'
+    const usuario_id = u ? u.usuario_id : '-1'
     const usuario = document.getElementById('usuario').value
     const email = document.getElementById('email').value
     const telefono = document.getElementById('telefono').value
     const contrasena = document.getElementById('contrasena').value
-    const cod_perfil = document.getElementById('cod_perfil').value=='null'?null:document.getElementById('cod_perfil').value
-    const cod_sucursal = document.getElementById('cod_sucursal').value=='null'?null:document.getElementById('cod_sucursal').value
+    const cod_perfil = document.getElementById('cod_perfil').value == 'null' ? null : document.getElementById('cod_perfil').value
+    const cod_sucursal = document.getElementById('cod_sucursal').value == 'null' ? null : document.getElementById('cod_sucursal').value
     const foto_url = null
     const estado = document.getElementById('estado').checked ? 'ACTIVO' : 'INACTIVO'
     const parametros = {
@@ -123,6 +128,37 @@ function Guardar(u) {
             }
             HideLoader()
         })
+}
+function Eliminar(u) {
+    var txt;
+    var r = confirm("Esta seguro de eliminar?");
+    if (r == true) {
+        ShowLoader()
+        const usuario_id = u.usuario_id
+        const parametros = {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                usuario_id,
+            })
+        }
+        fetch('http://localhost:5000/cuentas_api/delete_cuenta', parametros)
+            .then(req => req.json())
+            .then(res => {
+                if (res.err) {
+                    $('#text_error').text(res.err)
+                    $('#box_error').show()
+                } else {
+                    if (res.respuesta[0].fn_deletecuenta == 'Se elimino correctamente') {
+                        cuentas()
+                    }
+                }
+                HideLoader()
+            })
+    }
 }
 function nuevo(usuario) {
     console.log(usuario)

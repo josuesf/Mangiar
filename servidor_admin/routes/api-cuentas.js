@@ -35,6 +35,16 @@ router.post('/save_cuenta', function (req, res) {
 		return res.json({cuentas})
 	})
 });
+router.post('/delete_cuenta', function (req, res) {
+    input = req.body
+	//set params
+	const params = [input.usuario_id]
+	//call Model.login function
+	cuenta.delete(params, function (err, respuesta) {
+		if (err) return res.json({err})
+		return res.json({respuesta})
+	})
+});
 
 
 module.exports = router;
