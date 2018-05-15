@@ -46,12 +46,6 @@ function Ver(login) {
                                 <a onclick="${() => productos()}">Productos</a>
                             </li>
                             <li>
-                                <a href="#!">Mesas</a>
-                            </li>
-                            <li>
-                                <a href="#!">Clientes</a>
-                            </li>
-                            <li>
                                 <a onclick="${() => cuentas()}">Usuarios</a>
                             </li>
                         </ul>
