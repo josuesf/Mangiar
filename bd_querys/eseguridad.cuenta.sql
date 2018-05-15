@@ -1,8 +1,24 @@
 ﻿/*
+FUNCTION eseguridad.fn_getRowsCuenta
+Descripcion: Cantidad de filas que existen en la tabla
+Parametros:
+Ejecucion: SELECT eseguridad.fn_getRowsCuenta('') AS Filas
+DROP: DROP FUNCTION IF EXISTS eseguridad.fn_getRowsCuenta(varchar(50))
+*/
+CREATE OR REPLACE FUNCTION eseguridad.fn_getRowsCuenta(usuario_busqueda varchar(50)='')
+RETURNS bigint AS $$
+DECLARE _respuesta bigint;
+BEGIN
+ RETURN (select count(*) from eseguridad.cuenta c WHERE c.usuario like ('%' || usuario_busqueda || '%'));
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
+/*
 FUNCTION fn_GetCuentas
 Descripcion: Recupera todas las cuentas 
 Parametros: - tamano_pagina integer,numero_pagina integer
-Ejecucion: SELECT * FROM  eseguridad.fn_GetCuentas(20,1,'')
+Ejecucion: SELECT * FROM  eseguridad.fn_GetCuentas(5,2,'')
 */
 CREATE OR REPLACE FUNCTION eseguridad.fn_GetCuentas
 (

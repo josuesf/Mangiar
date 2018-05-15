@@ -9,9 +9,9 @@ router.post('/get_cuentas', function (req, res) {
 	//set params
 	const params = [input.tamano_pagina,input.numero_pagina,input.usuario_busqueda]
 	//call Model.login function
-	cuenta.getCuentas(params, function (err, cuentas) {
+	cuenta.getCuentas(params, function (err, cuentas , num_filas) {
 		if (err) return res.json({err})
-		return res.json({cuentas})
+		return res.json({cuentas,num_filas})
 	})
 });
 router.post('/save_cuenta', function (req, res) {
@@ -27,7 +27,7 @@ router.post('/save_cuenta', function (req, res) {
 		input.cod_perfil,
 		input.cod_sucursal,
 		input.estado,
-		'ADMIN'
+		req.app.locals.usuario
 	]
 	//call Model.login function
 	cuenta.save(params, function (err, cuentas) {

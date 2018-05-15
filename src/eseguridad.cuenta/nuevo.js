@@ -83,7 +83,7 @@ function Ver(usuario) {
     empty(container).appendChild(el);
     var sub_nav = yo`
     <div class="collection">
-        <a href="#!" onclick="${cuentas}" class="collection-item">Todos los usuarios</a>
+        <a href="#!" onclick="${()=>cuentas()}" class="collection-item">Todos los usuarios</a>
         <a href="#!" class="collection-item active">Nuevo Usuario</a>
     </div>
         `;
@@ -94,7 +94,7 @@ function Ver(usuario) {
 function Guardar(u) {
     ShowLoader()
     const usuario_id = u ? u.usuario_id : '-1'
-    const usuario = document.getElementById('usuario').value
+    const usuario = document.getElementById('usuario').value.toUpperCase()
     const email = document.getElementById('email').value
     const telefono = document.getElementById('telefono').value
     const contrasena = document.getElementById('contrasena').value

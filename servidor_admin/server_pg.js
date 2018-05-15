@@ -36,6 +36,7 @@ app.post('/login_', function (req, res) {
 	//call Model.login function
 	cuenta.login(params, function (err, cuenta) {
 		if (err) return res.json({err})
+		app.locals.usuario = cuenta.usuario
 		return res.json({cuenta})
 	})
 })
