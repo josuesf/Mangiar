@@ -34,35 +34,19 @@ function Ver(_cuentas,paginas,pagina_actual) {
     $(".dropdown-button").dropdown();
 }
 function Buscar(pagina_actual){
-    ShowLoader()
-    const tamano_pagina = 5
-    const parametros = {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            tamano_pagina,
-            numero_pagina: pagina_actual,
-            usuario_busqueda:document.getElementById('usuario_busqueda').value.toUpperCase()
-        })
-    }
-    fetch('http://localhost:5000/cuentas_api/get_cuentas', parametros)
-        .then(req => req.json())
-        .then(res => {
-            if (res.err) {
-                console.log(res.err)
-            } else {
-                var paginas = parseInt(res.num_filas)
-                paginas = parseInt(paginas / tamano_pagina) + (paginas % tamano_pagina != 0 ? 1 : 0)
+    // ShowLoader()
+    const usuario_busqueda = document.getElementById('usuario_busqueda').value.toUpperCase()
+    fetchCuentas(5,pagina_actual,usuario_busqueda,function(res){
+        if (res.err) {
+            console.log(res.err)
+        } else {
+            var paginas = parseInt(res.num_filas)
+            paginas = parseInt(paginas / tamano_pagina) + (paginas % tamano_pagina != 0 ? 1 : 0)
 
-                var tabla_content = document.getElementById('div_tabla')
-                empty(tabla_content).appendChild(VerTabla(res.cuentas,paginas,pagina_actual)) 
-            }
-            HideLoader()
-        })
-    
+            var tabla_content = document.getElementById('div_tabla')
+            empty(tabla_content).appendChild(VerTabla(res.cuentas,paginas,pagina_actual)) 
+        }
+    })
 }
 function VerTabla(_cuentas,paginas,pagina_actual){
     return yo`
@@ -110,9 +94,7 @@ function VerTabla(_cuentas,paginas,pagina_actual){
         </ul>
     </div>`;
 }
-function cuentas(_numero_pagina) {
-    ShowLoader()
-    const tamano_pagina = 5
+function fetchCuentas(tamano_pagina,_numero_pagina,usuario_busqueda,callback){
     const parametros = {
         method: 'POST',
         headers: {
@@ -122,22 +104,28 @@ function cuentas(_numero_pagina) {
         body: JSON.stringify({
             numero_pagina:_numero_pagina||1,
             tamano_pagina,
-            usuario_busqueda:''
+            usuario_busqueda:usuario_busqueda
         })
     }
     fetch('http://localhost:5000/cuentas_api/get_cuentas', parametros)
         .then(req => req.json())
         .then(res => {
-            if (res.err) {
-                console.log(res.err)
-            } else {
-                var paginas = parseInt(res.num_filas)
-                paginas = parseInt(paginas / tamano_pagina) + (paginas % tamano_pagina != 0 ? 1 : 0)
-
-                Ver(res.cuentas,paginas,_numero_pagina||1)
-            }
-            HideLoader()
+            callback(res)
         })
+}
+function cuentas(_numero_pagina) {
+    ShowLoader()
+    fetchCuentas(5,_numero_pagina,'',function(res){
+        if (res.err) {
+            console.log(res.err)
+        } else {
+            var paginas = parseInt(res.num_filas)
+            paginas = parseInt(paginas / tamano_pagina) + (paginas % tamano_pagina != 0 ? 1 : 0)
+
+            Ver(res.cuentas,paginas,_numero_pagina||1)
+        }
+        HideLoader()
+    })
 }
 
 export { cuentas }
