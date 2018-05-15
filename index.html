@@ -43,11 +43,13 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #555; 
 }
-
 </style>
 <body style="background-color: #f1f1f1">
     <div class="fakeloader">
-        
+        <div class="fl spinner1">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+        </div>
     </div>
     
     <div class="navbar-fixed" style="-webkit-app-region: drag;">
@@ -66,8 +68,10 @@
         
     </div>
     <div class="row">
-        <div class="col s3" id="sub_navegador_content">
-            
+        <div class="col s3" >
+            <div class="col s3 toc-wrapper pinned" style="top: 127px;z-index: 100" id="sub_navegador_content">
+
+            </div>
         </div>
         <div class="col s9" id="contenido_principal">
             <!-- 
@@ -255,13 +259,10 @@
                 'left': '',
                 'display':''
             });
-            $('.fakeloader').html('')
            }, 500);
-           
         }
        
         function ShowLoader() {
-            $('.fakeloader').html('<div class="fl spinner1"><div class="double-bounce1"></div><div class="double-bounce2"></div></div>')
             $('.fakeloader').css({
                 'backgroundColor': '#2c2c54',
                 'zIndex': '999',

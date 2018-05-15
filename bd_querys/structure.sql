@@ -101,7 +101,7 @@ usuario_creacion varchar(50),
 actualizado_en TIMESTAMP,
 usuario_actualizo varchar(50),
 FOREIGN KEY (cod_sucursal) REFERENCES sucursal(cod_sucursal)
-)
+);
 CREATE TABLE ubigeo --Omar
 ( 
 cod_departamento       char(2)  NOT NULL ,
@@ -111,7 +111,7 @@ departamento varchar(14)  NULL ,
 provincia          varchar(30)  NULL ,
 distrito            varchar(30)  NULL ,
  PRIMARY KEY (cod_departamento,cod_provincia,cod_distrito)
-)
+);
 -- Esquema de Seguridad
 CREATE SCHEMA eseguridad;
 CREATE TABLE eseguridad.modulo --Josue
