@@ -35,8 +35,9 @@ function Ver(_cuentas,paginas,pagina_actual) {
 }
 function Buscar(pagina_actual){
     // ShowLoader()
+    const tamano_pagina = 5
     const usuario_busqueda = document.getElementById('usuario_busqueda').value.toUpperCase()
-    fetchCuentas(5,pagina_actual,usuario_busqueda,function(res){
+    fetchCuentas(tamano_pagina,pagina_actual,usuario_busqueda,function(res){
         if (res.err) {
             console.log(res.err)
         } else {
@@ -115,7 +116,8 @@ function fetchCuentas(tamano_pagina,_numero_pagina,usuario_busqueda,callback){
 }
 function cuentas(_numero_pagina) {
     ShowLoader()
-    fetchCuentas(5,_numero_pagina,'',function(res){
+    const tamano_pagina = 5
+    fetchCuentas(tamano_pagina,_numero_pagina,'',function(res){
         if (res.err) {
             console.log(res.err)
         } else {
