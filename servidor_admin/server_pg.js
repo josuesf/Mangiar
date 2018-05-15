@@ -43,6 +43,7 @@ app.post('/login_', function (req, res) {
 
 //Routes
 var cuentas_api = require('./routes/api-cuentas')
+var modulos_api = require('./routes/api-modelos')
 var sucursales_api = require('./routes/api-sucursales')
 var ubigeos_api = require('./routes/api-ubigeos')
 var puntos_ventas_api = require('./routes/api-puntos-ventas')
@@ -58,6 +59,8 @@ var personas_api = require('./routes/api-personas')
 //   }
 // }
 app.use('/cuentas_api',cuentas_api);
+app.use('/modulos_api', modulos_api);
+
 app.use('/sucursales_api',sucursales_api);
 app.use('/ubigeos_api',ubigeos_api);
 app.use('/puntos_ventas_api',puntos_ventas_api);
