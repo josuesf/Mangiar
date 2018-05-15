@@ -83,7 +83,7 @@ function Guardar(d) {
     const descripcion_doc = $('#descripcion_doc').val()
     const tipo_doc = $('#tipo_doc').val()
     const formato_doc = $('#formato_doc').val()
-    const estado = $('#estado').val()
+    const estado = $("#estado").is(':checked')? 'ACTIVO' : 'INACTIVO'
     const parametros = {
         method: 'POST',
         headers: {

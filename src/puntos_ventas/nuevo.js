@@ -1,7 +1,7 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
 import { puntos_ventas } from './index'
-function Ver(punto_venta) {
+function Ver(punto_venta,sucursales) {
     var el = yo`
     <div class="card horizontal">
         <div class="card-stacked">
@@ -44,7 +44,10 @@ function Ver(punto_venta) {
                         <div class="row">
                             
                             <div class="input-field col s6">
-                                <input value="${punto_venta ? punto_venta.cod_sucursal : ''}" id="cod_sucursal" type="text" class="validate">
+                                <select id="cod_sucursal"> 
+                                    ${sucursales.map(e => yo`<option style="text-transform:uppercase" value="${e.cod_sucursal}">${e.nombre}</option>`)}
+                                        
+                                </select>
                                 <label for="cod_sucursal" class="active">Codigo Sucursal</label>
                             </div>
                              <div class="input-field col s6">
@@ -88,7 +91,7 @@ function Guardar(p) {
     const cod_sucursal = $('#cod_sucursal').val()
     const estado_accion = $('#estado_accion').val()
     const usuario_accion = $('#usuario_accion').val()
-    const estado = $('#estado').val()
+    const estado = $("#estado").is(':checked')? 'ACTIVO' : 'INACTIVO'
     const parametros = {
         method: 'POST',
         headers: {
@@ -104,6 +107,7 @@ function Guardar(p) {
             estado
         })
     }
+    console.log(parametros)
     fetch('http://localhost:5000/puntos_ventas_api/save_punto_venta', parametros)
         .then(req => req.json())
         .then(res => {
@@ -121,7 +125,29 @@ function Guardar(p) {
 }
 function nuevo(punto_venta) {
     ShowLoader()
-    Ver(punto_venta)
+
+    const parametros = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            tamano_pagina:10,
+            numero_pagina:1,
+            sucursal_busqueda: ''
+        })
+    }
+    fetch('http://localhost:5000/sucursales_api/get_sucursales', parametros)
+        .then(req => req.json())
+        .then(res => {
+            console.log(res)
+            if (res.err) {
+                console.log(res.err)
+            } else {
+                Ver(punto_venta,res.sucursales)
+            }
+        })
     HideLoader()
 }
 

@@ -155,7 +155,7 @@ function Guardar(p) {
     const tel_fijo = $('#tel_fijo').val()
     const telf_movil = $('#telf_movil').val()
     const correo = $('#correo').val()
-    const estado = $('#estado').val()
+    const estado = $("#estado").is(':checked')? 'ACTIVO' : 'INACTIVO'
     const parametros = {
         method: 'POST',
         headers: {

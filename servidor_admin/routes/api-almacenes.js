@@ -17,7 +17,6 @@ router.post('/get_almacenes', function (req, res) {
 router.post('/save_almacen', function (req, res) {
     input = req.body
 	//set params
-	console.log(input)
 	const params = [
 		input.almacen_id,
         input.almacen_cod, 

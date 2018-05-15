@@ -615,7 +615,7 @@ LANGUAGE 'plpgsql';
 FUNCTION fn_SaveAlmacen
 Descripcion: Guarda o actualiza un almacen
 Parametros: necesarios para un almacen
-Ejecucion: SELECT * FROM  fn_SaveAlmacen(1,'A000001','NINGUNA','NINGUNA','ACTIVO','ADMIN')
+Ejecucion: SELECT * FROM  fn_SaveAlmacen(-1,'A000002','NINGUNA','NINGUNA','ACTIVO','ADMIN')
 */
 CREATE OR REPLACE FUNCTION fn_SaveAlmacen
 (
@@ -640,9 +640,8 @@ RETURNS TABLE
 ) AS
 $BODY$
 BEGIN
-IF(almacen_id = -1)THEN
-INSERT INTO documento(
-	almacen_id,
+IF(_almacen_id = -1)THEN
+INSERT INTO almacen(
 	almacen_cod,
 	descripcion,
 	tipo,
@@ -651,7 +650,6 @@ INSERT INTO documento(
 	usuario_creacion) 
 	
 VALUES(
-	_almacen_id,
 	_almacen_cod,
 	_descripcion,
 	_tipo,
@@ -682,6 +680,7 @@ END IF;
 END;
 $BODY$
 LANGUAGE 'plpgsql';
+
 
 
  /*

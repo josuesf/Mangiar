@@ -31,11 +31,11 @@ function Ver(almacen) {
                         </div>
                          <div class="row">
                             <div class="input-field col s6">
-                             <input id="almacen_cod" value="${almacen.cod}" type="text" class="validate">
+                             <input id="almacen_cod" value="${almacen ? almacen.almacen_cod:''}" type="text" class="validate" data-length="50">
                              <label class="active">Codigo Almacen</label>
                             </div>
                             <div class="input-field col s6">
-                                <input value="${almacen ? almacen.descripcion : ''}" id="descripcion" type="text">
+                                <input value="${almacen ? almacen.descripcion : ''}" id="descripcion" type="text" data-length="200">
                                 <label for="descripcion" class="active">Descripcion</label>
                             </div>
                             
@@ -44,7 +44,7 @@ function Ver(almacen) {
                         <div class="row">
                             
                             <div class="input-field col s6">
-                                <input value="${almacen ? almacen.tipo : ''}" id="tipo" type="text" class="validate">
+                                <input value="${almacen ? almacen.tipo : ''}" id="tipo" type="text" class="validate" data-length="100">
                                 <label for="tipo" class="active">Tipo</label>
                             </div>
                              
@@ -74,11 +74,11 @@ function Ver(almacen) {
 }
 function Guardar(a) {
     ShowLoader()
-    const almacen_id = a?a.almacen_id:'-1'
+    const almacen_id = a?a.almacen_id:-1
     const almacen_cod = $('#almacen_cod').val()
     const descripcion = $('#descripcion').val()
     const tipo = $('#tipo').val()
-    const estado = $('#estado').val()
+    const estado = $("#estado").is(':checked')? 'ACTIVO' : 'INACTIVO'
     const parametros = {
         method: 'POST',
         headers: {
@@ -93,6 +93,7 @@ function Guardar(a) {
             estado
         })
     }
+
     fetch('http://localhost:5000/almacenes_api/save_almacen', parametros)
         .then(req => req.json())
         .then(res => {

@@ -51,6 +51,7 @@ function Ingresar() {
             contrasena: document.getElementById('contrasena').value
         })
     }
+    console.log(parametros)
     fetch('http://localhost:5000/login_', parametros)
         .then(req => req.json())
         .then(res => {

@@ -20,20 +20,20 @@ function Ver(ubigeo) {
                         <div class="row">
                             <div class="input-field col s4">
                                 <input value="${ubigeo ? ubigeo.cod_departamento : ''}" id="cod_departamento" type="text" data-length="2">
-                                <label for="cod_departamento" class="active">Codigo Departamento</label>
+                                <label for="cod_departamento">Codigo Departamento</label>
                             </div>
                             <div class="input-field col s4">
                                 <input value="${ubigeo ? ubigeo.cod_provincia : ''}" id="cod_provincia" type="text" data-length="2">
-                                <label for="cod_provincia" class="active">Codigo Provincia</label>
+                                <label for="cod_provincia">Codigo Provincia</label>
                             </div>
                             <div class="input-field col s4">
                                 <input value="${ubigeo ? ubigeo.cod_distrito : ''}" id="cod_distrito" type="text" data-length="2">
-                                <label for="cod_distrito" class="active">Codigo Distrito</label>
+                                <label for="cod_distrito">Codigo Distrito</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-field col s4">
-                                <input value="${ubigeo ? ubigeo.departamento : ''}" id="departamento" type="text">
+                                <input value="${ubigeo ? ubigeo.departamento : ''}" id="departamento" class="validate" type="text">
                                 <label for="departamento" class="active">Departamento</label>
                             </div>
                             <div class="input-field col s4">

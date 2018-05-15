@@ -219,6 +219,9 @@
     <script src="assets/js/materialize.min.js"></script>
     <script src="assets/js/fakeLoader.js"></script>
     <script type="text/javascript">
+        $(document).ready(function() {
+            $('input').characterCounter();
+        });
         
         const remote = require('electron').remote;
         const window_cu = remote.getCurrentWindow();
