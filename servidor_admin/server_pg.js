@@ -41,6 +41,7 @@ app.post('/login_', function (req, res) {
 })
 //Routes
 var cuentas_api = require('./routes/api-cuentas')
+var modulos_api = require('./routes/api-modelos')
 
 // function authChecker(req, res, next) {
 //   if ((req.session && req.session.authenticated)||req.path==='/login') {
@@ -50,6 +51,7 @@ var cuentas_api = require('./routes/api-cuentas')
 //   }
 // }
 app.use('/cuentas_api',cuentas_api);
+app.use('/modulos_api', modulos_api);
 
 
 //Listen Server
