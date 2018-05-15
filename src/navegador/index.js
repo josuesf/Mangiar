@@ -1,6 +1,12 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
 import { productos } from '../productos'
+import { sucursales } from '../sucursales'
+import { almacenes } from '../almacenes'
+import { puntos_ventas } from '../puntos_ventas'
+import { documentos } from '../documentos'
+import { personas } from '../personas'
+import { ubigeos } from '../ubigeos'
 import { inicio } from '../inicio'
 import { sub_navegador } from '../sub_navegador'
 import { login } from '../login'
@@ -12,7 +18,7 @@ function Ver(login) {
             <div class="nav-wrapper" style="background-color:#2c2c54">
                 <ul class="right hide-on-med-and-down">
                     <li>
-                        <a onclick="${() => inicio()}">Incio</a>
+                        <a onclick="${() => inicio()}">Inicio</a>
                     </li>
                     <li>
                         <a class="dropdown-button" href="#!" data-activates="Opciones">Configuracion
@@ -20,13 +26,25 @@ function Ver(login) {
                         </a>
                         <ul id="Opciones" class="dropdown-content">
                             <li>
+                                <a onclick="${() => sucursales()}">Sucursal</a>
+                            </li>
+                            <li>
+                                <a onclick="${() => almacenes()}">Almacen</a>
+                            </li>
+                            <li>
+                                <a onclick="${() => puntos_ventas()}">Puntos de Venta</a>
+                            </li>
+                            <li>
+                                <a onclick="${() => documentos()}">Documento </a>
+                            </li>
+                            <li>
+                                <a onclick="${() => personas()}">Persona</a>
+                            </li>
+                            <li>
+                                <a onclick="${() => ubigeos()}">Ubigeo</a>
+                            </li>
+                            <li>
                                 <a onclick="${() => productos()}">Productos</a>
-                            </li>
-                            <li>
-                                <a href="#!">Mesas</a>
-                            </li>
-                            <li>
-                                <a href="#!">Clientes</a>
                             </li>
                             <li>
                                 <a onclick="${() => cuentas()}">Usuarios</a>

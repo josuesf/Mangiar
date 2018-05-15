@@ -19,7 +19,7 @@ app.disable('x-powered-by');
 app.use(session({ secret: '_secret_', cookie: { maxAge: 60 * 60 * 1000 }, saveUninitialized: false, resave: false }));
 // app.use(authChecker);
 
-app.get('/', function (req, res) {
+app.get('/', function (req, res,next) {
   const db = require('../connectionbd')
 	db.query('SELECT * FROM account', [], (err, r) => {
 		if (err) {
@@ -36,12 +36,20 @@ app.post('/login_', function (req, res) {
 	//call Model.login function
 	cuenta.login(params, function (err, cuenta) {
 		if (err) return res.json({err})
+		app.locals.usuario = cuenta.usuario
 		return res.json({cuenta})
 	})
 })
+
 //Routes
 var cuentas_api = require('./routes/api-cuentas')
 var modulos_api = require('./routes/api-modelos')
+var sucursales_api = require('./routes/api-sucursales')
+var ubigeos_api = require('./routes/api-ubigeos')
+var puntos_ventas_api = require('./routes/api-puntos-ventas')
+var documentos_api = require('./routes/api-documentos')
+var almacenes_api = require('./routes/api-almacenes')
+var personas_api = require('./routes/api-personas')
 
 // function authChecker(req, res, next) {
 //   if ((req.session && req.session.authenticated)||req.path==='/login') {
@@ -53,6 +61,12 @@ var modulos_api = require('./routes/api-modelos')
 app.use('/cuentas_api',cuentas_api);
 app.use('/modulos_api', modulos_api);
 
+app.use('/sucursales_api',sucursales_api);
+app.use('/ubigeos_api',ubigeos_api);
+app.use('/puntos_ventas_api',puntos_ventas_api);
+app.use('/documentos_api',documentos_api);
+app.use('/almacenes_api',almacenes_api);
+app.use('/personas_api',personas_api);
 
 //Listen Server
 var server = app.listen(5000, function (err) {

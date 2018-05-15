@@ -10,8 +10,13 @@ module.exports = {
             var cuenta = r.rowCount > 0 ? r.rows[0] : undefined
             if (cuenta != undefined) {
                 if (cuenta.contrasena == md5(params.contrasena+'_08')) {
-                    cuenta["contrasena"] = ''
-                    callback(err, cuenta)
+                    db.query('UPDATE eseguridad.cuenta SET ultimo_ingreso = now() where usuario_id=$1;',[cuenta.usuario_id],(err,respuesta)=>{
+                        if (err) {
+                            return callback(err.name+":"+err.code+" "+err.routine, undefined)
+                        }
+                        cuenta["contrasena"] = ''
+                        callback(err, cuenta)
+                    })
                 }else{
                     callback('Verifique sus datos', undefined)    
                 }
@@ -25,7 +30,12 @@ module.exports = {
             if (err) {
                 return callback(err.name+":"+err.code+" "+err.routine, undefined)
             }
-            callback(err, r.rows)
+            db.query('SELECT eseguridad.fn_getRowsCuenta($1) AS Filas', [params[2]], (err, filas) => {
+                if (err) {
+                    return callback(err.name+":"+err.code+" "+err.routine, undefined)
+                }
+                callback(err, r.rows,filas.rows[0].filas)
+            })
         })
     },
     save :(params,callback)=>{
