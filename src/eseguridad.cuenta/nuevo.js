@@ -33,20 +33,24 @@ function Ver(usuario) {
                             <div class="input-field col s6">
                                 <input value="${usuario ? usuario.usuario : ''}" id="usuario" type="text" class="validate">
                                 <label class="active">Usuario</label>
+                                <span class="helper-text hide" style="color:red" id="usuario-helper-text"></span>
                             </div>
                             <div class="input-field col s6">
-                            <input value="${usuario ? usuario.email : ''}" id="email" type="email" class="validate">
-                            <label for="email" class="active" data-error="Correo invalido" data-success="">Email</label>
+                                <input value="${usuario ? usuario.email : ''}" id="email" type="email" class="validate">
+                                <label for="email" class="active" data-error="Correo invalido" data-success="">Email</label>
+                                <span class="helper-text hide" style="color:red" id="email-helper-text"></span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-field col s6">
                                 <input id="contrasena" type="password" class="validate">
                                 <label for="" class="active">Contraseña</label>
+                                <span class="helper-text hide" style="color:red" id="contrasena-helper-text"></span>
                             </div>
                             <div class="input-field col s6">
                                 <input value="${usuario ? usuario.telefono : ''}" id="telefono" type="text" class="validate">
                                 <label for="" class="active">Telefono</label>
+                                <span class="helper-text hide" style="color:red" id="telefono-helper-text"></span>
                             </div>
                         </div>
                         <div class="row">
@@ -94,35 +98,45 @@ function Ver(usuario) {
 
 
 function Validar(props){
-    function showErrorMessage(mensaje){
-        var text_error = document.getElementById("text_error")
-        var box_error = document.getElementById('box_error')
-        box_error.style.display = 'block'
-        text_error.innerText = mensaje
+    function showErrorMessage(id, mensaje){
+        var helperText = document.getElementById(id+'-helper-text')
+        helperText.innerHTML = mensaje
+        helperText.classList.remove('hide')
     }
+    function hideErrorMessage(id, mensaje){
+        var helperText = document.getElementById(id+'-helper-text')
+        helperText.innerHTML = mensaje
+        helperText.classList.add('hide')
+    }
+    var res = true
 
     for(var id in props){
         var el = document.getElementById(id)
         var value = el.value
         var condiciones = props[id]
         if(value.length == 0){
-            showErrorMessage("El campo " + condiciones.nombre + " esta vacio.")
-            return false
+            showErrorMessage(id, "Este campo es necesario.")
+            res = false
+            continue
         }
         if(condiciones.minLen && condiciones.minLen > value.length){
-            showErrorMessage("El campo " + condiciones.nombre + " necesita un minimo de " + condiciones.minLen + " caracteres.")
-            return false
+            showErrorMessage(id, "Se necesita un minimo de " + condiciones.minLen + " caracteres.")
+            res = false
+            continue
         }
         if(condiciones.maxLen && condiciones.maxLen < value.length){
-            showErrorMessage("El campo " + condiciones.nombre + " usa un maximo de " + condiciones.maxLen + " caracteres.")
-            return false
+            showErrorMessage(id, "Se usa un maximo de " + condiciones.maxLen + " caracteres.")
+            res = false
+            continue
         }
         if(condiciones.evaluador && !condiciones.evaluador(value)){
-            showErrorMessage(condiciones.mensaje)
-            return false
+            showErrorMessage(id, condiciones.mensaje)
+            res = false
+            continue
         }
+        hideErrorMessage(id, "")
     }
-    return true
+    return res
 }
 
 function Guardar(u) {
