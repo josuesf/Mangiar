@@ -12,7 +12,7 @@ function Ver(usuario) {
                         <div class="row" id="box_error" style="display:none;">
                             <div class="col s12">
                             <div class="card-panel  red lighten-2">
-                                <span class="white-text" id = "text_error"></span>
+                                <span class="white-text" id="text_error">yrty</span>
                             </div>
                             </div>
                         </div>
@@ -91,7 +91,58 @@ function Ver(usuario) {
     empty(container).appendChild(sub_nav)
     $('select').material_select();
 }
+
+
+function Validar(props){
+    function showErrorMessage(mensaje){
+        var text_error = document.getElementById("text_error")
+        var box_error = document.getElementById('box_error')
+        box_error.style.display = 'block'
+        text_error.innerText = mensaje
+    }
+
+    for(var id in props){
+        var el = document.getElementById(id)
+        var value = el.value
+        var condiciones = props[id]
+        if(value.length == 0){
+            showErrorMessage("El campo " + condiciones.nombre + " esta vacio.")
+            return false
+        }
+        if(condiciones.minLen && condiciones.minLen > value.length){
+            showErrorMessage("El campo " + condiciones.nombre + " necesita un minimo de " + condiciones.minLen + " caracteres.")
+            return false
+        }
+        if(condiciones.maxLen && condiciones.maxLen < value.length){
+            showErrorMessage("El campo " + condiciones.nombre + " usa un maximo de " + condiciones.maxLen + " caracteres.")
+            return false
+        }
+        if(condiciones.evaluador && !condiciones.evaluador(value)){
+            showErrorMessage(condiciones.mensaje)
+            return false
+        }
+    }
+    return true
+}
+
 function Guardar(u) {
+    var props = {
+        'usuario':{
+            'nombre': 'Usuario'
+        },
+        'email':{
+            'nombre': 'Email'
+        },
+        'contrasena':{
+            'nombre': 'Contrasena',
+            'minLen': 8
+        },
+        'telefono':{
+            'nombre': 'Telefono'
+        }
+    }
+    if(!Validar(props))
+        return;
     ShowLoader()
     const usuario_id = u ? u.usuario_id : '-1'
     const usuario = document.getElementById('usuario').value.toUpperCase()
