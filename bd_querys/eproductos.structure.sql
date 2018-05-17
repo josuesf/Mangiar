@@ -1,4 +1,16 @@
 ﻿CREATE SCHEMA eproductos;
+CREATE TABLE eproductos.categoria --Josue
+( 
+ cod_categoria varchar(50) NOT NULL,
+ nombre_categoria varchar(100) UNIQUE NULL,
+ imagen_url varchar(110)  NULL ,
+ estado      varchar(20) default 'ACTIVO',
+ creado_en TIMESTAMP NOT NULL,
+ usuario_creacion varchar(50),
+ actualizado_en TIMESTAMP,
+ usuario_actualizo varchar(50),
+ PRIMARY KEY(cod_categoria)
+);
 CREATE TABLE eproductos.producto --Josue
 ( 
  producto_id serial NOT NULL,
