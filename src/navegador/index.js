@@ -1,6 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
-import { productos } from '../productos'
+import { categorias } from '../eproductos.categoria'
 import { sucursales } from '../sucursales'
 import { almacenes } from '../almacenes'
 import { puntos_ventas } from '../puntos_ventas'
@@ -44,7 +44,7 @@ function Ver(login) {
                                 <a onclick="${() => ubigeos()}">Ubigeo</a>
                             </li>
                             <li>
-                                <a onclick="${() => productos()}">Productos</a>
+                                <a onclick="${() => categorias()}">Categorias</a>
                             </li>
                             <li>
                                 <a onclick="${() => cuentas()}">Usuarios</a>

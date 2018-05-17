@@ -50,7 +50,7 @@ var puntos_ventas_api = require('./routes/api-puntos-ventas')
 var documentos_api = require('./routes/api-documentos')
 var almacenes_api = require('./routes/api-almacenes')
 var personas_api = require('./routes/api-personas')
-
+var eproductos_categoria = require('./routes/eproductos.categoria')
 // function authChecker(req, res, next) {
 //   if ((req.session && req.session.authenticated)||req.path==='/login') {
 //       next();
@@ -67,7 +67,7 @@ app.use('/puntos_ventas_api',puntos_ventas_api);
 app.use('/documentos_api',documentos_api);
 app.use('/almacenes_api',almacenes_api);
 app.use('/personas_api',personas_api);
-
+app.use('/eproductos_categoria',eproductos_categoria);
 //Listen Server
 var server = app.listen(5000, function (err) {
   if (err) return console.log('Hubo un error'), process.exit(1);

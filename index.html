@@ -46,10 +46,6 @@
 </style>
 <body style="background-color: #f1f1f1">
     <div class="fakeloader">
-        <div class="fl spinner1">
-            <div class="double-bounce1"></div>
-            <div class="double-bounce2"></div>
-        </div>
     </div>
     
     <div class="navbar-fixed" style="-webkit-app-region: drag;">
@@ -249,6 +245,7 @@
         function HideLoader(){
             
             setTimeout(function(){
+                $('.fakeloader').html('')
             $('.fakeloader').css({
                 'backgroundColor': '',
                 'zIndex': '',
@@ -263,6 +260,7 @@
         }
        
         function ShowLoader() {
+            $('.fakeloader').html('<div class="fl spinner1"><div class="double-bounce1"></div><div class="double-bounce2"></div></div>')
             $('.fakeloader').css({
                 'backgroundColor': '#2c2c54',
                 'zIndex': '999',
