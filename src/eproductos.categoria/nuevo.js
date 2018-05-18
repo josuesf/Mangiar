@@ -21,10 +21,10 @@ function Ver(categoria) {
                                 <label>Estado</label>
                                 <div class="switch">
                                     <label>
-                                    INACTIVO
-                                    <input id="estado" checked="${categoria ? (categoria.estado ? '1' : '0') : '0'}" type="checkbox">
+                                    Inactivo
+                                    <input id="estado" ${categoria ? (categoria.estado=='ACTIVO' ? 'checked' : '') : 'checked'} type="checkbox">
                                     <span class="lever"></span>
-                                    ACTIVO
+                                    Activo
                                     </label>
                                 </div>
                             </div>
@@ -32,13 +32,11 @@ function Ver(categoria) {
                         <div class="row">
                             ${!categoria?yo`<div class="input-field col s6">
                                 <input value="${categoria ? categoria.cod_categoria : ''}" id="cod_categoria" type="text" class="validate">
-                                <label class="active">Codigo</label>
-                                <span class="helper-text hide" style="color:red" id="usuario-helper-text"></span>
+                                <label id="lcod_categoria" class="active" data-error="Ingrese codigo" data-success="Correcto">Codigo</label>
                             </div>`:yo``}
                             <div class="input-field col s6">
                                 <input value="${categoria ? categoria.nombre_categoria : ''}" id="nombre_categoria" type="text" class="validate">
-                                <label for="" class="active" data-error="Ingrese nombre valido" data-success="">Nombre Categoria</label>
-                                <span class="helper-text hide" style="color:red" id="email-helper-text"></span>
+                                <label id="lnombre_categoria" class="active" data-error="Ingrese nombre valido" data-success="Correcto">Nombre Categoria</label>
                             </div>
                         </div>
                         <div class="row">
@@ -86,70 +84,18 @@ function Ver(categoria) {
 function CambiarImagen(){
     document.getElementById('imagen_previa').src = document.getElementById('imagen_url').files[0].path
 }
-function Validar(props){
-    function showErrorMessage(id, mensaje){
-        var helperText = document.getElementById(id+'-helper-text')
-        helperText.innerHTML = mensaje
-        helperText.classList.remove('hide')
-    }
-    function hideErrorMessage(id, mensaje){
-        var helperText = document.getElementById(id+'-helper-text')
-        helperText.innerHTML = mensaje
-        helperText.classList.add('hide')
-    }
-    var res = true
-
-    for(var id in props){
-        var el = document.getElementById(id)
-        var value = el.value
-        var condiciones = props[id]
-        if(value.length == 0){
-            showErrorMessage(id, "Este campo es necesario.")
-            res = false
-            continue
-        }
-        if(condiciones.minLen && condiciones.minLen > value.length){
-            showErrorMessage(id, "Se necesita un minimo de " + condiciones.minLen + " caracteres.")
-            res = false
-            continue
-        }
-        if(condiciones.maxLen && condiciones.maxLen < value.length){
-            showErrorMessage(id, "Se usa un maximo de " + condiciones.maxLen + " caracteres.")
-            res = false
-            continue
-        }
-        if(condiciones.evaluador && !condiciones.evaluador(value)){
-            showErrorMessage(id, condiciones.mensaje)
-            res = false
-            continue
-        }
-        hideErrorMessage(id, "")
-    }
-    return res
-}
 
 function Guardar(u) {
     var props = {
-        'usuario':{
-            'nombre': 'Usuario'
-        },
-        'email':{
-            'nombre': 'Email'
-        },
-        'contrasena':{
-            'nombre': 'Contrasena',
-            'minLen': 8
-        },
-        'telefono':{
-            'nombre': 'Telefono'
-        }
+        'cod_categoria':{},
+        'nombre_categoria':{},
     }
-    // if(!Validar(props))
-    //     return;
+    if(!Validar(props))
+        return;
     ShowLoader()
     const cod_categoria = u ? u.cod_categoria : document.getElementById('cod_categoria').value.toUpperCase()
     const nombre_categoria = document.getElementById('nombre_categoria').value.toUpperCase()
-    const imagen_url = document.getElementById('imagen_url').files[0].path
+    const imagen_url = document.getElementById('imagen_url').files.length>0?document.getElementById('imagen_url').files[0].path:''
     const imagen_anterior = u?u.imagen_url : ''
     const estado = document.getElementById('estado').checked ? 'ACTIVO' : 'INACTIVO'
     const parametros = {

@@ -37,7 +37,7 @@ RETURNS TABLE
  actualizado_en TIMESTAMP,
  usuario_actualizo varchar(50)
 ) AS
-$BODY$
+$$
 DECLARE PageNumber BIGINT;
  
 BEGIN
@@ -58,13 +58,17 @@ BEGIN
  ORDER BY cod_categoria
  LIMIT tamano_pagina
  OFFSET PageNumber; 
+  EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
 
  /*
 FUNCTION eproductos.fn_SaveCategoria
 Descripcion: Guarda o aactualiza una categoria
 Parametros: necesarios para una categoria
 Fecha:17052018
-Ejecucion: SELECT * FROM  eproductos.fn_SaveCategoria('CA001','COMIDAS','','ACTIVO','ADMIN')
+Ejecucion: SELECT * FROM  eproductos.fn_SaveCategoria('COM','COMIDAS','','ACTIVO','ADMIN')
 */
 CREATE OR REPLACE FUNCTION eproductos.fn_SaveCategoria
 (
@@ -107,6 +111,9 @@ VALUES(
 	null,
 	null);
 ELSE
+IF( _imagen_url = '')then
+  _imagen_url = (SELECT c.imagen_url from eproductos.categoria c where c.cod_categoria=_cod_categoria);
+END IF;
 UPDATE eproductos.categoria SET
  nombre_categoria = _nombre_categoria ,
  imagen_url = _imagen_url,

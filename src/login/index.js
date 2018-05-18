@@ -19,13 +19,13 @@ function Ver() {
                     <div class="row">
                         <div class="input-field col s12">
                             <input id="usuario" type="text" class="validate">
-                            <label for="text" data-error="wrong" >Usuario</label>
+                            <label for="text" id="lusuario" data-error="" >Usuario</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
                             <input id="contrasena" type="password" class="validate">
-                            <label for="password">Contraseña</label>
+                            <label for="password" id="lcontrasena">Contraseña</label>
                         </div>
                     </div>
                 </form>
@@ -39,6 +39,12 @@ function Ver() {
     return el
 }
 function Ingresar() {
+    var props = {
+        'usuario':{},
+        'contrasena':{},
+    }
+    if(!Validar(props))
+        return;
     ShowLoader()
     const parametros = {
         method: 'POST',

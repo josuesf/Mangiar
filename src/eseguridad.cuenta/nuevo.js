@@ -32,25 +32,21 @@ function Ver(usuario) {
                         <div class="row">
                             <div class="input-field col s6">
                                 <input value="${usuario ? usuario.usuario : ''}" id="usuario" type="text" class="validate">
-                                <label class="active">Usuario</label>
-                                <span class="helper-text hide" style="color:red" id="usuario-helper-text"></span>
+                                <label class="active" id="lusuario">Usuario</label>
                             </div>
                             <div class="input-field col s6">
                                 <input value="${usuario ? usuario.email : ''}" id="email" type="email" class="validate">
-                                <label for="email" class="active" data-error="Correo invalido" data-success="">Email</label>
-                                <span class="helper-text hide" style="color:red" id="email-helper-text"></span>
+                                <label for="email" class="active" id="lemail">Email</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-field col s6">
                                 <input id="contrasena" type="password" class="validate">
-                                <label for="" class="active">Contraseña</label>
-                                <span class="helper-text hide" style="color:red" id="contrasena-helper-text"></span>
+                                <label for="" class="active" id="lcontrasena">Contraseña</label>
                             </div>
                             <div class="input-field col s6">
-                                <input value="${usuario ? usuario.telefono : ''}" id="telefono" type="text" class="validate">
+                                <input value="${usuario ? usuario.telefono : ''}" id="telefono" type="text" class="">
                                 <label for="" class="active">Telefono</label>
-                                <span class="helper-text hide" style="color:red" id="telefono-helper-text"></span>
                             </div>
                         </div>
                         <div class="row">
@@ -96,64 +92,11 @@ function Ver(usuario) {
     $('select').material_select();
 }
 
-
-function Validar(props){
-    function showErrorMessage(id, mensaje){
-        var helperText = document.getElementById(id+'-helper-text')
-        helperText.innerHTML = mensaje
-        helperText.classList.remove('hide')
-    }
-    function hideErrorMessage(id, mensaje){
-        var helperText = document.getElementById(id+'-helper-text')
-        helperText.innerHTML = mensaje
-        helperText.classList.add('hide')
-    }
-    var res = true
-
-    for(var id in props){
-        var el = document.getElementById(id)
-        var value = el.value
-        var condiciones = props[id]
-        if(value.length == 0){
-            showErrorMessage(id, "Este campo es necesario.")
-            res = false
-            continue
-        }
-        if(condiciones.minLen && condiciones.minLen > value.length){
-            showErrorMessage(id, "Se necesita un minimo de " + condiciones.minLen + " caracteres.")
-            res = false
-            continue
-        }
-        if(condiciones.maxLen && condiciones.maxLen < value.length){
-            showErrorMessage(id, "Se usa un maximo de " + condiciones.maxLen + " caracteres.")
-            res = false
-            continue
-        }
-        if(condiciones.evaluador && !condiciones.evaluador(value)){
-            showErrorMessage(id, condiciones.mensaje)
-            res = false
-            continue
-        }
-        hideErrorMessage(id, "")
-    }
-    return res
-}
-
 function Guardar(u) {
     var props = {
-        'usuario':{
-            'nombre': 'Usuario'
-        },
-        'email':{
-            'nombre': 'Email'
-        },
-        'contrasena':{
-            'nombre': 'Contrasena',
-            'minLen': 8
-        },
-        'telefono':{
-            'nombre': 'Telefono'
-        }
+        'usuario':{},
+        'email':{},
+        'contrasena':{minLen:4}
     }
     if(!Validar(props))
         return;

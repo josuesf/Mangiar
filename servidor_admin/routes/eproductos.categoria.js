@@ -20,7 +20,7 @@ router.post('/save_categoria', function (req, res) {
 	const params = [
         input.cod_categoria,
         input.nombre_categoria,
-        input.cod_categoria+ Date.now()+'.png',
+        input.imagen_url!=""?input.cod_categoria+ Date.now()+'.png':'',
 		input.estado,
         req.app.locals.usuario
     ]

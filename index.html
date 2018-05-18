@@ -294,6 +294,45 @@
                 });
             });
         }
+        //Funcion para validar campos 
+        function Validar(props) {
+                for (var id in props) {
+                    var el = document.getElementById(id)
+                    if (el == null) continue
+                    var error_mesage = document.getElementById('l' + id)
+                    var value = el.value
+                    var condiciones = props[id]
+                    if (value.length == 0) {
+                        el.classList = "invalid"
+                        error_mesage.classList = "active"
+                        error_mesage.setAttribute("data-error", "requerido");
+                        el.focus()
+                        return false
+                    }
+                    if (condiciones.minLen && condiciones.minLen > value.length) {
+                        el.classList = "invalid"
+                        error_mesage.classList = "active"
+                        error_mesage.setAttribute("data-error", condiciones.minLen + " caracteres minimo");
+                        el.focus()
+                        return false
+                    }
+                    if (condiciones.maxLen && condiciones.maxLen < value.length) {
+                        el.classList = "invalid"
+                        error_mesage.classList = "active"
+                        error_mesage.setAttribute("data-error", condiciones.maxLen + " caracteres maximo");
+                        el.focus()
+                        return false
+                    }
+                    if (condiciones.evaluador && !condiciones.evaluador(value)) {
+                        el.classList = "invalid"
+                        error_mesage.classList = "active"
+                        el.focus()
+                        return false
+                    }
+                    el.classList = "valid"
+                }
+                return true
+            }
     </script>
     <script src="public/app.js"></script>
 </body>

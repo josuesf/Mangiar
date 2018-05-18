@@ -20,14 +20,16 @@ module.exports = {
             if (err) {
                 return callback(err.name + ":" + err.code + " " + err.routine, undefined)
             }
-            if (images.anterior != ''){
+            if (images.anterior != '') {
                 // fs.unlinkSync(__dirname + '/../../../public/images/'+images.anterior);
-                fs.unlink(__dirname + '/../../../public/images/'+images.anterior,function(err){
-                    if(err) return console.log(err);
-                    console.log('file deleted successfully');
-               });  
+                if (images.nueva != '')
+                    fs.unlink(__dirname + '/../../../public/images/' + images.anterior, function (err) {
+                        if (err) return console.log(err);
+                        console.log('file deleted successfully');
+                    });
             }
-            fs.createReadStream(images.nueva).pipe(fs.createWriteStream(__dirname + '/../../../public/images/' + r.rows[0].imagen_url));
+            if (images.nueva != '')
+                fs.createReadStream(images.nueva).pipe(fs.createWriteStream(__dirname + '/../../../public/images/' + r.rows[0].imagen_url));
             callback(err, r.rows)
         })
     },
