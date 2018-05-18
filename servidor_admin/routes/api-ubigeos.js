@@ -8,9 +8,9 @@ router.post('/get_ubigeos', function (req, res) {
     input = req.body
 	//set params
 	const params = [input.tamano_pagina,input.numero_pagina,input.ubigeo_busqueda]
-	ubigeo.getUbigeos(params, function (err, ubigeos) {
+	ubigeo.getUbigeos(params, function (err, ubigeos,num_filas) {
 		if (err) return res.json({err})
-		return res.json({ubigeos})
+		return res.json({ubigeos,num_filas})
 	})
 });
 

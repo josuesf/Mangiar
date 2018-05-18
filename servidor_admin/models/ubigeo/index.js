@@ -6,7 +6,12 @@ module.exports = {
             if (err) {
                 return callback(err.name+":"+err.code+" "+err.routine, undefined)
             }
-            callback(err, r.rows)
+            db.query('SELECT fn_getRowsUbigeo($1) AS Filas', [params[2]], (err, filas) => {
+                if (err) {
+                    return callback(err.name+":"+err.code+" "+err.routine, undefined)
+                }
+                callback(err, r.rows,filas.rows[0].filas)
+            })
         })
     },
     save :(params,callback)=>{

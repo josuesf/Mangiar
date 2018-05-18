@@ -871,4 +871,19 @@ END IF;
 END;
 $BODY$
 LANGUAGE 'plpgsql';
- 
+
+/*
+FUNCTION fn_getRowsUbigeo
+Descripcion: Cantidad de filas que existen en la tabla
+Parametros:
+Ejecucion: SELECT fn_getRowsUbigeo('') AS Filas
+*/
+CREATE OR REPLACE FUNCTION fn_getRowsUbigeo(ubigeo_busqueda varchar(50)='')
+RETURNS bigint AS $$
+DECLARE _respuesta bigint;
+BEGIN
+ RETURN (select count(*) from ubigeo u WHERE u.departamento like ('%' || ubigeo_busqueda || '%') or u.provincia like ('%' || ubigeo_busqueda || '%') or u.distrito like ('%' || ubigeo_busqueda || '%'));
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
