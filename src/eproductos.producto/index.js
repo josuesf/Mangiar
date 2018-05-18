@@ -1,22 +1,22 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
 import {nuevo} from './nuevo'
-import {productos} from '../eproductos.producto'
-function Ver(_categorias,paginas,pagina_actual) {
+import {categorias} from '../eproductos.categoria'
+function Ver(_productos,paginas,pagina_actual) {
     var el = yo`
     <div class="card horizontal">
         <div class="card-stacked">
             <div class="card-content">
-                <span class="card-title">Lista de Categorias</span>
+                <span class="card-title">Lista de Productos</span>
                 <div class="row">
                     <div class="input-field col s12">
                         <i class="material-icons prefix">search</i>
-                        <input id="categoria_busqueda" onkeyup="${()=>Buscar(1)}" type="text" class="validate">
-                        <label for="categoria_busqueda" >Ingrese la categoria para buscar</label>
+                        <input id="producto_busqueda" onkeyup="${()=>Buscar(1)}" type="text" class="">
+                        <label for="producto_busqueda" >Ingrese el producto para buscar</label>
                     </div>
                 </div>
                 <div id="div_tabla">                            
-                    ${VerTabla(_categorias,paginas,pagina_actual)}
+                    ${VerTabla(_productos,paginas,pagina_actual)}
                 </div>
             </div>
         </div>
@@ -26,9 +26,9 @@ function Ver(_categorias,paginas,pagina_actual) {
     empty(container).appendChild(el);
     var sub_nav = yo`
     <div class="collection">
-        <a href="#!" class="collection-item active">Todas las categorias</a>
-        <a href="#!" onclick="${()=>nuevo()}" class="collection-item">Nueva Categoria</a>
-        <a href="#!" onclick="${()=>productos()}" class="collection-item">Atras</a>
+        <a href="#!" class="collection-item active">Todos los productos</a>
+        <a href="#!" onclick="${()=>nuevo()}" class="collection-item">Nuevo Producto</a>
+        <a href="#!" onclick="${()=>categorias()}" class="collection-item">Categorias</a>
     </div>
         `;
     var container = document.getElementById('sub_navegador_content')
@@ -38,8 +38,8 @@ function Ver(_categorias,paginas,pagina_actual) {
 function Buscar(pagina_actual){
     // ShowLoader()
     const tamano_pagina = 5
-    const categoria_busqueda = document.getElementById('categoria_busqueda').value.toUpperCase()
-    fetchCategorias(tamano_pagina,pagina_actual,categoria_busqueda,function(res){
+    const producto_busqueda = document.getElementById('producto_busqueda').value.toUpperCase()
+    fetchProductos(tamano_pagina,pagina_actual,producto_busqueda,function(res){
         if (res.err) {
             console.log(res.err)
         } else {
@@ -47,11 +47,11 @@ function Buscar(pagina_actual){
             paginas = parseInt(paginas / tamano_pagina) + (paginas % tamano_pagina != 0 ? 1 : 0)
 
             var tabla_content = document.getElementById('div_tabla')
-            empty(tabla_content).appendChild(VerTabla(res.categorias,paginas,pagina_actual)) 
+            empty(tabla_content).appendChild(VerTabla(res.productos,paginas,pagina_actual)) 
         }
     })
 }
-function VerTabla(_categorias,paginas,pagina_actual){
+function VerTabla(_productos,paginas,pagina_actual){
     return yo`
     <div>
         <table class="striped">
@@ -60,19 +60,21 @@ function VerTabla(_categorias,paginas,pagina_actual){
                     <th>Opc.</th>
                     <th>Codigo</th>
                     <th>Nombre</th>
+                    <th>Categoria</th>
                     <th>Imagen</th>
                     <th>Estado</th>
                 </tr>
             </thead>
             <tbody>
-                ${_categorias.map(c=> yo`
+                ${_productos.map(c=> yo`
                 <tr>
                     <td>
                         <a onclick=${()=>nuevo(c)} class="dropdown-button btn teal accent-3 btn-floating">
                         <i class="material-icons">edit</i>
                         </a>
                     </td>
-                    <td>${c.cod_categoria}</td>
+                    <td>${c.cod_producto}</td>
+                    <td>${c.nombre}</td>
                     <td>${c.nombre_categoria}</td>
                     <td> <img class="materialboxed" style="height:50px;width:50px;" src="public/images/${c.imagen_url}"></td>
                     <td>${c.estado}</td>
@@ -97,7 +99,7 @@ function VerTabla(_categorias,paginas,pagina_actual){
         </ul>
     </div>`;
 }
-function fetchCategorias(tamano_pagina,_numero_pagina,categoria_busqueda,callback){
+function fetchProductos(tamano_pagina,_numero_pagina,producto_busqueda,callback){
     const parametros = {
         method: 'POST',
         headers: {
@@ -107,19 +109,19 @@ function fetchCategorias(tamano_pagina,_numero_pagina,categoria_busqueda,callbac
         body: JSON.stringify({
             numero_pagina:_numero_pagina||1,
             tamano_pagina,
-            categoria_busqueda
+            producto_busqueda
         })
     }
-    fetch('http://localhost:5000/eproductos_categoria/get_categorias', parametros)
+    fetch('http://localhost:5000/eproductos_producto/get_productos', parametros)
         .then(req => req.json())
         .then(res => {
             callback(res)
         })
 }
-function categorias(_numero_pagina) {
+function productos(_numero_pagina) {
     ShowLoader()
     const tamano_pagina = 5
-    fetchCategorias(tamano_pagina,_numero_pagina,'',function(res){
+    fetchProductos(tamano_pagina,_numero_pagina,'',function(res){
         if (res.err) {
             //Mostrar Error en vez del console.log() !!!!Importanteee!
             console.log(res.err)
@@ -127,10 +129,10 @@ function categorias(_numero_pagina) {
             var paginas = parseInt(res.num_filas)
             paginas = parseInt(paginas / tamano_pagina) + (paginas % tamano_pagina != 0 ? 1 : 0)
 
-            Ver(res.categorias,paginas,_numero_pagina||1)
+            Ver(res.productos,paginas,_numero_pagina||1)
         }
         HideLoader()
     })
 }
 
-export { categorias }
+export { productos }

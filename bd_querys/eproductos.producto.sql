@@ -73,15 +73,15 @@ Ejecucion: SELECT * FROM  eproductos.fn_SaveProducto(-1,'PR001','COM','','COMIDA
 */
 CREATE OR REPLACE FUNCTION eproductos.fn_SaveProducto
 (
- producto_id int,
- cod_producto varchar(30),
- cod_categoria varchar(50),
- cod_marca varchar(120),
- nombre varchar(200),
- alias varchar(100),
- imagen_url varchar(110),
- estado      varchar(20),
- usuario_registro varchar(50)
+ pproducto_id int,
+ pcod_producto varchar(30),
+ pcod_categoria varchar(50),
+ pcod_marca varchar(120),
+ pnombre varchar(200),
+ palias varchar(100),
+ pimagen_url varchar(110),
+ pestado      varchar(20),
+ pusuario_registro varchar(50)
 )
 RETURNS TABLE 
 ( 
@@ -96,7 +96,7 @@ RETURNS TABLE
 ) AS
 $$
 BEGIN
-IF( producto_id = -1) THEN
+IF( pproducto_id = -1) THEN
 INSERT INTO eproductos.producto(
 	cod_producto,
 	cod_categoria,
@@ -110,38 +110,38 @@ INSERT INTO eproductos.producto(
 	actualizado_en,
 	usuario_actualizo) 
 VALUES(
-	cod_producto,
-	cod_categoria,
-	cod_marca,
-	nombre,
-	alias,
-	imagen_url,
-	_estado,
+	pcod_producto,
+	pcod_categoria,
+	pcod_marca,
+	pnombre,
+	palias,
+	pimagen_url,
+	pestado,
 	now(),
-	usuario_registro,
+	pusuario_registro,
 	null,
 	null);
 
-producto_id = (SELECT CURRVAL('eproductos.producto_producto_id_seq'));
+pproducto_id = (SELECT CURRVAL('eproductos.producto_producto_id_seq'));
 ELSE
 UPDATE eproductos.producto as p SET
- p.cod_producto = cod_producto,
- p.cod_categoria = cod_categoria,
- p.cod_marca =cod_marca,
- p.nombre =nombre,
- p.alias =alias,
- p.imagen_url =imagen_url,
- estado =_estado ,
+ p.cod_producto = pcod_producto,
+ p.cod_categoria = pcod_categoria,
+ p.cod_marca = pcod_marca,
+ p.nombre = pnombre,
+ p.alias = palias,
+ p.imagen_url = pimagen_url,
+ estado = pestado ,
  actualizado_en = now(),
- usuario_actualizo = usuario_registro
-WHERE p.producto_id = producto_id;
+ usuario_actualizo = pusuario_registro
+WHERE p.producto_id = pproducto_id;
 END IF;
 
  RETURN QUERY
  SELECT p.producto_id,p.cod_producto,p.cod_categoria,
 	p.cod_marca,p.nombre,p.alias,p.imagen_url,p.estado
  FROM eproductos.producto p
- WHERE p.producto_id = producto_id;
+ WHERE p.producto_id = pproducto_id;
  
  EXCEPTION WHEN OTHERS THEN 
  RAISE;
@@ -150,22 +150,22 @@ $$
 LANGUAGE 'plpgsql';
 
 /*
-FUNCTION eproductos.fn_DeleteCategoria
-Descripcion: Eliminar categoria
-Parametros: cod_categoria
-Ejecucion: SELECT eproductos.fn_DeleteCategoria('CA001') "RESPUESTA"
-DROP: DROP FUNCTION IF EXISTS eproductos.fn_DeleteCategoria(varchar(50))
+FUNCTION eproductos.fn_DeleteProducto
+Descripcion: Eliminar producto
+Parametros: producto_id
+Ejecucion: SELECT eproductos.fn_DeleteProducto(1) "respuesta"
+DROP: DROP FUNCTION IF EXISTS eproductos.fn_DeleteProducto(int)
 */
-CREATE OR REPLACE FUNCTION eproductos.fn_DeleteCategoria(varchar(50))
+CREATE OR REPLACE FUNCTION eproductos.fn_DeleteProducto(int)
 RETURNS varchar(100) AS $$
 DECLARE _respuesta varchar(100);
 BEGIN
-IF((select count(*) from eproductos.categoria where cod_categoria= $1) = 1) THEN
-  delete from eproductos.categoria
-	where eproductos.categoria.cod_categoria = $1;
+IF((select count(*) from eproductos.producto where producto_id= $1) = 1) THEN
+  delete from eproductos.producto
+	where eproductos.producto.producto_id = $1;
 	_respuesta='Se elimino correctamente';
 ELSE
-  _respuesta='No existe la categoria';
+  _respuesta='No existe el producto';
 END IF;
 
  RETURN _respuesta;

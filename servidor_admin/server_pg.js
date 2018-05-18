@@ -51,6 +51,7 @@ var documentos_api = require('./routes/api-documentos')
 var almacenes_api = require('./routes/api-almacenes')
 var personas_api = require('./routes/api-personas')
 var eproductos_categoria = require('./routes/eproductos.categoria')
+var eproductos_producto = require('./routes/eproductos.producto')
 // function authChecker(req, res, next) {
 //   if ((req.session && req.session.authenticated)||req.path==='/login') {
 //       next();
@@ -68,6 +69,7 @@ app.use('/documentos_api',documentos_api);
 app.use('/almacenes_api',almacenes_api);
 app.use('/personas_api',personas_api);
 app.use('/eproductos_categoria',eproductos_categoria);
+app.use('/eproductos_producto',eproductos_producto);
 //Listen Server
 var server = app.listen(5000, function (err) {
   if (err) return console.log('Hubo un error'), process.exit(1);
