@@ -48,6 +48,16 @@ router.post('/delete_producto', function (req, res) {
 		return res.json({respuesta})
 	})
 });
+router.post('/find', function (req, res) {
+    input = req.body
+	//set params
+	const params = [input.producto_id]
+	//call Model.login function
+	producto.get_categorias(function (err, categorias) {
+		if (err) return res.json({err})
+		return res.json({categorias})
+	})
+});
 
 
 module.exports = router;

@@ -41,5 +41,13 @@ module.exports = {
             callback(err, r.rows)
         })
     },
+    get_categorias: (callback) => {
+        db.query("SELECT cod_categoria,nombre_categoria from eproductos.categoria where estado=$1", ["ACTIVO"], (err, r) => {
+            if (err) {
+                return callback(err.name + ":" + err.code + " " + err.routine, undefined)
+            }
+            callback(err, r.rows)
+        })
+    },
     //...More functions
 }
