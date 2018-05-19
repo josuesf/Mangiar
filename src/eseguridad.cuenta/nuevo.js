@@ -12,7 +12,7 @@ function Ver(usuario) {
                         <div class="row" id="box_error" style="display:none;">
                             <div class="col s12">
                             <div class="card-panel  red lighten-2">
-                                <span class="white-text" id="text_error">yrty</span>
+                                <span class="white-text" id="text_error"></span>
                             </div>
                             </div>
                         </div>

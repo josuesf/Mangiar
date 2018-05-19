@@ -1,5 +1,23 @@
 /*
 FUNCION
+Nombre: fn_GetRowsModulo
+Descripcion: Recupera cuantos modulos
+tenemos que listar incluso si estan con un 
+filtro de busqueda
+Parametros: modulo_busqueda VARCHAR(50)
+Ejecucion: SELECT * FROM eseguridad.fn_GerRowsModulo('')
+*/
+CREATE OR REPLACE FUNCTION eseguridad.fn_getRowsModulo(modulo_busqueda varchar(50)='')
+RETURNS bigint AS $$
+DECLARE _respuesta bigint;
+BEGIN
+ RETURN (select count(*) from eseguridad.modulo m WHERE m.nombre like ('%' || modulo_busqueda || '%'));
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
+/*
+FUNCION
 Nombre: fn_GetModulos
 Descripcion: Recupera todos los modulos
 de cierto numero de pagina teniendo en cuenta
@@ -85,7 +103,7 @@ RETURNS TABLE
  nivel smallint,
  ruta_modulo VARCHAR(110),
  tipo_modulo VARCHAR(20),
- image_url VARCHAR(110),
+ imagen_url VARCHAR(110),
  estado VARCHAR(20),
  creado_en TIMESTAMP,
  usuario_creacion VARCHAR(50),
@@ -94,7 +112,7 @@ RETURNS TABLE
 ) AS
 $BODY$
 BEGIN
-IF( (SELECT COUNT(*) from eseguridad.modulo where cod_modulo = _cod_modulo) = 0 ) THEN
+IF( (SELECT COUNT(*) from eseguridad.modulo where eseguridad.modulo.cod_modulo=_cod_modulo) = 0 ) THEN
 INSERT INTO eseguridad.modulo(
 	cod_modulo,
     nombre,
@@ -102,7 +120,7 @@ INSERT INTO eseguridad.modulo(
     nivel,
     ruta_modulo,
     tipo_modulo,
-    image_url,
+    imagen_url,
     estado,
     creado_en,
     usuario_creacion,
@@ -131,7 +149,7 @@ UPDATE eseguridad.modulo SET
  nivel = _nivel,
  ruta_modulo = _ruta_modulo,
  tipo_modulo = _tipo_modulo,
- image_url = _imagen_url,
+ imagen_url = _imagen_url,
  estado =_estado ,
  actualizado_en = now(),
  usuario_actualizo = _usuario_registro
@@ -149,3 +167,28 @@ END IF;
 END;
 $BODY$
 LANGUAGE 'plpgsql';
+
+/*
+FUNCION
+Nombre: fn_DeleteModulo
+Descripcion: Eliminina un modulo
+Parametros: 
+Ejecucion: SELECT * FROM eseguridad.fn_DeleteModulos('M001')
+*/
+CREATE OR REPLACE FUNCTION eseguridad.fn_DeleteModulo(_cod_modulo VARCHAR(30))
+RETURNS varchar(100) AS $$
+DECLARE _respuesta varchar(100);
+BEGIN
+IF((select count(*) from eseguridad.modulo where cod_modulo=_cod_modulo) = 1) THEN
+  delete from eseguridad.modulo
+	where eseguridad.modulo.cod_modulo=_cod_modulo;
+	_respuesta='Se elimino correctamente';
+ELSE
+  _respuesta='No existe el usuario';
+END IF;
+
+ RETURN _respuesta;
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
