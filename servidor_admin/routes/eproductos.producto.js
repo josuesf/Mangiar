@@ -33,7 +33,7 @@ router.post('/save_producto', function (req, res) {
         anterior:input.imagen_anterior
     }
 	//call Model.login function
-	producto.save(params,images, function (err, productos) {
+	producto.save(params,images,input.precios, function (err, productos) {
         if (err) return res.json({err})
 		return res.json({productos})
 	})
@@ -55,9 +55,11 @@ router.post('/find', function (req, res) {
 	//call Model.login function
 	producto.get_categorias(function (err, categorias) {
 		if (err) return res.json({err})
-		return res.json({categorias})
+		producto.get_precios(params,function(err,precios){
+			return res.json({categorias,precios})
+		})
+		
 	})
 });
-
 
 module.exports = router;

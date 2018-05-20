@@ -69,7 +69,7 @@ FUNCTION eproductos.fn_SaveProducto
 Descripcion: Guarda o aactualiza un producto
 Parametros: necesarios para un producto
 Fecha:17052018
-Ejecucion: SELECT * FROM  eproductos.fn_SaveProducto(-1,'PR001','COM','','COMIDA 1','COM','','ACTIVO','ADMIN')
+Ejecucion: SELECT * FROM  eproductos.fn_SaveProducto(2,'PR001','COM','','COMIDA 1','COM','','ACTIVO','ADMIN')
 DROP: DROP FUNCTION eproductos.fn_SaveProducto(int,varchar(30),varchar(50),varchar(120),varchar(200),varchar(100),varchar(110),varchar(20),varchar(50))
 */
 CREATE OR REPLACE FUNCTION eproductos.fn_SaveProducto
@@ -86,14 +86,14 @@ CREATE OR REPLACE FUNCTION eproductos.fn_SaveProducto
 )
 RETURNS TABLE 
 ( 
- _producto_id int,
- _cod_producto varchar(30),
- _cod_categoria varchar(50),
- _cod_marca varchar(120),
- _nombre varchar(200),
- _alias varchar(100),
- _imagen_url varchar(110),
- _estado      varchar(20)
+ producto_id int,
+ cod_producto varchar(30),
+ cod_categoria varchar(50),
+ cod_marca varchar(120),
+ nombre varchar(200),
+ alias varchar(100),
+ imagen_url varchar(110),
+ estado      varchar(20)
 ) AS
 $$
 BEGIN
@@ -125,17 +125,17 @@ VALUES(
 
 pproducto_id = (SELECT CURRVAL('eproductos.producto_producto_id_seq'));
 ELSE
-UPDATE eproductos.producto as p SET
- p.cod_producto = pcod_producto,
- p.cod_categoria = pcod_categoria,
- p.cod_marca = pcod_marca,
- p.nombre = pnombre,
- p.alias = palias,
- p.imagen_url = pimagen_url,
- estado = pestado ,
- actualizado_en = now(),
- usuario_actualizo = pusuario_registro
-WHERE p.producto_id = pproducto_id;
+UPDATE eproductos.producto SET
+ cod_producto=pcod_producto,
+ cod_categoria=pcod_categoria,
+ cod_marca=pcod_marca,
+ nombre=pnombre,
+ alias=palias,
+ imagen_url=pimagen_url,
+ estado=pestado ,
+ actualizado_en=now(),
+ usuario_actualizo=pusuario_registro
+WHERE eproductos.producto.producto_id=pproducto_id;
 END IF;
 
  RETURN QUERY
@@ -154,7 +154,7 @@ LANGUAGE 'plpgsql';
 FUNCTION eproductos.fn_DeleteProducto
 Descripcion: Eliminar producto
 Parametros: producto_id
-Ejecucion: SELECT eproductos.fn_DeleteProducto(1) "respuesta"
+Ejecucion: SELECT eproductos.fn_DeleteProducto(2) "respuesta"
 DROP: DROP FUNCTION IF EXISTS eproductos.fn_DeleteProducto(int)
 */
 CREATE OR REPLACE FUNCTION eproductos.fn_DeleteProducto(int)
@@ -170,6 +170,59 @@ ELSE
 END IF;
 
  RETURN _respuesta;
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
+/*
+FUNCTION eproductos.fn_SavePrecioProducto
+Descripcion: Guardar precio producto
+Parametros: producto_id,cod_unidad,cod_precio,nombre_precio,cod_moneda,valor_precio,usuario
+Ejecucion: SELECT eproductos.fn_SavePrecioProducto(2,'NIU','NORMAL','NORMAL','PEN',20,'ADMIN') "respuesta"
+DROP: DROP FUNCTION IF EXISTS eproductos.fn_SavePrecioProducto(int)
+*/
+CREATE OR REPLACE FUNCTION eproductos.fn_SavePrecioProducto(
+pproducto_id int,
+pcod_unidad varchar(10),
+pcod_precio varchar(30),
+pnombre_precio varchar(100),
+pcod_moneda varchar(10),
+pvalor_precio numeric(38,6),
+pusuario_registro varchar(50)
+)
+RETURNS smallint AS $$
+BEGIN
+IF((select count(*) from eproductos.precios_producto where producto_id= pproducto_id and cod_precio=pcod_precio) = 1) THEN
+  update eproductos.precios_producto SET
+  nombre_precio=pnombre_precio,
+  cod_moneda=pcod_moneda,
+  valor_precio=pvalor_precio,
+  actualizado_en = now(),
+  usuario_actualizo = pusuario_registro
+  where producto_id= pproducto_id and cod_precio=pcod_precio;
+ELSE
+  insert into eproductos.precios_producto(
+	producto_id,
+	cod_unidad,
+	cod_precio,
+	nombre_precio,
+	cod_moneda,
+	valor_precio,
+	creado_en,
+	usuario_creacion)
+	values(
+	pproducto_id,
+	pcod_unidad,
+	pcod_precio,
+	pnombre_precio,
+	pcod_moneda,
+	pvalor_precio,
+	now(),
+	pusuario_registro
+	);
+END IF;
+
+ RETURN 1;
  EXCEPTION WHEN OTHERS THEN 
  RAISE;
 END;

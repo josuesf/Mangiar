@@ -303,10 +303,14 @@
                     var value = el.value
                     var condiciones = props[id]
                     if (value.length == 0) {
-                        el.classList = "invalid"
-                        error_mesage.classList = "active"
-                        error_mesage.setAttribute("data-error", "requerido");
-                        el.focus()
+                        if(el.nodeName=='SELECT'){
+                            error_mesage.className = 'red-text'
+                        }else{
+                            el.classList = "invalid"
+                            error_mesage.classList = "active"
+                            error_mesage.setAttribute("data-error", "requerido");
+                            el.focus()
+                        }
                         return false
                     }
                     if (condiciones.minLen && condiciones.minLen > value.length) {
@@ -323,6 +327,13 @@
                         el.focus()
                         return false
                     }
+                    if (condiciones.number_msg && (isNaN(value) || parseFloat(value)<1 ) ) {
+                        el.classList = "invalid"
+                        error_mesage.classList = "active"
+                        error_mesage.setAttribute("data-error",condiciones.number_msg);
+                        el.focus()
+                        return false
+                    }
                     if (condiciones.evaluador && !condiciones.evaluador(value)) {
                         el.classList = "invalid"
                         error_mesage.classList = "active"
@@ -330,6 +341,7 @@
                         return false
                     }
                     el.classList = "valid"
+                    error_mesage.className = el.nodeName!='SELECT'?'active':''
                 }
                 return true
             }
