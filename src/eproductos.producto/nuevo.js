@@ -1,6 +1,7 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
 import { productos } from './index'
+import { combinaciones } from './combinaciones'
 var PRECIOS_ = []
 function Ver(categorias,p) {
     var el = yo`
@@ -34,8 +35,8 @@ function Ver(categorias,p) {
                 <div class="col s12">
                     <ul class="tabs">
                         <li class="tab col s3"><a class="active" href="#tab_prin">Principal</a></li>
-                        <li class="tab col s3"><a href="#tab_comb">Combinaciones</a></li>
-                        <li class="tab col s3"><a href="#tab_part">Partes</a></li>
+                        ${p && yo`<li class="tab col s3"><a href="#tab_comb" onclick="${()=>combinaciones(p.producto_id)}">Combinaciones</a></li>`}
+                        ${p && yo`<li class="tab col s3"><a href="#tab_part">Partes</a></li>`}
                     </ul>
                 </div>
                 <div id="tab_prin" class="col s12">
@@ -147,8 +148,8 @@ function Ver(categorias,p) {
                         </div>
                     </div>
                 </div>
-                <div id="tab_comb" class="col s12">Proximamente...</div>
-                <div id="tab_part" class="col s12">Proximamente...</div>
+                ${p && yo`<div id="tab_comb" class="col s12">Proximamente...</div>`}
+                ${p && yo`<div id="tab_part" class="col s12">Proximamente...</div>`}
                 
             </div>
         </div>

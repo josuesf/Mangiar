@@ -12,6 +12,7 @@ import { sub_navegador } from '../sub_navegador'
 import { login } from '../login'
 import {cuentas} from '../eseguridad.cuenta'
 import { modulos } from '../eseguridad.modulo'
+import { perfiles } from '../eseguridad.perfil'
 function Ver(login) {
     var el = login ? yo`
         <nav>
@@ -51,6 +52,9 @@ function Ver(login) {
                             </li>
                             <li>
                                 <a onclick="${() => modulos()}">Modulos</a>
+                            </li>
+                            <li>
+                                <a onclick="${() => perfiles()}">Perfiles</a>
                             </li>
                         </ul>
                     </li>
