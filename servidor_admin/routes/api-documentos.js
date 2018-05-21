@@ -56,9 +56,9 @@ router.post('/save_serie', function (req, res) {
         req.app.locals.usuario
 	]
 	//call Model.login function
-	documento.save(params, function (err, documentos) {
+	documento.saveSerie(params, function (err, series) {
 		if (err) return res.json({err})
-		return res.json({documentos})
+		return res.json({series})
 	})
 });
 

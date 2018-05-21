@@ -259,7 +259,7 @@ function Eliminar(documento) {
                     $('#box_error').show()
                 } else {
                     if (res.respuesta[0].fn_deletedocumento == 'Se elimino correctamente') {
-                       puntos_ventas()
+                       documentos()
                     }
                 }   
                 HideLoader()

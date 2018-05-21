@@ -1,6 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
-import { nuevo } from './index'
+import { nuevo } from './nuevo'
 function Ver(documento,serie,sucursales) {
     var el = yo`
     <div>
