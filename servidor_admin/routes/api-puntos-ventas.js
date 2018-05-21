@@ -24,7 +24,7 @@ router.post('/save_punto_venta', function (req, res) {
         input.estado_accion,
         input.usuario_accion, 
         input.estado,
-        'ADMIN'
+        req.app.locals.usuario
 	]
 	//call Model.login function
 	punto_venta.save(params, function (err, puntos_ventas,num_filas) {

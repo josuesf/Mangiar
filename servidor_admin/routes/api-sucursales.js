@@ -31,7 +31,7 @@ router.post('/save_sucursal', function (req, res) {
         input.provincia,
 		input.distrito,
 		input.estado,
-        'ADMIN'
+        req.app.locals.usuario
 	]
 	//call Model.login function
 	sucursal.save(params, function (err, sucursales) {

@@ -33,7 +33,7 @@ router.post('/save_persona', function (req, res) {
         input.telf_movil,
         input.correo,
         input.estado,
-        'ADMIN'
+        req.app.locals.usuario
 	]
 	//call Model.login function
 	persona.save(params, function (err, personas) {

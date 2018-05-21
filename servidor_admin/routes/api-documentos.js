@@ -33,7 +33,7 @@ router.post('/save_documento', function (req, res) {
         input.tipo_doc,
         input.formato_doc,
         input.estado, 
-        'ADMIN'
+        req.app.locals.usuario
 	]
 	//call Model.login function
 	documento.save(params, function (err, documentos) {
@@ -53,7 +53,7 @@ router.post('/save_serie', function (req, res) {
 		input.cod_sucursal,
 		input.esta_afecto,
         input.estado, 
-        'ADMIN'
+        req.app.locals.usuario
 	]
 	//call Model.login function
 	documento.save(params, function (err, documentos) {

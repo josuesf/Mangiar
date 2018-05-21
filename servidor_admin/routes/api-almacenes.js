@@ -23,7 +23,7 @@ router.post('/save_almacen', function (req, res) {
         input.descripcion,
         input.tipo,
         input.estado, 
-        'ADMIN'
+        req.app.locals.usuario
 	]
 	//call Model.login function
 	almacen.save(params, function (err, almacenes) {
