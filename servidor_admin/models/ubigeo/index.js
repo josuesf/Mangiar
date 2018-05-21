@@ -21,6 +21,14 @@ module.exports = {
             }
             callback(err, r.rows)
         })
-    }
+    },
+    delete:(params,callback)=>{
+        db.query("SELECT * fn_DeleteUbigeo($1,$2,$3)", params, (err, r) => {
+            if (err) {
+                return callback(err.name+":"+err.code+" "+err.routine, undefined)
+            }
+            callback(err, r.rows)
+        })
+    },
     //...More functions
 }

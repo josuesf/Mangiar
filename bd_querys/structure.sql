@@ -104,9 +104,9 @@ FOREIGN KEY (cod_sucursal) REFERENCES sucursal(cod_sucursal)
 );
 CREATE TABLE ubigeo --Omar
 ( 
-cod_departamento       char(2)  NOT NULL ,
-cod_provincia      char(2)  NOT NULL ,
-cod_distrito        char(2)  NOT NULL ,
+cod_departamento       char(4)  NOT NULL ,
+cod_provincia      char(4)  NOT NULL ,
+cod_distrito        char(4)  NOT NULL ,
 departamento varchar(14)  NULL ,
 provincia          varchar(30)  NULL ,
 distrito            varchar(30)  NULL ,

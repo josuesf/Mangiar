@@ -29,7 +29,7 @@ function Ver(login) {
                                 <a onclick="${() => sucursales()}">Sucursal</a>
                             </li>
                             <li>
-                                <a onclick="${() => almacenes()}">Almacen</a>
+                                <a onclick="${() => almacenes()}">Almacén</a>
                             </li>
                             <li>
                                 <a onclick="${() => puntos_ventas()}">Puntos de Venta</a>

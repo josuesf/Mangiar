@@ -32,11 +32,11 @@ function Ver(sucursal,ubigeos) {
                         <div class="row">
                             ${sucursal ? yo`` : yo`<div class="input-field col s6">
                                                     <input id="cod_sucursal" type="text" class="validate" data-length="30">
-                                                    <label class="active">Codigo Sucursal</label>
+                                                    <label class="active" for="cod_sucursal" id="lcod_sucursal" class="active" data-error="Código mayor al permitido" data-success="">Codigo Sucursal</label>
                                                    </div>` }
                             <div class="input-field col s6">
                                 <input value="${sucursal ? sucursal.nombre : ''}" id="nombre" type="text" class="validate" data-length="100">
-                                <label class="active">Nombre</label>
+                                <label class="active" for="nombre" id="lnombre" class="active" data-error="nombre mayor al tamaño permitido" data-success="">Nombre</label>
                             </div>
                             
                         </div>
@@ -78,8 +78,8 @@ function Ver(sucursal,ubigeos) {
                                 <label for="longitud" class="active">Longitud</label>
                             </div>
                             <div class="input-field col s6">
-                                <select id="departamento" onchange=${()=>CambioDepartamento(sucursal,ubigeos)}>
-                                    <option value="-1">Seleccione un departamento</div>
+                                <select id="departamento" onchange="${()=>CambioDepartamento(sucursal,ubigeos)}">
+                                    ${sucursal ? yo``:yo`<option value="-1">Seleccione un departamento</div>`}
                                     ${ubigeos.map(u=>
                                         yo`<option value="${u.cod_departamento}" ${sucursal ? sucursal.departamento == u.cod_departamento ? 'selected' : '' : ''}>${u.departamento}</option>`
                                     )}
@@ -88,21 +88,38 @@ function Ver(sucursal,ubigeos) {
                             </div>
                         </div>
                          <div class="row">
-                            <div class="input-field col s6">
-                                <select id="provincia" onchange=${()=>CambioProvincia(sucursal,ubigeos)}>
-                                </select>
-                                <label>Provincia</label>
+                            <div class="col s6" id="divProvincia">
+                                <div class="input-field col s12">
+                                    <select id="provincia" onchange="${()=>CambioProvincia(sucursal,ubigeos)}">
+                                        ${sucursal ?
+                                            ubigeos.map(u=>
+                                            yo`<option value="${u.cod_provincia}" ${sucursal ? sucursal.provincia == u.cod_provincia ? 'selected' : '' : ''}>${u.provincia}</option>`
+                                        ):yo``}
+                                    </select>
+                                    <label>Provincia</label>
+                                </div>
                             </div>
-                            <div class="input-field col s6">
-                                <select id="distrito">
-                                </select>
-                                <label>Distrito</label>
+                            <div class="col s6" id="divDistrito">
+                                <div class="input-field col s12">
+                                    <select id="distrito">
+                                        ${sucursal ?
+                                            ubigeos.map(u=>
+                                            yo`<option value="${u.cod_distrito}" ${sucursal ? sucursal.distrito == u.cod_distrito ? 'selected' : '' : ''}>${u.distrito}</option>`
+                                        ):yo``}
+                                    </select>
+                                    <label>Distrito</label>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col s6">
                                 <a onclick=${() => Guardar(sucursal)} class="waves-effect waves-light btn">Guardar Sucursal</a>
                             </div>
+                            ${sucursal?yo`
+                            <div class="col s6">
+                                <a onclick=${() => Eliminar(sucursal)} class="waves-effect waves-light btn red lighten-3">Eliminar Sucursal</a>
+                            </div>
+                            `:yo``}
                         </div>
                     </form>
                 </div>
@@ -113,7 +130,7 @@ function Ver(sucursal,ubigeos) {
     empty(container).appendChild(el);
     var sub_nav = yo`
     <div class="collection">
-        <a onclick="${sucursales}" class="collection-item">Todas las Sucursales</a>
+        <a href="#!" onclick="${()=>sucursales()}" class="collection-item">Todas las Sucursales</a>
         <a href="#!" class="collection-item active">Nueva Sucursal</a>
     </div>
         `;
@@ -124,31 +141,73 @@ function Ver(sucursal,ubigeos) {
 
 function CambioDepartamento(sucursal,ubigeos){
     var cod_departamento =  $("#departamento").val()
-    if(cod_departamento=="-1"){
-        $("#provincia").val("")
-        $("#distrito").val("")        
-    }else{
+    var blank = yo`
+        <div class="input-field col s12">
+            <select id="provincia">
+            </select>
+            <label>Provincia</label>
+        </div>`
+
+    var opts = document.getElementById('divProvincia')
+    empty(opts).appendChild(blank)
+    $('select').material_select();  
+
+    if(cod_departamento!="-1"){
+      
+        var el = yo`
+                <div class="input-field col s12">
+                    <select id="provincia">
+                    ${ubigeos.map(u=>
+                        u.cod_departamento==cod_departamento?yo`<option value="${u.cod_provincia}">${u.provincia}</option>`:yo``
+                    )}
+                    </select>
+                    <label>Provincia</label>
+                </div>`
         
-        var html=''
-        for(var i=0;i<ubigeos.length;i++){
-            html = html + '<option value="'+ubigeos[i].cod_provincia+'">'+ubigeos[i].provincia+'</option>'
-            //console.log(html)
-            $('#provincia').html(html)
-        }
-        $('#provincia').html(html)
-        //CambioProvincia(sucursal,ubigeos)
+        var opts = document.getElementById('divProvincia')
+        empty(opts).appendChild(el)
+        $('select').material_select();
+
+        CambioProvincia(sucursal,ubigeos)
     }
 }
 
 function CambioProvincia(sucursal,ubigeos){
-    var cod_provincia =  $("#provincia").val() 
-    var el = yo`${ubigeos.map(u=>
-                u.cod_provincia==cod_provincia?yo`<option value="${u.cod_distrito}" ${sucursal ? sucursal.distrito == u.cod_distrito ? 'selected' : '' : ''}>${u.cod_distrito}</option>`:yo``
-            )}`
-    $('#distrito').html(el)
+    var cod_provincia =  $("#provincia").val()
+    var blank = yo`
+        <div class="input-field col s12">
+            <select id="distrito">
+            </select>
+            <label>Distrito</label>
+        </div>`
+
+    var opts = document.getElementById('divDistrito')
+    empty(opts).appendChild(blank)
+    $('select').material_select();  
+ 
+    var el = yo`
+            <div class="input-field col s12">
+                <select id="distrito">
+                ${ubigeos.map(u=>
+                    u.cod_provincia==cod_provincia?yo`<option value="${u.cod_distrito}">${u.distrito}</option>`:yo``
+                )}
+                </select>
+                <label>Distrito</label>
+            </div>`
+    
+    var opts = document.getElementById('divDistrito')
+    empty(opts).appendChild(el)
+    $('select').material_select();
 }
 
 function Guardar(s) {
+
+    var props = {
+        'nombre':{maxLen:100}
+    }
+    if(!Validar(props))
+        return;
+
     ShowLoader()
     const cod_sucursal = s?s.cod_sucursal:$('#cod_sucursal').val()
     const nombre = $('#nombre').val()
@@ -185,6 +244,7 @@ function Guardar(s) {
             distrito
         })
     }
+    console.log(parametros)
     fetch('http://localhost:5000/sucursales_api/save_sucursal', parametros)
         .then(req => req.json())
         .then(res => {
@@ -199,6 +259,38 @@ function Guardar(s) {
             }
             HideLoader()
         })
+}
+
+function Eliminar(s) {
+    var txt;
+    var r = confirm("Esta seguro de eliminar?");
+    if (r == true) {
+        ShowLoader()
+        const cod_sucursal = s.cod_sucursal
+        const parametros = {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                cod_sucursal,
+            })
+        }
+        fetch('http://localhost:5000/sucursales_api/delete_sucursal', parametros)
+            .then(req => req.json())
+            .then(res => {
+                if (res.err) {
+                    $('#text_error').text(res.err)
+                    $('#box_error').show()
+                } else {
+                    if (res.respuesta[0].fn_deletesucursal == 'Se elimino correctamente') {
+                        sucursales()
+                    }
+                }
+                HideLoader()
+            })
+    }
 }
 function nuevo(sucursal) {
     ShowLoader()

@@ -6,7 +6,7 @@ function Ver(almacen) {
     <div class="card horizontal">
         <div class="card-stacked">
             <div class="card-content">
-                <span class="card-title">${almacen ? 'Editar Almacen' : 'Nuevo Almacen' }</span>
+                <span class="card-title">${almacen ? 'Editar Almacén' : 'Nuevo Almacén' }</span>
                 <div class="row">
                     <form class="col s12">
                         <div class="row" id="box_error" style="display:none;">
@@ -16,7 +16,7 @@ function Ver(almacen) {
                             </div>
                             </div>
                         </div>
-                         <div class="row">
+                        <div class="row">
                             <div class="col s6">
                                 <label>Estado</label>
                                 <div class="switch">
@@ -32,11 +32,11 @@ function Ver(almacen) {
                          <div class="row">
                             <div class="input-field col s6">
                              <input id="almacen_cod" value="${almacen ? almacen.almacen_cod:''}" type="text" class="validate" data-length="50">
-                             <label class="active">Codigo Almacen</label>
+                             <label for="almacen_cod" id="lalmacen_cod" class="active" data-error="Código mayor al permitido" data-success="">Codigo Almacén</label>
                             </div>
                             <div class="input-field col s6">
                                 <input value="${almacen ? almacen.descripcion : ''}" id="descripcion" type="text" data-length="200">
-                                <label for="descripcion" class="active">Descripcion</label>
+                                <label for="descripcion" id="ldescripcion" class="active" data-error="Descripción mayor al permitido" data-success="">Descripción</label>
                             </div>
                             
                         </div>
@@ -53,8 +53,13 @@ function Ver(almacen) {
                           
                         <div class="row">
                             <div class="col s6">
-                                <a onclick=${() => Guardar(almacen)} class="waves-effect waves-light btn">Guardar Almacen</a>
+                                <a onclick=${() => Guardar(almacen)} class="waves-effect waves-light btn">Guardar Almacén</a>
                             </div>
+                            ${almacen?yo`
+                            <div class="col s6">
+                                <a onclick=${() => Eliminar(almacen)} class="waves-effect waves-light btn red lighten-3">Eliminar Almacén</a>
+                            </div>
+                            `:yo``}
                         </div>
                     </form>
                 </div>
@@ -65,14 +70,21 @@ function Ver(almacen) {
     empty(container).appendChild(el);
     var sub_nav = yo`
     <div class="collection">
-        <a onclick="${almacenes}" class="collection-item">Todos los Almacenes</a>
-        <a href="#!" class="collection-item active">Nuevo Almacen</a>
+        <a href="#!" onclick="${()=>almacenes()}" class="collection-item">Todos los Almacenes</a>
+        <a href="#!" class="collection-item active">Nuevo Almacén</a>
     </div>
         `;
     var container = document.getElementById('sub_navegador_content')
     empty(container).appendChild(sub_nav)
 }
 function Guardar(a) {
+    var props = {
+        'almacen_cod':{maxLen:50},
+        'descripcion':{maxLen:200}
+    }
+    if(!Validar(props))
+        return;
+
     ShowLoader()
     const almacen_id = a?a.almacen_id:-1
     const almacen_cod = $('#almacen_cod').val()
@@ -108,6 +120,37 @@ function Guardar(a) {
             }
             HideLoader()
         })
+}
+function Eliminar(a) {
+    var txt;
+    var r = confirm("Esta seguro de eliminar?");
+    if (r == true) {
+        ShowLoader()
+        const almacen_id = a.almacen_id
+        const parametros = {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                almacen_id,
+            })
+        }
+        fetch('http://localhost:5000/almacenes_api/delete_almacen', parametros)
+            .then(req => req.json())
+            .then(res => {
+                if (res.err) {
+                    $('#text_error').text(res.err)
+                    $('#box_error').show()
+                } else {
+                    if (res.respuesta[0].fn_deletealmacen == 'Se elimino correctamente') {
+                        almacenes()
+                    }
+                }
+                HideLoader()
+            })
+    }
 }
 function nuevo(almacen) {
     ShowLoader()

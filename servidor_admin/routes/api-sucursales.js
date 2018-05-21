@@ -8,9 +8,9 @@ router.post('/get_sucursales', function (req, res) {
     input = req.body
 	//set params
 	const params = [input.tamano_pagina,input.numero_pagina,input.sucursal_busqueda]
-	sucursal.getSucursales(params, function (err, sucursales) {
+	sucursal.getSucursales(params, function (err, sucursales, num_filas) {
 		if (err) return res.json({err})
-		return res.json({sucursales})
+		return res.json({sucursales,num_filas})
 	})
 });
 
@@ -27,16 +27,27 @@ router.post('/save_sucursal', function (req, res) {
         input.tipo_sistema,
         input.latitud,
         input.longitud,
-        input.estado,
         input.departamento,
         input.provincia,
-        input.distrito,
+		input.distrito,
+		input.estado,
         'ADMIN'
 	]
 	//call Model.login function
 	sucursal.save(params, function (err, sucursales) {
 		if (err) return res.json({err})
 		return res.json({sucursales})
+	})
+});
+
+router.post('/delete_sucursal', function (req, res) {
+    input = req.body
+	//set params
+	const params = [input.cod_sucursal]
+	//call Model.login function
+	sucursal.delete(params, function (err, respuesta) {
+		if (err) return res.json({err})
+		return res.json({respuesta})
 	})
 });
 

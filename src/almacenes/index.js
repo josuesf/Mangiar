@@ -1,7 +1,7 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
 import {nuevo} from './nuevo'
-function Ver(almacenes) {
+function Ver(almacenes,paginas,pagina_actual) {
     var el = yo`
         <div class="card horizontal">
             <div class="card-stacked">
@@ -9,71 +9,14 @@ function Ver(almacenes) {
                     <span class="card-title">Lista de Almacenes</span>
                     <div class="row">
                         <div class="input-field col s12">
-                          <input id="almacen_busqueda" type="text" class="validate">
-                          <label for="almacen_busqueda">Ingrese el nombre del almacen</label>
+                            <i class="material-icons prefix">search</i>
+                            <input id="almacen_busqueda" onkeyup="${()=>Buscar(1)}" type="text" class="validate">
+                            <label for="almacen_busqueda" >Ingrese el nombre del almacén para buscar</label>
                         </div>
                     </div>
-                    <div class="row">
-                        <table class="striped">
-                            <thead>
-                                <tr>
-                                    <th>Opc.</th>
-                                    <th>Codigo</th>
-                                    <th>Descripcion</th>
-                                    <th>Tipo</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${almacenes.map(a=> yo`
-                                <tr>
-                                    <td>
-                                        <a onclick=${()=>nuevo(a)} class="dropdown-button btn teal accent-3 btn-floating btn-small">
-                                        <i class="material-icons">edit</i>
-                                        </a>
-                                        <a class="dropdown-button btn red accent-3 btn-floating btn-small">
-                                        <i class="material-icons">delete</i>
-                                        </a>
-                                    </td>
-                                    <td>${a.almacen_cod}</td>
-                                    <td>${a.descripcion}</td>
-                                    <td>${a.tipo}</td>
-                                </tr>
-                                `)}
-                            </tbody>
-                        </table>
+                    <div id="div_tabla">                            
+                        ${VerTabla(almacenes,paginas,pagina_actual)}
                     </div>
-                    <div class="row">
-                        <ul class="pagination">
-                            <li class="disabled">
-                                <a href="#!">
-                                    <i class="material-icons">chevron_left</i>
-                                </a>
-                            </li>
-                            <li class="active">
-                                <a href="#!">1</a>
-                            </li>
-                            <li class="waves-effect">
-                                <a href="#!">2</a>
-                            </li>
-                            <li class="waves-effect">
-                                <a href="#!">3</a>
-                            </li>
-                            <li class="waves-effect">
-                                <a href="#!">4</a>
-                            </li>
-                            <li class="waves-effect">
-                                <a href="#!">5</a>
-                            </li>
-                            <li class="waves-effect">
-                                <a href="#!">
-                                    <i class="material-icons">chevron_right</i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="card-action">
-                    <a href="#">Guardar</a>
                 </div>
             </div>
         </div>`;
@@ -82,14 +25,77 @@ function Ver(almacenes) {
     var sub_nav = yo`
     <div class="collection">
         <a href="#!" class="collection-item active">Todos los Almacenes</a>
-        <a href="#!" class="collection-item" onclick="${()=>nuevo()}">Nuevo Almacen</a>
+        <a href="#!" class="collection-item" onclick="${()=>nuevo()}">Nuevo Almacén</a>
     </div>
         `;
     var container = document.getElementById('sub_navegador_content')
     empty(container).appendChild(sub_nav)
+    $(".dropdown-button").dropdown();
 }
-function almacenes() {
-    ShowLoader()
+
+function Buscar(pagina_actual){
+    // ShowLoader()
+    const tamano_pagina = 5
+    const almacen_busqueda = document.getElementById('almacen_busqueda').value.toUpperCase()
+    fetchAlmacenes(tamano_pagina,pagina_actual,almacen_busqueda,function(res){
+        if (res.err) {
+            console.log(res.err)
+        } else {
+            var paginas = parseInt(res.num_filas)
+            paginas = parseInt(paginas / tamano_pagina) + (paginas % tamano_pagina != 0 ? 1 : 0)
+
+            var tabla_content = document.getElementById('div_tabla')
+            empty(tabla_content).appendChild(VerTabla(res.almacenes,paginas,pagina_actual)) 
+        }
+    })
+}
+
+function VerTabla(almacenes,paginas,pagina_actual){
+    return yo`
+    <div>
+        <table class="striped">
+            <thead>
+                <tr>
+                    <th>Opc.</th>
+                    <th>Descripción</th>
+                    <th>Tipo</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${almacenes.map(a=> yo`
+                <tr>
+                    <td>
+                        <a onclick=${()=>nuevo(a)} class="dropdown-button btn teal accent-3 btn-floating">
+                        <i class="material-icons">edit</i>
+                        </a>
+                    </td>
+                    <td>${a.descripcion}</td>
+                    <td>${a.tipo}</td>
+                    <td>${a.estado}</td>
+                </tr>
+                `)}
+            </tbody>
+        </table>
+        <ul class="pagination">
+            <li class="${(pagina_actual>1)?'waves-effect':'disabled'}">
+                <a href="#!" onclick="${()=>(pagina_actual>1)?Buscar(pagina_actual-1):null}">
+                    <i class="material-icons">chevron_left</i>
+                </a>
+            </li>
+            ${((new Array(paginas)).fill(0)).map((p, i) => yo`<li class=${pagina_actual==(i+1)?'active indigo lighten-2':' waves-effect'}>
+            <a href="#!" onclick="${()=>Buscar(i+1)}" >${i + 1}</a>
+            </li>`)}
+            <li class="${(pagina_actual<paginas)?'waves-effect':'disabled'}">
+                <a href="#!" onclick="${()=>(pagina_actual<paginas)?Buscar(pagina_actual+1):null}">
+                    <i class="material-icons">chevron_right</i>
+                </a>
+            </li>
+        </ul>
+    </div>`;
+}
+
+function fetchAlmacenes(tamano_pagina,_numero_pagina,almacen_busqueda,callback){
     const parametros = {
         method: 'POST',
         headers: {
@@ -97,23 +103,32 @@ function almacenes() {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            tamano_pagina:10,
-            numero_pagina:1,
-            almacen_busqueda: ''
+            numero_pagina:_numero_pagina||1,
+            tamano_pagina,
+            almacen_busqueda
         })
     }
     fetch('http://localhost:5000/almacenes_api/get_almacenes', parametros)
         .then(req => req.json())
         .then(res => {
-            console.log(res)
-            if (res.err) {
-                console.log(res.err)
-            } else {
-                Ver(res.almacenes)
-            }
-            HideLoader()
+            callback(res)
         })
-    //Ver()
+}
+
+function almacenes(_numero_pagina) {
+    ShowLoader()
+    const tamano_pagina = 5
+    fetchAlmacenes(tamano_pagina,_numero_pagina,'',function(res){
+        if (res.err) {
+            console.log(res.err)
+        } else {
+            var paginas = parseInt(res.num_filas)
+            paginas = parseInt(paginas / tamano_pagina) + (paginas % tamano_pagina != 0 ? 1 : 0)
+
+            Ver(res.almacenes,paginas,_numero_pagina||1)
+        }
+        HideLoader()
+    })
 }
 
 export { almacenes }

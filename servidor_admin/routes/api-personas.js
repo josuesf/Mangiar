@@ -8,9 +8,9 @@ router.post('/get_personas', function (req, res) {
     input = req.body
 	//set params
 	const params = [input.tamano_pagina,input.numero_pagina,input.persona_busqueda]
-	persona.getPersonas(params, function (err, personas) {
+	persona.getPersonas(params, function (err, personas, num_filas) {
 		if (err) return res.json({err})
-		return res.json({personas})
+		return res.json({personas,num_filas})
 	})
 });
 
@@ -39,6 +39,17 @@ router.post('/save_persona', function (req, res) {
 	persona.save(params, function (err, personas) {
 		if (err) return res.json({err})
 		return res.json({personas})
+	})
+});
+
+router.post('/delete_persona', function (req, res) {
+    input = req.body
+	//set params
+	const params = [input.cod_persona]
+	//call Model.login function
+	persona.delete(params, function (err, respuesta) {
+		if (err) return res.json({err})
+		return res.json({respuesta})
 	})
 });
 

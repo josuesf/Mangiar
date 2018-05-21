@@ -1,7 +1,7 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
 import {nuevo} from './nuevo'
-function Ver(puntos_ventas) {
+function Ver(puntos_ventas,paginas,pagina_actual) {
     var el = yo`
         <div class="card horizontal">
             <div class="card-stacked">
@@ -9,69 +9,14 @@ function Ver(puntos_ventas) {
                     <span class="card-title">Lista de Puntos de Venta</span>
                     <div class="row">
                         <div class="input-field col s12">
-                          <input id="punto_venta_busqueda" type="text" class="validate">
-                          <label for="punto_venta_busqueda">Ingrese el nombre del punto de venta</label>
+                            <i class="material-icons prefix">search</i>
+                            <input id="punto_venta_busqueda" onkeyup="${()=>Buscar(1)}" type="text" class="validate">
+                            <label for="punto_venta_busqueda" >Ingrese el nombre del punto de venta para buscar</label>
                         </div>
                     </div>
-                    <div class="row">
-                        <table class="striped">
-                            <thead>
-                                <tr>
-                                    <th>Opc.</th>
-                                    <th>Nombre</th>
-                                    <th>Sucursal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${puntos_ventas.map(p=> yo`
-                                <tr>
-                                    <td>
-                                        <a onclick=${()=>nuevo(p)} class="dropdown-button btn teal accent-3 btn-floating btn-small">
-                                        <i class="material-icons">edit</i>
-                                        </a>
-                                        <a class="dropdown-button btn red accent-3 btn-floating btn-small">
-                                        <i class="material-icons">delete</i>
-                                        </a>
-                                    </td>
-                                    <td>${p.nombre_punto}</td>
-                                    <td>${p.cod_sucursal}</td>
-                                </tr>
-                                `)}
-                            </tbody>
-                        </table>
+                    <div id="div_tabla">                            
+                        ${VerTabla(puntos_ventas,paginas,pagina_actual)}
                     </div>
-                    <div class="row">
-                        <ul class="pagination">
-                            <li class="disabled">
-                                <a href="#!">
-                                    <i class="material-icons">chevron_left</i>
-                                </a>
-                            </li>
-                            <li class="active">
-                                <a href="#!">1</a>
-                            </li>
-                            <li class="waves-effect">
-                                <a href="#!">2</a>
-                            </li>
-                            <li class="waves-effect">
-                                <a href="#!">3</a>
-                            </li>
-                            <li class="waves-effect">
-                                <a href="#!">4</a>
-                            </li>
-                            <li class="waves-effect">
-                                <a href="#!">5</a>
-                            </li>
-                            <li class="waves-effect">
-                                <a href="#!">
-                                    <i class="material-icons">chevron_right</i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="card-action">
-                    <a href="#">Guardar</a>
                 </div>
             </div>
         </div>`;
@@ -86,8 +31,72 @@ function Ver(puntos_ventas) {
     var container = document.getElementById('sub_navegador_content')
     empty(container).appendChild(sub_nav)
 }
-function puntos_ventas() {
-    ShowLoader()
+
+function Buscar(pagina_actual){
+    // ShowLoader()
+    const tamano_pagina = 5
+    const punto_venta_busqueda = document.getElementById('punto_venta_busqueda').value.toUpperCase()
+    fetchPuntosVentas(tamano_pagina,pagina_actual,punto_venta_busqueda,function(res){
+        if (res.err) {
+            console.log(res.err)
+        } else {
+            var paginas = parseInt(res.num_filas)
+            paginas = parseInt(paginas / tamano_pagina) + (paginas % tamano_pagina != 0 ? 1 : 0)
+
+            var tabla_content = document.getElementById('div_tabla')
+            empty(tabla_content).appendChild(VerTabla(res.puntos_ventas,paginas,pagina_actual)) 
+        }
+    })
+}
+
+function VerTabla(puntos_ventas,paginas,pagina_actual){
+    return yo`
+    <div>
+        <table class="striped">
+            <thead>
+                <tr>
+                    <th>Opc.</th>
+                    <th>Nombre</th>
+                    <th>Sucursal</th>
+                    <th>Estado Acción</th>
+                    <th>Usuario Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${puntos_ventas.map(p=> yo`
+                <tr>
+                    <td>
+                        <a onclick=${()=>nuevo(p)} class="dropdown-button btn teal accent-3 btn-floating">
+                        <i class="material-icons">edit</i>
+                        </a>
+                    </td>
+                    <td>${p.nombre_punto}</td>
+                    <td>${p.cod_sucursal}</td>
+                    <td>${p.estado_accion}</td>
+                    <td>${p.usuario_accion}</td>
+                </tr>
+                `)}
+            </tbody>
+        </table>
+        <ul class="pagination">
+            <li class="${(pagina_actual>1)?'waves-effect':'disabled'}">
+                <a href="#!" onclick="${()=>(pagina_actual>1)?Buscar(pagina_actual-1):null}">
+                    <i class="material-icons">chevron_left</i>
+                </a>
+            </li>
+            ${((new Array(paginas)).fill(0)).map((p, i) => yo`<li class=${pagina_actual==(i+1)?'active indigo lighten-2':' waves-effect'}>
+            <a href="#!" onclick="${()=>Buscar(i+1)}" >${i + 1}</a>
+            </li>`)}
+            <li class="${(pagina_actual<paginas)?'waves-effect':'disabled'}">
+                <a href="#!" onclick="${()=>(pagina_actual<paginas)?Buscar(pagina_actual+1):null}">
+                    <i class="material-icons">chevron_right</i>
+                </a>
+            </li>
+        </ul>
+    </div>`;
+}
+
+function fetchPuntosVentas(tamano_pagina,_numero_pagina,punto_venta_busqueda,callback){
     const parametros = {
         method: 'POST',
         headers: {
@@ -95,23 +104,33 @@ function puntos_ventas() {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            tamano_pagina:10,
-            numero_pagina:1,
-            punto_venta_busqueda: ''
+            numero_pagina:_numero_pagina||1,
+            tamano_pagina,
+            punto_venta_busqueda
         })
     }
     fetch('http://localhost:5000/puntos_ventas_api/get_puntos_ventas', parametros)
         .then(req => req.json())
         .then(res => {
-            console.log(res)
-            if (res.err) {
-                console.log(res.err)
-            } else {
-                Ver(res.puntos_ventas)
-            }
-            HideLoader()
+            callback(res)
         })
-    //Ver()
+}
+
+
+function puntos_ventas(_numero_pagina) {
+    ShowLoader()
+    const tamano_pagina = 5
+    fetchPuntosVentas(tamano_pagina,_numero_pagina,'',function(res){
+        if (res.err) {
+            console.log(res.err)
+        } else {
+            var paginas = parseInt(res.num_filas)
+            paginas = parseInt(paginas / tamano_pagina) + (paginas % tamano_pagina != 0 ? 1 : 0)
+
+            Ver(res.puntos_ventas,paginas,_numero_pagina||1)
+        }
+        HideLoader()
+    })
 }
 
 export { puntos_ventas }

@@ -32,5 +32,16 @@ router.post('/save_ubigeo', function (req, res) {
 	})
 });
 
+router.post('/delete_ubigeo', function (req, res) {
+    input = req.body
+	//set params
+	const params = [input.cod_departamento,input.cod_provincia,input.cod_distrito]
+	//call Model.login function
+	ubigeo.delete(params, function (err, respuesta) {
+		if (err) return res.json({err})
+		return res.json({respuesta})
+	})
+});
+
 
 module.exports = router;

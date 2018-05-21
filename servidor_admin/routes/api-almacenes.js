@@ -8,9 +8,9 @@ router.post('/get_almacenes', function (req, res) {
     input = req.body
 	//set params
 	const params = [input.tamano_pagina,input.numero_pagina,input.almacen_busqueda]
-	almacen.getAlmacenes(params, function (err, almacenes) {
+	almacen.getAlmacenes(params, function (err, almacenes,num_filas) {
 		if (err) return res.json({err})
-		return res.json({almacenes})
+		return res.json({almacenes,num_filas})
 	})
 });
 
@@ -29,6 +29,17 @@ router.post('/save_almacen', function (req, res) {
 	almacen.save(params, function (err, almacenes) {
 		if (err) return res.json({err})
 		return res.json({almacenes})
+	})
+});
+
+router.post('/delete_almacen', function (req, res) {
+    input = req.body
+	//set params
+	const params = [input.almacen_id]
+	//call Model.login function
+	almacen.delete(params, function (err, respuesta) {
+		if (err) return res.json({err})
+		return res.json({respuesta})
 	})
 });
 

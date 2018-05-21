@@ -32,7 +32,7 @@ function Ver(punto_venta,sucursales) {
                          <div class="row">
                             ${punto_venta ? yo`` : yo`<div class="input-field col s6">
                                                     <input id="cod_punto_venta" type="text" class="validate">
-                                                    <label class="active">Codigo Punto Venta</label>
+                                                    <label class="active">Código Punto Venta</label>
                                                    </div>` }
                             <div class="input-field col s6">
                                 <input value="${punto_venta ? punto_venta.nombre_punto : ''}" id="nombre_punto" type="text">
@@ -45,10 +45,10 @@ function Ver(punto_venta,sucursales) {
                             
                             <div class="input-field col s6">
                                 <select id="cod_sucursal"> 
-                                    ${sucursales.map(e => yo`<option style="text-transform:uppercase" value="${e.cod_sucursal}">${e.nombre}</option>`)}
+                                    ${sucursales.map(e => yo`<option style="text-transform:uppercase" value="${e.cod_sucursal}" ${punto_venta?punto_venta.cod_sucursal==e.cod_sucursal?'selected':'':''}>${e.nombre}</option>`)}
                                         
                                 </select>
-                                <label for="cod_sucursal" class="active">Codigo Sucursal</label>
+                                <label>Código Sucursal</label>
                             </div>
                              <div class="input-field col s6">
                                 <input value="${punto_venta ? punto_venta.estado_accion : ''}" id="estado_accion" type="text">
@@ -67,6 +67,11 @@ function Ver(punto_venta,sucursales) {
                             <div class="col s6">
                                 <a onclick=${() => Guardar(punto_venta)} class="waves-effect waves-light btn">Guardar Punto de Venta</a>
                             </div>
+                            ${punto_venta?yo`
+                            <div class="col s6">
+                                <a onclick=${() => Eliminar(punto_venta)} class="waves-effect waves-light btn red lighten-3">Eliminar Punto Venta</a>
+                            </div>
+                            `:yo``}
                         </div>
                     </form>
                 </div>
@@ -77,12 +82,13 @@ function Ver(punto_venta,sucursales) {
     empty(container).appendChild(el);
     var sub_nav = yo`
     <div class="collection">
-        <a onclick="${puntos_ventas}" class="collection-item">Todos los Puntos de Venta</a>
+        <a href="#!" onclick="${()=>puntos_ventas()}" class="collection-item">Todos los Puntos de Venta</a>
         <a href="#!" class="collection-item active">Nuevo Punto de Venta</a>
     </div>
         `;
     var container = document.getElementById('sub_navegador_content')
     empty(container).appendChild(sub_nav)
+    $('select').material_select();
 }
 function Guardar(p) {
     ShowLoader()
@@ -123,6 +129,39 @@ function Guardar(p) {
             HideLoader()
         })
 }
+
+function Eliminar(punto_venta) {
+    var txt;
+    var r = confirm("Esta seguro de eliminar?");
+    if (r == true) {
+        ShowLoader()
+        const cod_punto_venta = punto_venta.cod_punto_venta
+        const parametros = {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                cod_punto_venta
+            })
+        }
+        fetch('http://localhost:5000/puntos_ventas_api/delete_punto_venta', parametros)
+            .then(req => req.json())
+            .then(res => {
+                if (res.err) {
+                    $('#text_error').text(res.err)
+                    $('#box_error').show()
+                } else {
+                    if (res.respuesta[0].fn_deletepuntoventa == 'Se elimino correctamente') {
+                       puntos_ventas()
+                    }
+                }   
+                HideLoader()
+            })
+    }
+}
+
 function nuevo(punto_venta) {
     ShowLoader()
 

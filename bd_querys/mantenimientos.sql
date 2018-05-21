@@ -4,6 +4,8 @@ Descripcion: Recupera todas las sucursales
 Parametros: - tamano_pagina integer,numero_pagina integer
 Ejecucion: SELECT * FROM  fn_GetSucursales(20,1,'')
 */
+
+ 
 CREATE OR REPLACE FUNCTION fn_GetSucursales
 (
  tamano_pagina INTEGER = NULL
@@ -22,9 +24,12 @@ RETURNS TABLE
  fecha_inicio         	TIMESTAMP,
  latitud              	numeric(18,2),
  longitud             	numeric(18,2),
- departamento         	char(4),
- provincia         		char(4),
- distrito           	char(4),
+ n_departamento         varchar(14),
+ n_provincia         	varchar(30),
+ n_distrito           	varchar(30),
+ departamento 		char(4),
+ provincia 		char(4),
+ distrito		char(4),
  estado      			varchar(20),
  creado_en 				TIMESTAMP,
  usuario_creacion 		varchar(50),
@@ -46,7 +51,27 @@ BEGIN
  Custome paging SQL Query construction.......
  ************************************************ */
  RETURN QUERY
- SELECT *
+ SELECT s.cod_sucursal,
+ 	s.nombre,
+	s.direccion,
+	s.telefono,
+	s.fax,
+	s.correo,
+	s.tipo_sistema,
+	s.fecha_inicio,
+	s.latitud,
+	s.longitud,
+	(SELECT u.departamento FROM ubigeo u WHERE s.departamento = u.cod_departamento limit 1) as n_departamento,
+	(SELECT u.provincia FROM ubigeo u WHERE s.provincia = u.cod_provincia limit 1) as n_provincia,
+	(SELECT u.distrito FROM ubigeo u WHERE s.distrito = u.cod_distrito limit 1) as n_distrito,
+	s.departamento,
+	s.provincia,
+	s.distrito,
+	s.estado,
+	s.creado_en,
+	s.usuario_creacion,
+	s.actualizado_en,
+	s.usuario_actualizo
  FROM sucursal s
  WHERE s.nombre like ('%' || sucursal_busqueda || '%')
  ORDER BY s.cod_sucursal
@@ -62,7 +87,7 @@ LANGUAGE 'plpgsql';
 
 
 /*
-FUNCTION fn_uSucursal
+FUNCTION fn_SaveSucursal
 Descripcion: Guarda o actualiza una sucursal
 Parametros: necesarios para una sucursal
 Ejecucion: SELECT * FROM  fn_SaveSucursal('1222','PRUEBA','PRUEBA','1111111',
@@ -734,7 +759,7 @@ BEGIN
  RETURN QUERY
  SELECT *
  FROM persona p
- WHERE p.nombres like ('%' || persona_busqueda || '%') or p.a_paterno like ('%' || persona_busqueda || '%') or p.a_materno like ('%' || persona_busqueda || '%')
+ WHERE p.nombres like ('%' || persona_busqueda || '%') or p.a_paterno like ('%' || persona_busqueda || '%') or p.a_materno like ('%' || persona_busqueda || '%') or (p.nombres || p.a_paterno || p.a_materno) like ('%' || persona_busqueda || '%')
  ORDER BY p.cod_persona
  LIMIT tamano_pagina
  OFFSET PageNumber; 
@@ -883,6 +908,537 @@ RETURNS bigint AS $$
 DECLARE _respuesta bigint;
 BEGIN
  RETURN (select count(*) from ubigeo u WHERE u.departamento like ('%' || ubigeo_busqueda || '%') or u.provincia like ('%' || ubigeo_busqueda || '%') or u.distrito like ('%' || ubigeo_busqueda || '%'));
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
+
+/*
+FUNCTION fn_getRowsAlmacenes
+Descripcion: Cantidad de filas que existen en la tabla
+Parametros:
+Ejecucion: SELECT fn_getRowsAlmacenes('') AS Filas
+*/
+CREATE OR REPLACE FUNCTION fn_getRowsAlmacenes(almacen_busqueda varchar(50)='')
+RETURNS bigint AS $$
+DECLARE _respuesta bigint;
+BEGIN
+ RETURN (select count(*) from almacen a WHERE a.descripcion like ('%' || almacen_busqueda || '%'));
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
+
+/*
+FUNCTION fn_getRowsDocumentos
+Descripcion: Cantidad de filas que existen en la tabla
+Parametros:
+Ejecucion: SELECT fn_getRowsDocumentos('') AS Filas
+*/
+CREATE OR REPLACE FUNCTION fn_getRowsDocumentos(documento_busqueda varchar(50)='')
+RETURNS bigint AS $$
+DECLARE _respuesta bigint;
+BEGIN
+ RETURN (select count(*) from documento d WHERE d.descripcion_doc like ('%' || documento_busqueda || '%'));
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
+
+
+/*
+FUNCTION fn_getRowsPersonas
+Descripcion: Cantidad de filas que existen en la tabla
+Parametros:
+Ejecucion: SELECT fn_getRowsPersonas('') AS Filas
+*/
+CREATE OR REPLACE FUNCTION fn_getRowsPersonas(persona_busqueda varchar(50)='')
+RETURNS bigint AS $$
+DECLARE _respuesta bigint;
+BEGIN
+ RETURN (select count(*) from persona p WHERE p.nombres like ('%' || persona_busqueda || '%') or  p.a_paterno like ('%' || persona_busqueda || '%') or p.a_materno like ('%' || persona_busqueda || '%') or (p.nombres || p.a_paterno || p.a_materno) like ('%' || persona_busqueda || '%'));
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
+
+
+/*
+FUNCTION fn_getRowsPuntosVentas
+Descripcion: Cantidad de filas que existen en la tabla
+Parametros:
+Ejecucion: SELECT fn_getRowsPuntosVentas('') AS Filas
+*/
+CREATE OR REPLACE FUNCTION fn_getRowsPuntosVentas(punto_venta_busqueda varchar(50)='')
+RETURNS bigint AS $$
+DECLARE _respuesta bigint;
+BEGIN
+ RETURN (select count(*) from punto_venta p WHERE p.nombre_punto like ('%' || punto_venta_busqueda || '%'));
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
+
+/*
+FUNCTION fn_getRowsSucursales
+Descripcion: Cantidad de filas que existen en la tabla
+Parametros:
+Ejecucion: SELECT fn_getRowsSucursales('') AS Filas
+*/
+CREATE OR REPLACE FUNCTION fn_getRowsSucursales(sucursal_busqueda varchar(50)='')
+RETURNS bigint AS $$
+DECLARE _respuesta bigint;
+BEGIN
+ RETURN (select count(*) from sucursal s WHERE s.nombre like ('%' || sucursal_busqueda || '%'));
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
+
+/*
+FUNCTION fn_DeleteUbigeo
+Descripcion: Eliminar ubigeo
+Parametros: cod_departamento, cod_provincia_cod_distrito
+Ejecucion: SELECT fn_DeleteUbigeo() "RESPUESTA"
+DROP: DROP FUNCTION IF EXISTS fn_DeleteUbigeo(int)
+*/
+CREATE OR REPLACE FUNCTION fn_DeleteUbigeo(char(2),char(2),char(2))
+RETURNS varchar(100) AS $$
+DECLARE _respuesta varchar(100);
+BEGIN
+IF((select count(*) from ubigeo where cod_departamento = $1 and cod_provincia=$2 and cod_distrito=$3) = 1) THEN
+  delete from ubigeo
+	where ubigeo.cod_departamento = $1 and ubigeo.cod_provincia = $2 and ubigeo.cod_distrito = $3;
+	_respuesta='Se elimino correctamente';
+ELSE
+  _respuesta='No existe el ubigeo';
+END IF;
+
+ RETURN _respuesta;
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
+
+
+/*
+FUNCTION fn_DeleteSucursal
+Descripcion: Eliminar sucursal
+Parametros: cod_sucursal
+Ejecucion: SELECT fn_DeleteSucursal() "RESPUESTA"
+DROP: DROP FUNCTION IF EXISTS fn_DeleteSucursal(varchar(30))
+*/
+CREATE OR REPLACE FUNCTION fn_DeleteSucursal(varchar(30))
+RETURNS varchar(100) AS $$
+DECLARE _respuesta varchar(100);
+BEGIN
+IF((select count(*) from sucursal where cod_sucursal = $1) = 1) THEN
+  delete from sucursal
+	where sucursal.cod_sucursal = $1;
+	_respuesta='Se elimino correctamente';
+ELSE
+  _respuesta='No existe la sucursal';
+END IF;
+
+ RETURN _respuesta;
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
+
+
+/*
+FUNCTION fn_DeletePuntoVenta
+Descripcion: Eliminar punto de venta
+Parametros: cod_punto_venta
+Ejecucion: SELECT fn_DeletePuntoVenta() "RESPUESTA"
+DROP: DROP FUNCTION IF EXISTS fn_DeletePuntoVenta(varchar(30))
+*/
+CREATE OR REPLACE FUNCTION fn_DeletePuntoVenta(varchar(30))
+RETURNS varchar(100) AS $$
+DECLARE _respuesta varchar(100);
+BEGIN
+IF((select count(*) from punto_venta where cod_punto_venta = $1) = 1) THEN
+  delete from punto_venta
+	where punto_venta.cod_punto_venta = $1;
+	_respuesta='Se elimino correctamente';
+ELSE
+  _respuesta='No existe el punto de venta';
+END IF;
+
+ RETURN _respuesta;
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
+
+
+/*
+FUNCTION fn_DeletePersona
+Descripcion: Eliminar persona
+Parametros: cod_persona
+Ejecucion: SELECT fn_DeletePersona() "RESPUESTA"
+DROP: DROP FUNCTION IF EXISTS fn_DeletePersona(varchar(12))
+*/
+CREATE OR REPLACE FUNCTION fn_DeletePersona(varchar(12))
+RETURNS varchar(100) AS $$
+DECLARE _respuesta varchar(100);
+BEGIN
+IF((select count(*) from persona where cod_persona = $1) = 1) THEN
+  delete from persona
+	where persona.cod_persona = $1;
+	_respuesta='Se elimino correctamente';
+ELSE
+  _respuesta='No existe el persona';
+END IF;
+
+ RETURN _respuesta;
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
+
+
+/*
+FUNCTION fn_DeleteAlmacen
+Descripcion: Eliminar almacen
+Parametros: almacen_id
+Ejecucion: SELECT fn_DeleteAlmacen(11) "RESPUESTA"
+DROP: DROP FUNCTION IF EXISTS fn_DeleteAlmacen(int)
+*/
+CREATE OR REPLACE FUNCTION fn_DeleteAlmacen(int)
+RETURNS varchar(100) AS $$
+DECLARE _respuesta varchar(100);
+BEGIN
+IF((select count(*) from almacen where almacen_id = $1) = 1) THEN
+  delete from almacen
+	where almacen.almacen_id = $1;
+	_respuesta='Se elimino correctamente';
+ELSE
+  _respuesta='No existe el almacen';
+END IF;
+
+ RETURN _respuesta;
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+/*
+FUNCTION fn_DeleteDocumento
+Descripcion: Eliminar documento
+Parametros: cod_documento
+Ejecucion: SELECT fn_DeleteDocumento() "RESPUESTA"
+DROP: DROP FUNCTION IF EXISTS fn_DeleteDocumento(varchar(5))
+*/
+CREATE OR REPLACE FUNCTION fn_DeleteDocumento(varchar(5))
+RETURNS varchar(100) AS $$
+DECLARE _respuesta varchar(100);
+BEGIN
+IF((select count(*) from documento where cod_documento = $1) = 1) THEN
+  delete from documento
+	where documento.cod_documento = $1;
+	_respuesta='Se elimino correctamente';
+ELSE
+  _respuesta='No existe el documento';
+END IF;
+
+ RETURN _respuesta;
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
+
+
+/*
+FUNCTION fn_DeleteDocumentoSerie
+Descripcion: Eliminar documento serie
+Parametros: cod_documento, nro_serie, nro_inicio
+Ejecucion: SELECT fn_DeleteDocumentoSerie() "RESPUESTA"
+DROP: DROP FUNCTION IF EXISTS fn_DeleteDocumentoSerie(varchar(5),int,int)
+*/
+CREATE OR REPLACE FUNCTION fn_DeleteDocumentoSerie(varchar(5),int,int)
+RETURNS varchar(100) AS $$
+DECLARE _respuesta varchar(100);
+BEGIN
+IF((select count(*) from documento_serie where cod_documento = $1 and nro_serie = $2 and nro_inicio = $3) = 1) THEN
+  delete from documento_serie
+	where documento_serie.cod_documento = $1 and nro_serie = $2 and nro_inicio = $3;
+	_respuesta='Se elimino correctamente';
+ELSE
+  _respuesta='No existe la serie del documento';
+END IF;
+
+ RETURN _respuesta;
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+ /*
+FUNCTION fn_GetSeries
+Descripcion: Recupera todos las series de un documento
+Parametros: - tamano_pagina integer,numero_pagina integer
+Ejecucion: SELECT * FROM  fn_GetSeries(20,2,-1,'')
+*/
+ 
+CREATE OR REPLACE FUNCTION fn_GetSeries
+(
+ tamano_pagina INTEGER = NULL
+ ,numero_pagina INTEGER = NULL
+ ,serie_busqueda INTEGER = NULL
+ ,cod_documento_cod varchar(5) = ''
+)
+RETURNS TABLE 
+( 
+ cod_documento        	varchar(5),
+ nro_serie 		int,
+ nro_inicio       	int,
+ cod_sucursal    	varchar(30),
+ esta_afecto      	bit(1),
+ estado			varchar(20),
+ creado_en 		TIMESTAMP,
+ usuario_creacion 	varchar(50),
+ actualizado_en 	TIMESTAMP,
+ usuario_actualizo 	varchar(50)
+) AS
+$BODY$
+DECLARE PageNumber BIGINT;
+ 
+BEGIN
+ /* ***************************************************************
+ Construct Custom paging parameter...
+ **************************************************************** */
+ IF (tamano_pagina IS NOT NULL AND numero_pagina IS NOT NULL) THEN
+  PageNumber := (tamano_pagina * (numero_pagina-1)); 
+ END IF; 
+  
+ /* ************************************************
+ Custome paging SQL Query construction.......
+ ************************************************ */
+ IF (serie_busqueda IS NOT NULL) THEN 
+	 RETURN QUERY
+	 SELECT *
+	 FROM documento_serie d
+	 WHERE d.cod_documento = cod_documento_cod AND  d.nro_serie = serie_busqueda
+	 ORDER BY d.cod_documento
+	 LIMIT tamano_pagina
+	 OFFSET PageNumber;
+ ELSE
+	RETURN QUERY
+	 SELECT *
+	 FROM documento_serie d
+	 WHERE d.cod_documento = cod_documento_cod
+	 ORDER BY d.cod_documento
+	 LIMIT tamano_pagina
+	 OFFSET PageNumber; 
+ END IF; 
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$BODY$
+LANGUAGE 'plpgsql';
+
+/*
+FUNCTION fn_getRowsSeries
+Descripcion: Cantidad de filas que existen en la tabla
+Parametros:
+Ejecucion: SELECT fn_getRowsSeries(NULL,'d0001') AS Filas
+*/
+CREATE OR REPLACE FUNCTION fn_getRowsSeries(serie_busqueda int =NULL,cod_documento_cod varchar(5)='')
+RETURNS bigint AS $$
+DECLARE _respuesta bigint;
+BEGIN
+ RETURN (select count(*) from documento_serie u WHERE u.cod_documento=cod_documento_cod);
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
+ 
+
+
+/*
+FUNCTION fn_SaveSerie
+Descripcion: Guarda o actualiza una serie
+Parametros: necesarios para una serie
+Ejecucion: SELECT * FROM  fn_SaveSerie('D0001',1,1,'IIIII','0','ACTIVO','ADMIN')
+*/
+CREATE OR REPLACE FUNCTION fn_SaveSerie
+(
+ _cod_documento        	varchar(5),
+ _nro_serie 		int,
+ _nro_inicio       	int,
+ _cod_sucursal    	varchar(30),
+ _esta_afecto      	bit(1),
+ _estado 		varchar(20),
+ _usuario 		varchar(50)
+)
+RETURNS TABLE 
+( 
+ cod_documento        	varchar(5),
+ nro_serie 		int,
+ nro_inicio       	int,
+ cod_sucursal    	varchar(30),
+ esta_afecto      	bit(1),
+ estado 		varchar(20),
+ creado_en 		TIMESTAMP,
+ usuario_creacion 	varchar(50),
+ actualizado_en 	TIMESTAMP,
+ usuario_actualizo 	varchar(50)
+) AS
+$BODY$
+BEGIN
+IF( not exists (select 1 from documento_serie d where d.cod_documento= _cod_documento and d.nro_serie=_nro_serie and d.nro_inicio=_nro_inicio and d.cod_sucursal=_cod_sucursal))THEN
+INSERT INTO documento_serie(
+	cod_documento,
+	nro_serie,
+	nro_inicio,
+	cod_sucursal,
+	esta_afecto,
+	estado,
+	creado_en,
+	usuario_creacion) 
+	
+VALUES(
+	_cod_documento,
+	_nro_serie,
+	_nro_inicio,
+	_cod_sucursal,
+	_esta_afecto,
+	_estado,
+	now(),
+	_usuario);
+
+ELSE
+UPDATE documento_serie SET
+ cod_documento=_cod_documento,
+ nro_serie=_nro_serie,
+ nro_inicio=_nro_inicio,
+ cod_sucursal=_cod_sucursal,
+ esta_afecto=_esta_afecto,
+ estado=_estado,
+ actualizado_en = now(),
+ usuario_actualizo = _usuario
+
+WHERE documento_serie.cod_documento= _cod_documento;
+END IF;
+
+ RETURN QUERY
+ SELECT *
+ FROM documento_serie d
+ WHERE d.cod_documento = _cod_documento
+ ORDER BY d.cod_documento;
+ 
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$BODY$
+LANGUAGE 'plpgsql';
+
+
+
+
+/*
+FUNCTION fn_SaveSerie
+Descripcion: Guarda o actualiza una serie
+Parametros: necesarios para una serie
+Ejecucion: SELECT * FROM  fn_SaveSerie('D0001',1,1,'IIIII','0','ACTIVO','ADMIN')
+*/
+CREATE OR REPLACE FUNCTION fn_SaveSerie
+(
+ _cod_documento        	varchar(5),
+ _nro_serie 		int,
+ _nro_inicio       	int,
+ _cod_sucursal    	varchar(30),
+ _esta_afecto      	bit(1),
+ _estado 		varchar(20),
+ _usuario 		varchar(50)
+)
+RETURNS TABLE 
+( 
+ cod_documento        	varchar(5),
+ nro_serie 		int,
+ nro_inicio       	int,
+ cod_sucursal    	varchar(30),
+ esta_afecto      	bit(1),
+ estado 		varchar(20),
+ creado_en 		TIMESTAMP,
+ usuario_creacion 	varchar(50),
+ actualizado_en 	TIMESTAMP,
+ usuario_actualizo 	varchar(50)
+) AS
+$BODY$
+BEGIN
+IF( not exists (select 1 from documento_serie d where d.cod_documento= _cod_documento and d.nro_serie=_nro_serie and d.nro_inicio=_nro_inicio and d.cod_sucursal=_cod_sucursal))THEN
+INSERT INTO documento_serie(
+	cod_documento,
+	nro_serie,
+	nro_inicio,
+	cod_sucursal,
+	esta_afecto,
+	estado,
+	creado_en,
+	usuario_creacion) 
+	
+VALUES(
+	_cod_documento,
+	_nro_serie,
+	_nro_inicio,
+	_cod_sucursal,
+	_esta_afecto,
+	_estado,
+	now(),
+	_usuario);
+
+ELSE
+UPDATE documento_serie SET
+ cod_documento=_cod_documento,
+ nro_serie=_nro_serie,
+ nro_inicio=_nro_inicio,
+ cod_sucursal=_cod_sucursal,
+ esta_afecto=_esta_afecto,
+ estado=_estado,
+ actualizado_en = now(),
+ usuario_actualizo = _usuario
+
+WHERE documento_serie.cod_documento= _cod_documento;
+END IF;
+
+ RETURN QUERY
+ SELECT *
+ FROM documento_serie d
+ WHERE d.cod_documento = _cod_documento
+ ORDER BY d.cod_documento;
+ 
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$BODY$
+LANGUAGE 'plpgsql';
+
+/*
+FUNCTION fn_DeleteSerie
+Descripcion: Eliminar serie
+Ejecucion: SELECT fn_DeleteSerie() "RESPUESTA"
+DROP: DROP FUNCTION IF EXISTS fn_DeleteSerie('D0001',1,1,'IIIII')
+*/
+CREATE OR REPLACE FUNCTION fn_DeleteSerie(varchar(5),int,int,varchar(30))
+RETURNS varchar(100) AS $$
+DECLARE _respuesta varchar(100);
+BEGIN
+IF((select count(*) from documento_serie where cod_documento = $1 and nro_serie=$2 and nro_inicio=$3 and cod_sucursal=$4) = 1) THEN
+  delete from documento_serie
+	where cod_documento = $1 and nro_serie=$2 and nro_inicio=$3 and cod_sucursal=$4;
+	_respuesta='Se elimino correctamente';
+ELSE
+  _respuesta='No existe la serie';
+END IF;
+
+ RETURN _respuesta;
  EXCEPTION WHEN OTHERS THEN 
  RAISE;
 END;

@@ -1,7 +1,7 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
 import {nuevo} from './nuevo'
-function Ver(sucursales) {
+function Ver(sucursales,paginas,pagina_actual) {
     var el = yo`
         <div class="card horizontal">
             <div class="card-stacked">
@@ -9,79 +9,14 @@ function Ver(sucursales) {
                     <span class="card-title">Lista de Sucursales</span>
                     <div class="row">
                         <div class="input-field col s12">
-                          <input id="sucursal_busqueda" type="text" class="validate">
-                          <label for="sucursal_busqueda">Ingrese el nombre de sucursal</label>
+                            <i class="material-icons prefix">search</i>
+                            <input id="sucursal_busqueda" onkeyup="${()=>Buscar(1)}" type="text" class="validate">
+                            <label for="sucursal_busqueda" >Ingrese el nombre de la sucursal para buscar</label>
                         </div>
                     </div>
-                    <div class="row">
-                        <table class="striped">
-                            <thead>
-                                <tr>
-                                    <th>Opc.</th>
-                                    <th>Nombre</th>
-                                    <th>Dirección</th>
-                                    <th>Telefono</th>
-                                    <th>Correo</th>
-                                    <th>Fax</th>
-                                    <th>Tipo de sistema</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${sucursales.map(s=> yo`
-                                <tr>
-                                    <td>
-                                        <a onclick=${()=>nuevo(s)} class="dropdown-button btn teal accent-3 btn-floating btn-small">
-                                        <i class="material-icons">edit</i>
-                                        </a>
-                                        <a class="dropdown-button btn red accent-3 btn-floating btn-small">
-                                        <i class="material-icons">delete</i>
-                                        </a>
-                                    </td>
-                                    <td>${s.nombre}</td>
-                                    <td>${s.direccion}</td>
-                                    <td>${s.telefono}</td>
-                                    <td>${s.correo}</td>
-                                    <td>${s.fax}</td>
-                                    <td>${s.tipo_sistema}</td>
-                                    <td>${s.estado}</td>
-                                </tr>
-                                `)}
-                            </tbody>
-                        </table>
+                    <div id="div_tabla">                            
+                        ${VerTabla(sucursales,paginas,pagina_actual)}
                     </div>
-                    <div class="row">
-                        <ul class="pagination">
-                            <li class="disabled">
-                                <a href="#!">
-                                    <i class="material-icons">chevron_left</i>
-                                </a>
-                            </li>
-                            <li class="active">
-                                <a href="#!">1</a>
-                            </li>
-                            <li class="waves-effect">
-                                <a href="#!">2</a>
-                            </li>
-                            <li class="waves-effect">
-                                <a href="#!">3</a>
-                            </li>
-                            <li class="waves-effect">
-                                <a href="#!">4</a>
-                            </li>
-                            <li class="waves-effect">
-                                <a href="#!">5</a>
-                            </li>
-                            <li class="waves-effect">
-                                <a href="#!">
-                                    <i class="material-icons">chevron_right</i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="card-action">
-                    <a href="#">Guardar</a>
                 </div>
             </div>
         </div>`;
@@ -95,9 +30,82 @@ function Ver(sucursales) {
         `;
     var container = document.getElementById('sub_navegador_content')
     empty(container).appendChild(sub_nav)
+    $(".dropdown-button").dropdown();
 }
-function sucursales() {
-    ShowLoader()
+
+function Buscar(pagina_actual){
+    // ShowLoader()
+    const tamano_pagina = 5
+    const sucursal_busqueda = document.getElementById('sucursal_busqueda').value.toUpperCase()
+    fetchSucursales(tamano_pagina,pagina_actual,sucursal_busqueda,function(res){
+        if (res.err) {
+            console.log(res.err)
+        } else {
+            var paginas = parseInt(res.num_filas)
+            paginas = parseInt(paginas / tamano_pagina) + (paginas % tamano_pagina != 0 ? 1 : 0)
+
+            var tabla_content = document.getElementById('div_tabla')
+            empty(tabla_content).appendChild(VerTabla(res.sucursales,paginas,pagina_actual)) 
+        }
+    })
+}
+
+function VerTabla(sucursales,paginas,pagina_actual){
+    return yo`
+    <div>
+        <table class="striped">
+            <thead>
+                <tr>
+                    <th>Opc.</th>
+                    <th>Nombre</th>
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
+                    <th>Latitud</th>
+                    <th>Longitud</th>
+                    <th>Departamento</th>
+                    <th>Provincia</th>
+                    <th>Distrito</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${sucursales.map(s=> yo`
+                <tr>
+                    <td>
+                        <a onclick=${()=>nuevo(s)} class="dropdown-button btn teal accent-3 btn-floating">
+                        <i class="material-icons">edit</i>
+                        </a>
+                    </td>
+                    <td>${s.nombre}</td>
+                    <td>${s.direccion}</td>
+                    <td>${s.telefono}</td>
+                    <td>${s.latitud}</td>
+                    <td>${s.longitud}</td>
+                    <td>${s.n_departamento}</td>
+                    <td>${s.n_provincia}</td>
+                    <td>${s.n_distrito}</td>
+                </tr>
+                `)}
+            </tbody>
+        </table>
+        <ul class="pagination">
+            <li class="${(pagina_actual>1)?'waves-effect':'disabled'}">
+                <a href="#!" onclick="${()=>(pagina_actual>1)?Buscar(pagina_actual-1):null}">
+                    <i class="material-icons">chevron_left</i>
+                </a>
+            </li>
+            ${((new Array(paginas)).fill(0)).map((p, i) => yo`<li class=${pagina_actual==(i+1)?'active indigo lighten-2':' waves-effect'}>
+            <a href="#!" onclick="${()=>Buscar(i+1)}" >${i + 1}</a>
+            </li>`)}
+            <li class="${(pagina_actual<paginas)?'waves-effect':'disabled'}">
+                <a href="#!" onclick="${()=>(pagina_actual<paginas)?Buscar(pagina_actual+1):null}">
+                    <i class="material-icons">chevron_right</i>
+                </a>
+            </li>
+        </ul>
+    </div>`;
+}
+
+function fetchSucursales(tamano_pagina,_numero_pagina,sucursal_busqueda,callback){
     const parametros = {
         method: 'POST',
         headers: {
@@ -105,23 +113,33 @@ function sucursales() {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            tamano_pagina:10,
-            numero_pagina:1,
-            sucursal_busqueda: ''
+            numero_pagina:_numero_pagina||1,
+            tamano_pagina,
+            sucursal_busqueda
         })
     }
     fetch('http://localhost:5000/sucursales_api/get_sucursales', parametros)
         .then(req => req.json())
         .then(res => {
-            console.log(res)
-            if (res.err) {
-                console.log(res.err)
-            } else {
-                Ver(res.sucursales)
-            }
-            HideLoader()
+            callback(res)
         })
-    //Ver()
+}
+
+
+function sucursales(_numero_pagina) {
+    ShowLoader()
+    const tamano_pagina = 5
+    fetchSucursales(tamano_pagina,_numero_pagina,'',function(res){
+        if (res.err) {
+            console.log(res.err)
+        } else {
+            var paginas = parseInt(res.num_filas)
+            paginas = parseInt(paginas / tamano_pagina) + (paginas % tamano_pagina != 0 ? 1 : 0)
+
+            Ver(res.sucursales,paginas,_numero_pagina||1)
+        }
+        HideLoader()
+    })
 }
 
 export { sucursales }
