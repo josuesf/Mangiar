@@ -96,6 +96,7 @@ CREATE TABLE eproductos.combinacion
  PRIMARY KEY (combinacion_id)
 );
 CREATE TABLE eproductos.combinacion_detalle( --Josue
+ detalle_id serial not null,
  combinacion_id int not null,
  producto_id int NULL,
  nombre_producto varchar(200),
@@ -106,7 +107,7 @@ CREATE TABLE eproductos.combinacion_detalle( --Josue
  usuario_creacion varchar(50),
  actualizado_en TIMESTAMP,
  usuario_actualizo varchar(50),
- PRIMARY KEY (producto_id,combinacion_id),
+ PRIMARY KEY (detalle_id,combinacion_id),
  FOREIGN KEY(combinacion_id) REFERENCES eproductos.combinacion(combinacion_id)
 	ON UPDATE NO ACTION ON DELETE NO ACTION
 );
