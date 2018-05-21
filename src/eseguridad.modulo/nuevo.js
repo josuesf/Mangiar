@@ -83,11 +83,11 @@ function Ver(modulo) {
                         </div>
                         <div class="row">
                             <div class="col s6">
-                                <a onclick=${() => Guardar(modulo)} class="waves-effect waves-light btn">Guardar Usuario</a>
+                                <a onclick=${() => Guardar(modulo)} class="waves-effect waves-light btn">Guardar Modulo</a>
                             </div>
                             ${modulo?yo`
                             <div class="col s6">
-                                <a onclick=${() => Eliminar(modulo)} class="waves-effect waves-light btn red lighten-3">Eliminar Usuario</a>
+                                <a onclick=${() => Eliminar(modulo)} class="waves-effect waves-light btn red lighten-3">Eliminar Modulo</a>
                             </div>
                             `:yo``}
                         </div>
@@ -101,8 +101,8 @@ function Ver(modulo) {
     empty(container).appendChild(el);
     var sub_nav = yo`
     <div class="collection">
-        <a href="#!" onclick="${()=>modulos()}" class="collection-item">Todos los usuarios</a>
-        <a href="#!" class="collection-item active">Nuevo Usuario</a>
+        <a href="#!" onclick="${()=>modulos()}" class="collection-item">Todos los modulos</a>
+        <a href="#!" class="collection-item active">Nuevo Modulo</a>
     </div>
         `;
     var container = document.getElementById('sub_navegador_content')
