@@ -19,16 +19,16 @@ function Ver(ubigeo) {
                          
                         <div class="row">
                             <div class="input-field col s4">
-                                <input value="${ubigeo ? ubigeo.cod_departamento : ''}" id="cod_departamento" type="text" data-length="2">
-                                <label for="cod_departamento">Codigo Departamento</label>
+                                <input value="${ubigeo ? ubigeo.cod_departamento : ''}" id="cod_departamento" type="text" class="validate" data-length="2">
+                                <label for="cod_departamento" id="lcod_departamento" class="active" data-error="Código mayor al permitido" data-success="">Codigo Departamento</label>
                             </div>
                             <div class="input-field col s4">
-                                <input value="${ubigeo ? ubigeo.cod_provincia : ''}" id="cod_provincia" type="text" data-length="2">
-                                <label for="cod_provincia">Codigo Provincia</label>
+                                <input value="${ubigeo ? ubigeo.cod_provincia : ''}" id="cod_provincia" type="text" data-length="2" class="validate">
+                                <label for="cod_provincia" id="lcod_provincia" class="active" data-error="Código mayor al permitido" data-success="">Codigo Provincia</label>
                             </div>
                             <div class="input-field col s4">
-                                <input value="${ubigeo ? ubigeo.cod_distrito : ''}" id="cod_distrito" type="text" data-length="2">
-                                <label for="cod_distrito">Codigo Distrito</label>
+                                <input value="${ubigeo ? ubigeo.cod_distrito : ''}" id="cod_distrito" type="text" data-length="2" class="validate">
+                                <label for="cod_distrito" id="lcod_distrito" class="active" data-error="Código mayor al permitido" data-success="">Codigo Distrito</label>
                             </div>
                         </div>
                         <div class="row">
@@ -45,12 +45,18 @@ function Ver(ubigeo) {
                                 <label for="distrito" class="active">Distrito</label>
                             </div>
                         </div>
-                          
+
                         <div class="row">
                             <div class="col s6">
                                 <a onclick=${() => Guardar(ubigeo)} class="waves-effect waves-light btn">Guardar Ubigeo</a>
                             </div>
+                            ${ubigeo?yo`
+                            <div class="col s6">
+                                <a onclick=${() => Eliminar(ubigeo)} class="waves-effect waves-light btn red lighten-3">Eliminar Ubigeo</a>
+                            </div>
+                            `:yo``}
                         </div>
+                          
                     </form>
                 </div>
             </div>
@@ -60,7 +66,7 @@ function Ver(ubigeo) {
     empty(container).appendChild(el);
     var sub_nav = yo`
     <div class="collection">
-        <a onclick="${ubigeos}" class="collection-item">Todos los Ubigeos</a>
+        <a href="#!" onclick="${ubigeos}" class="collection-item">Todos los Ubigeos</a>
         <a href="#!" class="collection-item active">Nuevo Ubigeo</a>
     </div>
         `;
@@ -68,6 +74,13 @@ function Ver(ubigeo) {
     empty(container).appendChild(sub_nav)
 }
 function Guardar(u) {
+    var props = {
+        'cod_departamento':{maxLen:2},
+        'cod_distrito':{maxLen:2},
+        'cod_provincia':{maxLen:2}
+    }
+    if(!Validar(props))
+        return;
     ShowLoader()
     const cod_departamento = u?u.cod_departamento:$('#cod_departamento').val()
     const cod_provincia = u?u.cod_provincia:$('#cod_provincia').val()
@@ -105,6 +118,44 @@ function Guardar(u) {
             HideLoader()
         })
 }
+
+
+function Eliminar(ubigeo) {
+    var txt;
+    var r = confirm("Esta seguro de eliminar?");
+    if (r == true) {
+        ShowLoader()
+        const cod_departamento = ubigeo.cod_departamento
+        const cod_provincia = ubigeo.cod_provincia
+        const cod_distrito = ubigeo.cod_distrito
+        const parametros = {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                cod_departamento,
+                cod_provincia,
+                cod_distrito
+            })
+        }
+        fetch('http://localhost:5000/ubigeos_api/delete_ubigeo', parametros)
+            .then(req => req.json())
+            .then(res => {
+                if (res.err) {
+                    $('#text_error').text(res.err)
+                    $('#box_error').show()
+                } else {
+                    if (res.respuesta[0].fn_deleteubigeo == 'Se elimino correctamente') {
+                       ubigeos()
+                    }
+                }   
+                HideLoader()
+            })
+    }
+}
+
 function nuevo(ubigeo) {
     ShowLoader()
     Ver(ubigeo)
