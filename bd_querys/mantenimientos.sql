@@ -1,8 +1,12 @@
-/*
+﻿/*
 FUNCTION fn_GetSucursales
 Descripcion: Recupera todas las sucursales
 Parametros: - tamano_pagina integer,numero_pagina integer
 Ejecucion: SELECT * FROM  fn_GetSucursales(20,1,'')
+DROP: DROP FUNCTION fn_GetSucursales
+(
+ tamano_pagina INTEGER,numero_pagina INTEGER,sucursal_busqueda varchar(50)
+)
 */
 
  

@@ -1,4 +1,4 @@
-/*
+﻿/*
 FUNCION
 Nombre: fn_GetRowsModulo
 Descripcion: Recupera cuantos modulos
@@ -82,6 +82,15 @@ Descripcion: Guarda o actualiza un modulo
 Parametros: tamano_pagina INTEGER, numero_pagina INTEGER,
             modulo_busqueda VARCHAR(50)
 Ejecucion: SELECT * FROM eseguridad.fn_GerModulos(20,1,'')
+Drop FUNCTION eseguridad.fn_SaveModulo(cod_modulo VARCHAR(30),
+ _nombre VARCHAR(50),
+ _descripcion VARCHAR(50),
+ _nivel smallint,
+ _ruta_modulo VARCHAR(110),
+ _tipo_modulo VARCHAR (20),
+ _imagen_url VARCHAR(110),
+ _estado VARCHAR(20),
+ _usuario_registro VARCHAR(50))
 */
 CREATE OR REPLACE FUNCTION eseguridad.fn_SaveModulo
 (
