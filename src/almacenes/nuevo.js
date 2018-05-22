@@ -30,12 +30,12 @@ function Ver(almacen) {
                             </div>
                         </div>
                          <div class="row">
-                            <div class="input-field col s6">
-                             <input id="almacen_cod" value="${almacen ? almacen.almacen_cod:''}" type="text" class="validate" data-length="50">
+                            <div class="input-field col s6  ${almacen ? 'hidden':''}">
+                             <input style="text-transform: uppercase;" id="almacen_cod" value="${almacen ? almacen.almacen_cod:''}" type="text" class="validate" data-length="50">
                              <label for="almacen_cod" id="lalmacen_cod" class="active" data-error="Código mayor al permitido" data-success="">Codigo Almacén</label>
                             </div>
                             <div class="input-field col s6">
-                                <input value="${almacen ? almacen.descripcion : ''}" id="descripcion" type="text" data-length="200">
+                                <input style="text-transform: uppercase;" value="${almacen ? almacen.descripcion : ''}" id="descripcion" type="text" data-length="200">
                                 <label for="descripcion" id="ldescripcion" class="active" data-error="Descripción mayor al permitido" data-success="">Descripción</label>
                             </div>
                             
@@ -44,8 +44,11 @@ function Ver(almacen) {
                         <div class="row">
                             
                             <div class="input-field col s6">
-                                <input value="${almacen ? almacen.tipo : ''}" id="tipo" type="text" class="validate" data-length="100">
-                                <label for="tipo" class="active">Tipo</label>
+                                <select id="tipo">
+                                    <option value="PRINCIPAL" ${almacen ? almacen.tipo=="PRINCIPAL" ? 'selected': '' : ''}>PRINCIPAL</option>
+                                    <option value="SECUNDARIO" ${almacen ? almacen.tipo=="SECUNDARIO" ? 'selected': '' : ''}>SECUNDARIO</option>
+                                </select>
+                                <label>Tipo</label>
                             </div>
                              
                         </div>
@@ -87,8 +90,8 @@ function Guardar(a) {
 
     ShowLoader()
     const almacen_id = a?a.almacen_id:-1
-    const almacen_cod = $('#almacen_cod').val()
-    const descripcion = $('#descripcion').val()
+    const almacen_cod = $('#almacen_cod').val().toUpperCase()
+    const descripcion = $('#descripcion').val().toUpperCase()
     const tipo = $('#tipo').val()
     const estado = $("#estado").is(':checked')? 'ACTIVO' : 'INACTIVO'
     const parametros = {

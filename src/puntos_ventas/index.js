@@ -58,8 +58,7 @@ function VerTabla(puntos_ventas,paginas,pagina_actual){
                     <th>Opc.</th>
                     <th>Nombre</th>
                     <th>Sucursal</th>
-                    <th>Estado Acción</th>
-                    <th>Usuario Acción</th>
+                    <th>Estado</th>
                 </tr>
             </thead>
             <tbody>
@@ -72,8 +71,9 @@ function VerTabla(puntos_ventas,paginas,pagina_actual){
                     </td>
                     <td>${p.nombre_punto}</td>
                     <td>${p.cod_sucursal}</td>
-                    <td>${p.estado_accion}</td>
-                    <td>${p.usuario_accion}</td>
+                    <td>
+                        <span class="new badge ${p.estado=="ACTIVO"? 'blue':'red'}" data-badge-caption="${p.estado}"></span>
+                    </td>
                 </tr>
                 `)}
             </tbody>

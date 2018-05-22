@@ -30,13 +30,13 @@ function Ver(punto_venta,sucursales) {
                             </div>
                         </div>
                          <div class="row">
-                            ${punto_venta ? yo`` : yo`<div class="input-field col s6">
-                                                    <input id="cod_punto_venta" type="text" class="validate">
-                                                    <label class="active">Código Punto Venta</label>
-                                                   </div>` }
+                            <div class="input-field col s6 ${punto_venta ? 'hidden':''}">
+                                <input style="text-transform: uppercase;" value="${punto_venta ? punto_venta.cod_punto_venta:''}" id="cod_punto_venta" type="text" class="validate">
+                                <label class="active" id="lcod_punto_venta">Código Punto Venta</label>
+                            </div>
                             <div class="input-field col s6">
-                                <input value="${punto_venta ? punto_venta.nombre_punto : ''}" id="nombre_punto" type="text">
-                                <label for="nombre_punto" class="active">Nombre Punto Venta</label>
+                                <input style="text-transform: uppercase;" value="${punto_venta ? punto_venta.nombre_punto : ''}" id="nombre_punto" type="text">
+                                <label for="nombre_punto" id="lnombre_punto" class="active">Nombre Punto Venta</label>
                             </div>
                             
                         </div>
@@ -51,15 +51,12 @@ function Ver(punto_venta,sucursales) {
                                 <label>Código Sucursal</label>
                             </div>
                              <div class="input-field col s6">
-                                <input value="${punto_venta ? punto_venta.estado_accion : ''}" id="estado_accion" type="text">
-                                <label for="estado_accion" class="active">Estado de la acción</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            
-                            <div class="input-field col s6">
-                                <input value="${punto_venta ? punto_venta.usuario_accion : ''}" id="usuario_accion" type="text" class="validate">
-                                <label for="usuario_accion" class="active">Usuario de la acción</label>
+                                <select id="estado_accion">
+                                    <option value="LIBRE" ${punto_venta ? punto_venta.estado_accion=="LIBRE" ? 'selected': '' : ''}>LIBRE</option>
+                                    <option value="OCUPADO" ${punto_venta ? punto_venta.estado_accion=="OCUPADO" ? 'selected': '' : ''}>OCUPADO</option>
+                                    <option value="PENDIENTE" ${punto_venta ? punto_venta.estado_accion=="PENDIENTE" ? 'selected': '' : ''}>PENDIENTE</option>
+                                </select>
+                                <label>Estado de la acción</label>
                             </div>
                         </div>
                           
@@ -91,12 +88,20 @@ function Ver(punto_venta,sucursales) {
     $('select').material_select();
 }
 function Guardar(p) {
+
+    var props = {
+        'cod_punto_venta':{},
+        'nombre_punto':{}
+    }
+    if(!Validar(props))
+        return;
+
     ShowLoader()
-    const cod_punto_venta = p?p.cod_punto_venta:$('#cod_punto_venta').val()
-    const nombre_punto = $('#nombre_punto').val()
+    const cod_punto_venta = p?p.cod_punto_venta:$('#cod_punto_venta').val().toUpperCase()
+    const nombre_punto = $('#nombre_punto').val().toUpperCase()
     const cod_sucursal = $('#cod_sucursal').val()
     const estado_accion = $('#estado_accion').val()
-    const usuario_accion = $('#usuario_accion').val()
+    const usuario_accion = null
     const estado = $("#estado").is(':checked')? 'ACTIVO' : 'INACTIVO'
     const parametros = {
         method: 'POST',

@@ -30,20 +30,20 @@ function Ver(sucursal,ubigeos) {
                             </div>
                         </div>
                         <div class="row">
-                            ${sucursal ? yo`` : yo`<div class="input-field col s6">
-                                                    <input id="cod_sucursal" type="text" class="validate" data-length="30">
-                                                    <label class="active" for="cod_sucursal" id="lcod_sucursal" class="active" data-error="Código mayor al permitido" data-success="">Codigo Sucursal</label>
-                                                   </div>` }
+                            <div class="input-field col s6 ${sucursal ? 'hidden' : ''}">
+                                <input style="text-transform: uppercase;" id="cod_sucursal" type="text" class="validate" data-length="30">
+                                <label class="active" for="cod_sucursal" id="lcod_sucursal" data-error="Código mayor al permitido" data-success="">Codigo Sucursal</label>
+                            </div>
                             <div class="input-field col s6">
-                                <input value="${sucursal ? sucursal.nombre : ''}" id="nombre" type="text" class="validate" data-length="100">
-                                <label class="active" for="nombre" id="lnombre" class="active" data-error="nombre mayor al tamaño permitido" data-success="">Nombre</label>
+                                <input style="text-transform: uppercase;" value="${sucursal ? sucursal.nombre : ''}" id="nombre" type="text" class="validate" data-length="100">
+                                <label class="active" for="nombre" id="lnombre" data-error="Es necesario llenar este campo" data-success="">Nombre</label>
                             </div>
                             
                         </div>
                         <div class="row">
                             <div class="input-field col s6">
                                 <input value="${sucursal ? sucursal.direccion : ''}" id="direccion" type="text" data-length="120">
-                                <label class="active">Dirección</label>
+                                <label class="active" for="direccion" id="ldireccion" data-error="Es necesario llenar este campo" data-success="">Dirección</label>
                             </div>
                             <div class="input-field col s6">
                                 <input value="${sucursal ? sucursal.telefono : ''}" id="telefono" type="text" class="validate" data-length="12">
@@ -63,51 +63,53 @@ function Ver(sucursal,ubigeos) {
                         <div class="row">
                             <div class="input-field col s6">
                                 <select id="tipo_sistema">
-                                    <option value=null disabled selected></option>
+                                    <option value="escritorio">Escritorio</option>
                                 </select>
                                 <label>Tipo de Sistema</label>
                             </div>
                             <div class="input-field col s6">
-                                <input value="${sucursal ? sucursal.latitud : ''}" id="latitud" type="text" class="validate">
+                                <input value="${sucursal ? sucursal.latitud : '0'}" id="latitud" type="text" class="validate">
                                 <label for="latitud" class="active">Latitud</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-field col s6">
-                                <input value="${sucursal ? sucursal.longitud : ''}" id="longitud" type="text" class="validate">
+                                <input value="${sucursal ? sucursal.longitud : '0'}" id="longitud" type="text" class="validate">
                                 <label for="longitud" class="active">Longitud</label>
                             </div>
                             <div class="input-field col s6">
                                 <select id="departamento" onchange="${()=>CambioDepartamento(sucursal,ubigeos)}">
-                                    ${sucursal ? yo``:yo`<option value="-1">Seleccione un departamento</div>`}
+                                    ${sucursal ? yo``:yo`<option value="">Seleccione un departamento</div>`}
                                     ${ubigeos.map(u=>
                                         yo`<option value="${u.cod_departamento}" ${sucursal ? sucursal.departamento == u.cod_departamento ? 'selected' : '' : ''}>${u.departamento}</option>`
                                     )}
                                 </select>
-                                <label>Departamento</label>
+                                <label id="ldepartamento">Departamento</label>
                             </div>
                         </div>
                          <div class="row">
                             <div class="col s6" id="divProvincia">
                                 <div class="input-field col s12">
                                     <select id="provincia" onchange="${()=>CambioProvincia(sucursal,ubigeos)}">
+                                        ${sucursal ? yo``:yo`<option value="">Seleccione una provincia</div>`}
                                         ${sucursal ?
                                             ubigeos.map(u=>
                                             yo`<option value="${u.cod_provincia}" ${sucursal ? sucursal.provincia == u.cod_provincia ? 'selected' : '' : ''}>${u.provincia}</option>`
                                         ):yo``}
                                     </select>
-                                    <label>Provincia</label>
+                                    <label id="lprovincia">Provincia</label>
                                 </div>
                             </div>
                             <div class="col s6" id="divDistrito">
                                 <div class="input-field col s12">
                                     <select id="distrito">
+                                        ${sucursal ? yo``:yo`<option value="">Seleccione un distrito</div>`}
                                         ${sucursal ?
                                             ubigeos.map(u=>
                                             yo`<option value="${u.cod_distrito}" ${sucursal ? sucursal.distrito == u.cod_distrito ? 'selected' : '' : ''}>${u.distrito}</option>`
                                         ):yo``}
                                     </select>
-                                    <label>Distrito</label>
+                                    <label id="ldistrito">Distrito</label>
                                 </div>
                             </div>
                         </div>
@@ -144,8 +146,9 @@ function CambioDepartamento(sucursal,ubigeos){
     var blank = yo`
         <div class="input-field col s12">
             <select id="provincia">
+                <option value="">Seleccione una provincia</div>
             </select>
-            <label>Provincia</label>
+            <label id="lprovincia">Provincia</label>
         </div>`
 
     var opts = document.getElementById('divProvincia')
@@ -157,11 +160,12 @@ function CambioDepartamento(sucursal,ubigeos){
         var el = yo`
                 <div class="input-field col s12">
                     <select id="provincia">
+                    <option value="">Seleccione una provincia</div>
                     ${ubigeos.map(u=>
                         u.cod_departamento==cod_departamento?yo`<option value="${u.cod_provincia}">${u.provincia}</option>`:yo``
                     )}
                     </select>
-                    <label>Provincia</label>
+                    <label id="lprovincia">Provincia</label>
                 </div>`
         
         var opts = document.getElementById('divProvincia')
@@ -177,8 +181,9 @@ function CambioProvincia(sucursal,ubigeos){
     var blank = yo`
         <div class="input-field col s12">
             <select id="distrito">
+                <option value="">Seleccione un distrito</div>
             </select>
-            <label>Distrito</label>
+            <label id="ldistrito">Distrito</label>
         </div>`
 
     var opts = document.getElementById('divDistrito')
@@ -188,11 +193,12 @@ function CambioProvincia(sucursal,ubigeos){
     var el = yo`
             <div class="input-field col s12">
                 <select id="distrito">
+                <option value="">Seleccione un distrito</div>
                 ${ubigeos.map(u=>
                     u.cod_provincia==cod_provincia?yo`<option value="${u.cod_distrito}">${u.distrito}</option>`:yo``
                 )}
                 </select>
-                <label>Distrito</label>
+                <label id="ldistrito">Distrito</label>
             </div>`
     
     var opts = document.getElementById('divDistrito')
@@ -203,21 +209,26 @@ function CambioProvincia(sucursal,ubigeos){
 function Guardar(s) {
 
     var props = {
-        'nombre':{maxLen:100}
+        'cod_sucursal':{},
+        'nombre':{maxLen:100},
+        'direccion':{},
+        'departamento':{},
+        'provincia':{},
+        'distrito':{}
     }
     if(!Validar(props))
         return;
 
     ShowLoader()
-    const cod_sucursal = s?s.cod_sucursal:$('#cod_sucursal').val()
-    const nombre = $('#nombre').val()
-    const direccion = $('#direccion').val()
+    const cod_sucursal = s?s.cod_sucursal:$('#cod_sucursal').val().toUpperCase()
+    const nombre = $('#nombre').val().toUpperCase()
+    const direccion = $('#direccion').val().toUpperCase()
     const telefono = $('#telefono').val()
     const correo = $('#correo').val()
     const fax = $('#fax').val()
     const tipo_sistema = $('#tipo_sistema').val()
-    const latitud = $('#latitud').val()
-    const longitud = $('#longitud').val()
+    const latitud = $('#latitud').val().trim()==""?0:$('#latitud').val()
+    const longitud = $('#longitud').val().trim()==""?0:$('#longitud').val()
     const estado = $("#estado").is(':checked')? 'ACTIVO' : 'INACTIVO'
     const departamento = $('#departamento').val()
     const provincia = $('#provincia').val()

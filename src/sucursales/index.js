@@ -22,7 +22,7 @@ function Ver(sucursales,paginas,pagina_actual) {
         </div>`;
     var container = document.getElementById('contenido_principal')
     empty(container).appendChild(el);
-    var sub_nav = yo`
+    /*var sub_nav = yo`
     <div class="collection">
         <a href="#!" class="collection-item active">Todas las Sucursales</a>
         <a href="#!" class="collection-item" onclick="${()=>nuevo()}">Nueva Sucursal</a>
@@ -30,7 +30,7 @@ function Ver(sucursales,paginas,pagina_actual) {
         `;
     var container = document.getElementById('sub_navegador_content')
     empty(container).appendChild(sub_nav)
-    $(".dropdown-button").dropdown();
+    $(".dropdown-button").dropdown();*/
 }
 
 function Buscar(pagina_actual){
@@ -60,11 +60,7 @@ function VerTabla(sucursales,paginas,pagina_actual){
                     <th>Nombre</th>
                     <th>Dirección</th>
                     <th>Teléfono</th>
-                    <th>Latitud</th>
-                    <th>Longitud</th>
-                    <th>Departamento</th>
-                    <th>Provincia</th>
-                    <th>Distrito</th>
+                    <th>Estado</th>
                 </tr>
             </thead>
             <tbody>
@@ -78,11 +74,9 @@ function VerTabla(sucursales,paginas,pagina_actual){
                     <td>${s.nombre}</td>
                     <td>${s.direccion}</td>
                     <td>${s.telefono}</td>
-                    <td>${s.latitud}</td>
-                    <td>${s.longitud}</td>
-                    <td>${s.n_departamento}</td>
-                    <td>${s.n_provincia}</td>
-                    <td>${s.n_distrito}</td>
+                    <td>
+                        <span class="new badge ${s.estado=="ACTIVO"? 'blue':'red'}" data-badge-caption="${s.estado}"></span>
+                    </td>
                 </tr>
                 `)}
             </tbody>

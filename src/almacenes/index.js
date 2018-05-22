@@ -72,7 +72,9 @@ function VerTabla(almacenes,paginas,pagina_actual){
                     </td>
                     <td>${a.descripcion}</td>
                     <td>${a.tipo}</td>
-                    <td>${a.estado}</td>
+                    <td>
+                        <span class="new badge ${a.estado=="ACTIVO"? 'blue':'red'}" data-badge-caption="${a.estado}"></span>
+                    </td>
                 </tr>
                 `)}
             </tbody>
