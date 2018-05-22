@@ -5,7 +5,7 @@ var COMBINACIONES_PRODUCTO = []
 function Ver(combinaciones, combinaciones_producto, producto_id) {
     var el = yo`
     <div class="col s12">
-        <div id="modalCombinaciones" class="modal modal-fixed-footer">
+        <div id="modalCombinaciones" class="modal col s6 modal-fixed-footer">
             <div class="modal-content">
                 <h5>Combinaciones</h5>
                 <div class="row">

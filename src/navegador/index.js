@@ -29,9 +29,6 @@ function Ver(login) {
                                 <a onclick="${() => productos()}">Productos</a>
                             </li>
                             <li>
-                                <a onclick="${() => productos()}">Productos</a>
-                            </li>
-                            <li>
                                 <a onclick="${() => cuentas()}">Usuarios</a>
                             </li>
                             <li>
