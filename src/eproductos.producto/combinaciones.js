@@ -1,31 +1,37 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
 import { productos } from './index'
-function Ver(combinaciones) {
+var COMBINACIONES_PRODUCTO = []
+function Ver(combinaciones, combinaciones_producto, producto_id) {
     var el = yo`
     <div class="col s12">
-        <div id="modal1" class="modal">
+        <div id="modalCombinaciones" class="modal modal-fixed-footer">
             <div class="modal-content">
-                <h4>Nuevo Precio</h4>
+                <h5>Combinaciones</h5>
                 <div class="row">
-                    <div class="input-field col s4">
-                        <input value="" id="nombre_precio" type="text" class="validate">
-                        <label id="lnombre_precio" class="active" data-error="Ingrese nombre" data-success="Correcto">Nombre Precio</label>
-                    </div>
-                    <div class="input-field col s4">
-                        <select id="cod_moneda">
-                            <option value="PEN" disabled selected>SOLES</option>
-                        </select>
-                        <label>Seleccione Moneda</label>
-                    </div>
-                    <div class="input-field col s4">
-                        <input value="" id="valor_precio" type="text" class="validate">
-                        <label id="lvalor_precio" class="active" data-error="Ejem: 10.00" data-success="Correcto">Valor Precio</label>
-                    </div>
+                    <a style="font-size:8pt;" 
+                    class="waves-effect waves-light btn white teal-text text-accent-4" 
+                    onclick="${() => console.log('Nuevo')}">
+                    <i class="material-icons left teal-text text-accent-4">add_box</i> Nueva Combinacion</a>
+                    <ul class="collapsible" data-collapsible="accordion">
+                        ${combinaciones.map(c => yo`<li>
+                            <div class="collapsible-header" onclick="${() => AbrirCombinacion(c, "MOC")}">
+                                <p>
+                                <input onclick="${() => SeleccionarCombinacion(c, producto_id)}" type="checkbox" ${c.producto_id ? 'checked' : ''} class="filled-in" id="filled-in-box${c.combinacion_id}" />
+                                <label for="filled-in-box${c.combinacion_id}"></label>
+                                </p>
+
+                                <i class="material-icons">remove_red_eye</i>${c.etiqueta_titulo}
+                            </div>
+                            <div class="collapsible-body" id="MOC${c.combinacion_id}">
+                                
+                            </div>
+                        </li>`)}
+                    </ul>
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="#!" onclick="${() => AgregarPrecio()}" class="waves-effect waves-green teal accent-4 btn">Agregar</a>
+                <a href="#!" onclick="${() => GuardarCombinaciones(producto_id)}" class="waves-effect waves-green teal accent-4 btn">Guardar</a>
             </div>
         </div>
         <br>
@@ -34,13 +40,13 @@ function Ver(combinaciones) {
             <div class="row">
                 <a style="font-size:8pt;" 
                 class="waves-effect waves-light btn white teal-text text-accent-4" 
-                onclick="${() => AgregarCombinacion()}">
-                <i class="material-icons left teal-text text-accent-4">add_box</i> Agregar Combinacion</a>
+                onclick="${() => VerCombinaciones()}">
+                <i class="material-icons left teal-text text-accent-4">edit</i> Editar Combinaciones</a>
             </div>
             <div class="row">
                 <ul class="collapsible" data-collapsible="accordion">
-                    ${combinaciones.map(c => yo`<li>
-                        <div class="collapsible-header" onclick="${() => AbrirCombinacion(c)}">
+                    ${combinaciones_producto.map(c => yo`<li>
+                        <div class="collapsible-header" onclick="${() => AbrirCombinacion(c, "COM")}">
                             <i class="material-icons">expand_more</i>${c.etiqueta_titulo}
                         </div>
                         <div class="collapsible-body" id="COM${c.combinacion_id}">
@@ -75,17 +81,54 @@ function Ver(combinaciones) {
         $('.collapsible').collapsible();
     });
 }
-
-function AbrirCombinacion(c) {
+function SeleccionarCombinacion(c, producto_id) {
+    var EstaSeleccionado = document.getElementById("filled-in-box" + c.combinacion_id).checked
+    COMBINACIONES_PRODUCTO.filter(com => {
+        if (com.combinacion_id == c.combinacion_id) {
+            com.producto_id = EstaSeleccionado ? producto_id : null
+        }
+        return com;
+    })
+}
+function GuardarCombinaciones(producto_id) {
+    console.log(COMBINACIONES_PRODUCTO.filter(c => c.producto_id != null))
+    ShowLoader()
+    const parametros = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            combinaciones_producto: COMBINACIONES_PRODUCTO.filter(c => c.producto_id != null),
+            producto_id
+        })
+    }
+    fetch('http://localhost:5000/eproductos_producto/save_combinaciones_producto', parametros)
+        .then(req => req.json())
+        .then(res => {
+            if (res.err) {
+                console.log(res.err)
+            } else {
+                $('#modalCombinaciones').modal('close');
+                combinaciones(producto_id)
+            }
+            HideLoader()
+        })
+}
+function VerCombinaciones() {
+    $('#modalCombinaciones').modal('open');
+}
+function AbrirCombinacion(c, id_seccion) {
     const combinacion_id = c.combinacion_id
-    var combinacion = document.getElementById('COM' + c.combinacion_id)
+    var combinacion = document.getElementById(id_seccion + c.combinacion_id)
     var icono = ''
-    if(parseInt(c.cantidad_maxima) == 0 ){
-        icono ='radio_button_checked'
-    }else if(parseInt(c.cantidad_maxima) == 1 ){
-        icono ='check_box'
-    }else{
-        icono ='add_box'
+    if (parseInt(c.cantidad_maxima) == 0) {
+        icono = 'radio_button_checked'
+    } else if (parseInt(c.cantidad_maxima) == 1) {
+        icono = 'check_box'
+    } else {
+        icono = 'add_box'
     }
     empty(combinacion)
     const parametros = {
@@ -108,7 +151,7 @@ function AbrirCombinacion(c) {
                 const combinacion_detalle = res.com_detalle
                 combinacion.appendChild(yo`
                 <table>
-                    ${combinacion_detalle.map(d=>yo`
+                    ${combinacion_detalle.map(d => yo`
                         <tr>
                             <td><i class="deep-purple-text text-lighten-2 material-icons">${icono}</i></td>
                             <td>${d.nombre_producto}</td>
@@ -117,12 +160,15 @@ function AbrirCombinacion(c) {
                     `)}
                 </table>
                 `);
-                combinacion.appendChild(yo`
+                if (id_seccion == 'ME') {
+                    combinacion.appendChild(yo`
                 <a style="font-size:8pt;" 
                 class="waves-effect waves-light btn white red-text text-darken-2" 
                 onclick="${() => EliminarCombinacion(combinacion_id)}">
                 <i class="material-icons left red-text text-darken-2">delete</i> Eliminar Combinacion</a>
                 `);
+                }
+
             }
             // HideLoader()
         })
@@ -246,7 +292,8 @@ function combinaciones(producto_id) {
                 //mostrar error
                 console.log(res.err)
             } else {
-                Ver(res.combinaciones)
+                COMBINACIONES_PRODUCTO = res.combinaciones
+                Ver(res.combinaciones, res.combinaciones_producto, producto_id)
             }
             HideLoader()
         })

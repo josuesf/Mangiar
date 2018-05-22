@@ -87,7 +87,15 @@ module.exports = {
         })
     },
     get_combinaciones: (params, callback) => {
-        db.query("SELECT combinacion_id,etiqueta_titulo,cantidad_maxima,cantidad_minima from eproductos.combinacion where estado='ACTIVO'", [], (err, r) => {
+        db.query("SELECT c.combinacion_id,c.etiqueta_titulo,c.cantidad_maxima,c.cantidad_minima,(SELECT cp.producto_id from eproductos.combinaciones_producto cp where cp.producto_id=$1 and cp.combinacion_id=c.combinacion_id) from eproductos.combinacion c where c.estado='ACTIVO' order by producto_id", params, (err, r) => {
+            if (err) {
+                return callback(err.name + ":" + err.code + " " + err.routine, undefined)
+            }
+            callback(err, r.rows)
+        })
+    },
+    get_combinaciones_producto: (params, callback) => {
+        db.query("SELECT combinacion_id,etiqueta_titulo,cantidad_maxima,cantidad_minima from eproductos.combinaciones_producto where producto_id=$1 and estado='ACTIVO' ", params, (err, r) => {
             if (err) {
                 return callback(err.name + ":" + err.code + " " + err.routine, undefined)
             }
@@ -102,5 +110,41 @@ module.exports = {
             callback(err, r.rows)
         })
     },
+    save_combinaciones_producto: (params, callback) => {
+        //Eliminar todas sus combinaciones
+        db.query("DELETE FROM eproductos.combinaciones_producto where producto_id=$1", [params.producto_id], (err, r) => {
+            if (err) {
+                return callback(err.name + ":" + err.code + " " + err.routine, undefined)
+            }
+            const combinaciones_producto = params.combinaciones_producto
+            SAVE_SYNC(combinaciones_producto,0,"INSERT INTO eproductos.combinaciones_producto(combinacion_id, producto_id, etiqueta_titulo, cantidad_minima,cantidad_maxima, estado, creado_en, usuario_creacion)VALUES ($1, $2, $3, $4,$5, $6, now(), $7); ",params.usuario,callback)
+        })
+    },
     //...More functions
+}
+
+function SAVE_SYNC(array,posicion,query,usuario,callback){
+    if(array.length>0){
+        var elemento = [
+            array[posicion].combinacion_id,
+            array[posicion].producto_id,
+            array[posicion].etiqueta_titulo,
+            array[posicion].cantidad_minima,
+            array[posicion].cantidad_maxima,
+            'ACTIVO',
+            usuario
+        ]
+    db.query(query, elemento, (err, r) => {
+            if (err) {
+                return callback(err.name + ":" + err.code + " " + err.routine, undefined)
+            }
+            if(posicion+1<array.length){
+                SAVE_SYNC(array,posicion+1,query,usuario,callback)
+            }else{
+                callback(err,'OK')
+            }
+    })
+    }else{
+        callback(undefined,'OK')
+    }
 }

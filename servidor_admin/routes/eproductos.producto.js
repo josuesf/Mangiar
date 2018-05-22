@@ -68,7 +68,10 @@ router.post('/get_combinaciones', function (req, res) {
 	//call Model.login function
 	producto.get_combinaciones(params,function (err, combinaciones) {
 		if (err) return res.json({err})
-		return res.json({combinaciones})
+		producto.get_combinaciones_producto(params,function (err, combinaciones_producto) {
+			if (err) return res.json({err})
+			return res.json({combinaciones,combinaciones_producto})
+		})
 	})
 });
 router.post('/get_combinacion_detalle', function (req, res) {
@@ -79,6 +82,17 @@ router.post('/get_combinacion_detalle', function (req, res) {
 	producto.get_combinacion_detalle(params,function (err, com_detalle) {
 		if (err) return res.json({err})
 		return res.json({com_detalle})
+	})
+});
+router.post('/save_combinaciones_producto', function (req, res) {
+    input = req.body
+	//set params
+	var params = input
+	params.usuario = req.app.locals.usuario
+	//call Model.login function
+	producto.save_combinaciones_producto(params, function (err, respuesta) {
+		if (err) return res.json({err})
+		return res.json({respuesta})
 	})
 });
 
