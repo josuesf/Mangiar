@@ -24,7 +24,7 @@ function menu_administracion() {
     var sub_nav = yo`
     <div class="row">
         <ul class="collapsible" data-collapsible="accordion">
-            <li>
+            <li id="liSucursales">
                 <div class="collapsible-header">
                     <i class="material-icons">expand_more</i>Sucursales
                 </div>
@@ -139,7 +139,9 @@ function menu_administracion() {
         `;
     var container = document.getElementById('sub_navegador_content')
     empty(container).appendChild(sub_nav)
-    $('.collapsible').collapsible();
+    $('.collapsible').collapsible()
+    empty(document.getElementById('contenido_principal'))
+    //sucursales()
 }
 
  

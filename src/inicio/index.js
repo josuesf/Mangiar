@@ -3,57 +3,33 @@ var empty = require('empty-element');
 function Ver() {
     var el = yo`
     <div class="row">
-                <div class="col s12 m3">
-                    <div class="card teal accent-4">
-                        <div class="card-content white-text">
-                            <span class="card-title">Mesa 01</span>
-                        </div>
-                        <div class="card-action">
-                            <a href="#" class="white-text">Ver Detalles</a>
-                        </div>
-                    </div>
+        <div class="col s12 m3">
+            <ul class="cards">
+        
+                <li class="card-custom">
+                <div class="row">
+                <p>Lorem ipsum dolor sit amet </p>
                 </div>
-                <div class="col s12 m3">
-                    <div class="card teal accent-4">
-                        <div class="card-content white-text">
-                            <span class="card-title">Mesa 02</span>
-                        </div>
-                        <div class="card-action">
-                            <a href="#" class="white-text">Ver Detalles</a>
-                        </div>
-                    </div>
+                </li>
+                <li class="card-custom">
+                <div class="row">
+                <p>Lorem ipsum dolor sit amet </p>
                 </div>
-                <div class="col s12 m3">
-                    <div class="card red lighten-3">
-                        <div class="card-content white-text">
-                            <span class="card-title">Mesa 03</span>
-                        </div>
-                        <div class="card-action">
-                            <a href="#" class="white-text">Ver Detalles</a>
-                        </div>
-                    </div>
+                </li>
+                <li class="card-custom">
+                <div class="row">
+                <p>Lorem ipsum dolor sit amet </p>
                 </div>
-                <div class="col s12 m3">
-                    <div class="card teal accent-4">
-                        <div class="card-content white-text">
-                            <span class="card-title">Mesa 04</span>
-                        </div>
-                        <div class="card-action">
-                            <a href="#" class="white-text">Ver Detalles</a>
-                        </div>
-                    </div>
+                </li>
+                <li class="card-custom">
+                <div class="row">
+                <p>Lorem ipsum dolor sit amet </p>
                 </div>
-                <div class="col s12 m3">
-                    <div class="card teal accent-4">
-                        <div class="card-content white-text">
-                            <span class="card-title">Mesa 05</span>
-                        </div>
-                        <div class="card-action">
-                            <a href="#" class="white-text">Ver Detalles</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
+                </li>
+            </ul>
+        </div>
+    </div>
         `;
     var container = document.getElementById('contenido_principal')
     empty(container).appendChild(el);
@@ -66,7 +42,36 @@ function Ver() {
         `;
     var container = document.getElementById('sub_navegador_content')
     empty(container).appendChild(sub_nav)
+
+    $('.cards').each(function(){
+
+        var $this = $(this),
+            $cards = $this.find('.card-custom'),
+            $current = $cards.filter('.card-custom--current'),
+            $next;
+    
+        $cards.on('click',function(){
+          if ( !$current.is(this) ) {
+            $cards.removeClass('card--current card--out card--next');
+            $current.addClass('card--out');
+            $current = $(this).addClass('card--current');
+            $next = $current.next();
+            $next = $next.length ? $next : $cards.first();
+            $next.addClass('card--next');
+          }
+        });
+    
+        if ( !$current.length ) {
+          $current = $cards.last();
+          $cards.first().trigger('click');
+        }
+    
+        $this.addClass('cards--active');
+    
+      })
 }
+ 
+
 function inicio() {
     //Cargar Mesas
     Ver()
