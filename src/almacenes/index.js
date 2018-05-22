@@ -1,6 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
-import {nuevo} from './nuevo'
+import {nuevoAlmacen} from './nuevo'
 function Ver(almacenes,paginas,pagina_actual) {
     var el = yo`
         <div class="card horizontal">
@@ -22,14 +22,15 @@ function Ver(almacenes,paginas,pagina_actual) {
         </div>`;
     var container = document.getElementById('contenido_principal')
     empty(container).appendChild(el);
-    var sub_nav = yo`
+    $('select').material_select();
+    /*var sub_nav = yo`
     <div class="collection">
         <a href="#!" class="collection-item active">Todos los Almacenes</a>
-        <a href="#!" class="collection-item" onclick="${()=>nuevo()}">Nuevo Almacén</a>
+        <a href="#!" class="collection-item" onclick="${()=>nuevoAlmacen()}">Nuevo Almacén</a>
     </div>
         `;
     var container = document.getElementById('sub_navegador_content')
-    empty(container).appendChild(sub_nav)
+    empty(container).appendChild(sub_nav)*/
     $(".dropdown-button").dropdown();
 }
 
@@ -66,7 +67,7 @@ function VerTabla(almacenes,paginas,pagina_actual){
                 ${almacenes.map(a=> yo`
                 <tr>
                     <td>
-                        <a onclick=${()=>nuevo(a)} class="dropdown-button btn teal accent-3 btn-floating">
+                        <a onclick=${()=>nuevoAlmacen(a)} class="dropdown-button btn teal accent-3 btn-floating">
                         <i class="material-icons">edit</i>
                         </a>
                     </td>

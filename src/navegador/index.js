@@ -1,12 +1,8 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+
+import { menu_administracion } from '../menu'
 import { productos } from '../eproductos.producto'
-import { sucursales } from '../sucursales'
-import { almacenes } from '../almacenes'
-import { puntos_ventas } from '../puntos_ventas'
-import { documentos } from '../documentos'
-import { personas } from '../personas'
-import { ubigeos } from '../ubigeos'
 import { inicio } from '../inicio'
 import { sub_navegador } from '../sub_navegador'
 import { login } from '../login'
@@ -27,22 +23,10 @@ function Ver(login) {
                         </a>
                         <ul id="Opciones" class="dropdown-content">
                             <li>
-                                <a onclick="${() => sucursales()}">Sucursal</a>
+                                <a onclick="${() => menu_administracion()}">Administracion</a>
                             </li>
                             <li>
-                                <a onclick="${() => almacenes()}">Almacén</a>
-                            </li>
-                            <li>
-                                <a onclick="${() => puntos_ventas()}">Puntos de Venta</a>
-                            </li>
-                            <li>
-                                <a onclick="${() => documentos()}">Documento </a>
-                            </li>
-                            <li>
-                                <a onclick="${() => personas()}">Persona</a>
-                            </li>
-                            <li>
-                                <a onclick="${() => ubigeos()}">Ubigeo</a>
+                                <a onclick="${() => productos()}">Productos</a>
                             </li>
                             <li>
                                 <a onclick="${() => productos()}">Productos</a>

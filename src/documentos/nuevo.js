@@ -31,13 +31,13 @@ function Ver(documento,series,paginas,pagina_actual) {
                             </div>
                         </div>
                          <div class="row">
-                            ${documento ? yo`` : yo`<div class="input-field col s6">
-                                                    <input id="cod_documento" type="text" class="validate">
-                                                    <label class="active">Codigo Documento</label>
-                                                   </div>` }
+                             <div class="input-field col s6" style="display:${documento ? "none":"display"}">
+                                <input style="text-transform: uppercase;" id="cod_documento" type="text" class="validate">
+                                <label class="active" for="cod_documento" id="lcod_documento" data-error="" data-success="">Codigo Documento</label>
+                            </div>
                             <div class="input-field col s6">
-                                <input value="${documento ? documento.descripcion_doc : ''}" id="descripcion_doc" type="text">
-                                <label for="descripcion_doc" class="active">Descripcion</label>
+                                <input style="text-transform: uppercase;" value="${documento ? documento.descripcion_doc : ''}" id="descripcion_doc" type="text">
+                                <label class="active" for="descripcion_doc" id="ldescripcion_doc" data-error="" data-success="">Descripcion</label>
                             </div>
                             
                         </div>
@@ -103,14 +103,14 @@ function Ver(documento,series,paginas,pagina_actual) {
     </div>`;
     var container = document.getElementById('contenido_principal')
     empty(container).appendChild(el);
-    var sub_nav = yo`
+    /*var sub_nav = yo`
     <div class="collection">
         <a href="#!" onclick="${()=>documentos()}" class="collection-item">Todos los Documentos</a>
         <a href="#!" class="collection-item active">Nuevo Documento</a>
     </div>
         `;
     var container = document.getElementById('sub_navegador_content')
-    empty(container).appendChild(sub_nav)
+    empty(container).appendChild(sub_nav)*/
 }
 
 function VerTablaSeries(documento,series,paginas,pagina_actual){
@@ -199,9 +199,17 @@ function BuscarSerie(documento,pagina_actual){
 }
 
 function Guardar(d) {
+
+    var props = {
+        'cod_documento':{},
+        'descripcion_doc':{}
+    }
+    if(!Validar(props))
+        return;
+
     ShowLoader()
-    const cod_documento = d?d.cod_documento:$("#cod_documento").val()
-    const descripcion_doc = $('#descripcion_doc').val()
+    const cod_documento = d?d.cod_documento:$("#cod_documento").val().toUpperCase()
+    const descripcion_doc = $('#descripcion_doc').val().toUpperCase()
     const tipo_doc = $('#tipo_doc').val()
     const formato_doc = $('#formato_doc').val()
     const estado = $("#estado").is(':checked')? 'ACTIVO' : 'INACTIVO'
@@ -271,7 +279,7 @@ function AgregarSerie(documento,s){
     nuevaserie(documento,s)
 }
 
-function nuevo(documento,_numero_pagina) {
+function nuevoDocumento(documento,_numero_pagina) {
     ShowLoader()
     const tamano_pagina = 5
     fetchSeries(documento,tamano_pagina,_numero_pagina,null,function(res){
@@ -290,4 +298,4 @@ function nuevo(documento,_numero_pagina) {
    // HideLoader()
 }
 
-export { nuevo }
+export { nuevoDocumento }

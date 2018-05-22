@@ -30,7 +30,7 @@ function Ver(sucursal,ubigeos) {
                             </div>
                         </div>
                         <div class="row">
-                            <div class="input-field col s6 ${sucursal ? 'hidden' : ''}">
+                            <div class="input-field col s6" style="display:${sucursal ? "none":"display"}">
                                 <input style="text-transform: uppercase;" id="cod_sucursal" type="text" class="validate" data-length="30">
                                 <label class="active" for="cod_sucursal" id="lcod_sucursal" data-error="Código mayor al permitido" data-success="">Codigo Sucursal</label>
                             </div>
@@ -130,14 +130,14 @@ function Ver(sucursal,ubigeos) {
     </div>`;
     var container = document.getElementById('contenido_principal')
     empty(container).appendChild(el);
-    var sub_nav = yo`
+    /*var sub_nav = yo`
     <div class="collection">
         <a href="#!" onclick="${()=>sucursales()}" class="collection-item">Todas las Sucursales</a>
         <a href="#!" class="collection-item active">Nueva Sucursal</a>
     </div>
         `;
     var container = document.getElementById('sub_navegador_content')
-    empty(container).appendChild(sub_nav)
+    empty(container).appendChild(sub_nav)*/
     $('select').material_select();
 }
 
@@ -303,7 +303,7 @@ function Eliminar(s) {
             })
     }
 }
-function nuevo(sucursal) {
+function nuevaSucursal(sucursal) {
     ShowLoader()
     const parametros = {
         method: 'POST',
@@ -355,4 +355,4 @@ function nuevo(sucursal) {
         })*/
 }
 
-export { nuevo }
+export { nuevaSucursal }

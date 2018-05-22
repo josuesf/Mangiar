@@ -30,7 +30,7 @@ function Ver(punto_venta,sucursales) {
                             </div>
                         </div>
                          <div class="row">
-                            <div class="input-field col s6 ${punto_venta ? 'hidden':''}">
+                            <div class="input-field col s6" style="display:${punto_venta ? "none":"display"}">
                                 <input style="text-transform: uppercase;" value="${punto_venta ? punto_venta.cod_punto_venta:''}" id="cod_punto_venta" type="text" class="validate">
                                 <label class="active" id="lcod_punto_venta">Código Punto Venta</label>
                             </div>
@@ -77,14 +77,14 @@ function Ver(punto_venta,sucursales) {
     </div>`;
     var container = document.getElementById('contenido_principal')
     empty(container).appendChild(el);
-    var sub_nav = yo`
+    /*var sub_nav = yo`
     <div class="collection">
         <a href="#!" onclick="${()=>puntos_ventas()}" class="collection-item">Todos los Puntos de Venta</a>
         <a href="#!" class="collection-item active">Nuevo Punto de Venta</a>
     </div>
         `;
     var container = document.getElementById('sub_navegador_content')
-    empty(container).appendChild(sub_nav)
+    empty(container).appendChild(sub_nav)*/
     $('select').material_select();
 }
 function Guardar(p) {
@@ -167,7 +167,7 @@ function Eliminar(punto_venta) {
     }
 }
 
-function nuevo(punto_venta) {
+function nuevo_punto_venta(punto_venta) {
     ShowLoader()
 
     const parametros = {
@@ -195,4 +195,4 @@ function nuevo(punto_venta) {
     HideLoader()
 }
 
-export { nuevo }
+export { nuevo_punto_venta }

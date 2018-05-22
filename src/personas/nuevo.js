@@ -30,29 +30,31 @@ function Ver(persona) {
                             </div>
                         </div>
                          <div class="row">
-                            ${persona ? yo`` : yo`<div class="input-field col s6">
-                                                    <input id="cod_persona" type="text" class="validate">
-                                                    <label class="active">Código Persona</label>
-                                                   </div>` }
-
+                            
+                            
                             <div class="input-field col s6">
-                                <select id="tipo_persona" onchange="${()=>CambioTipoPersona()}">
-                                    <option value="NATURAL" ${persona ? persona.tipo_persona == 'NATURAL'? 'selected': '' :'selected'}>Natural</option>
-                                    <option value="JURIDICA" ${persona ? persona.tipo_persona == 'JURIDICA'? 'selected': '' :''}>Jurídica</option>
+                                <select id="tipo_doc_ident" onchange="${()=>CambioTipoDoc()}">
+                                    <option value="DNI" ${persona ? persona.tipo_doc_ident == 'DNI'? 'selected': '' :'selected'}>DNI</option>
+                                    <option value="RUC" ${persona ? persona.tipo_doc_ident == 'RUC'? 'selected': '' :''}>RUC</option>
                                 </select>
-                                <label>Tipo persona</label>
-                            </div>                            
+                                <label>Tipo Documento</label>
+                            </div>      
+
+                            <div class="input-field col s6" style="display:${persona ? "none":"display"}">
+                                <input style="text-transform: uppercase;"  id="cod_persona" type="text" class="validate">
+                                <label class="active" for="cod_persona" id="lcod_persona" data-error="" data-success="">Código Persona</label>
+                            </div>                          
                         </div>
                          
                         <div class="row">
                             
                             <div class="input-field col s6" id="divRazonSocial">
-                                <input value="${persona ? persona.razon_social : ''}" id="razon_social" type="text" class="validate" data-length="120">
+                                <input style="text-transform: uppercase;" value="${persona ? persona.razon_social : ''}" id="razon_social" type="text" class="validate" data-length="120">
                                 <label class="active" for="razon_social" id="lrazon_social" data-error="nombre mayor al tamaño permitido" data-success="">Razon Social</label>
                             </div>
                             
                             <div class="input-field col s6" id="divNombres">
-                                <input value="${persona ? persona.nombres : ''}" id="nombres" type="text" class="validate" data-length="40">
+                                <input style="text-transform: uppercase;" value="${persona ? persona.nombres : ''}" id="nombres" type="text" class="validate" data-length="40">
                                 <label class="active" for="nombres" id="lnombres" data-error="nombre mayor al tamaño permitido" data-success="">Nombres</label>
                             </div>
 
@@ -61,12 +63,12 @@ function Ver(persona) {
                         <div class="row">
                             
                             <div class="input-field col s6" id="divAP">
-                                <input value="${persona ? persona.a_paterno : ''}" id="a_paterno" type="text" class="validate" data-length="30">
+                                <input style="text-transform: uppercase;" value="${persona ? persona.a_paterno : ''}" id="a_paterno" type="text" class="validate" data-length="30">
                                 <label class="active" for="a_paterno" id="la_paterno" data-error="apellido mayor al tamaño permitido" data-success="">Apellido Paterno</label>
                             </div>
                             
                             <div class="input-field col s6" id="divAM">
-                                <input value="${persona ? persona.a_materno : ''}" id="a_materno" type="text" class="validate" data-length="30">
+                                <input style="text-transform: uppercase;" value="${persona ? persona.a_materno : ''}" id="a_materno" type="text" class="validate" data-length="30">
                                 <label class="active" for="a_materno" id="la_materno" data-error="apellido mayor al tamaño permitido" data-success="">Apellido Materno</label>
                             </div>
 
@@ -75,7 +77,7 @@ function Ver(persona) {
                              
                             <div class="input-field col s6">
                                 <input value="${persona ? persona.doc_ident : ''}" id="doc_ident" type="text" class="validate" data-length="15">
-                                <label class="active" for="doc_ident" id="ldoc_ident" data-error="numero mayor al tamaño permitido" data-success="">${persona ? persona.tipo_doc_ident :'DNI'}</label>
+                                <label class="active" for="doc_ident" id="ldoc_ident" data-error="numero mayor al tamaño permitido" data-success="">Numero Documento</label>
                             </div>
 
                             <div class="input-field col s6">
@@ -140,14 +142,14 @@ function Ver(persona) {
     </div>`;
     var container = document.getElementById('contenido_principal')
     empty(container).appendChild(el);
-    var sub_nav = yo`
+    /*var sub_nav = yo`
     <div class="collection">
         <a href="#!" onclick="${()=>personas()}" class="collection-item">Todas las Personas</a>
         <a href="#!" class="collection-item active">Nueva Persona</a>
     </div>
         `;
     var container = document.getElementById('sub_navegador_content')
-    empty(container).appendChild(sub_nav)
+    empty(container).appendChild(sub_nav)*/
     $('select').material_select();
     $('.datepicker').pickadate({
         selectMonths: true,
@@ -157,20 +159,18 @@ function Ver(persona) {
     var $input = $('#fecha_nacimiento').pickadate()
     var picker = $input.pickadate('picker')
     picker.set('select', new Date())
-    CambioTipoPersona()
+    CambioTipoDoc()
 }
 
 
-function CambioTipoPersona(){
+function CambioTipoDoc(){
 
-    if($("#tipo_persona").val()=="JURIDICA"){
-        $("#ldoc_ident").text("RUC")
+    if($("#tipo_doc_ident").val()=="RUC"){ 
         $("#divRazonSocial").show()
         $("#divNombres").hide()
         $("#divAP").hide()
         $("#divAM").hide()
     }else{
-        $("#ldoc_ident").text("DNI")
         $("#divRazonSocial").hide()
         $("#divNombres").show()
         $("#divAP").show()
@@ -180,7 +180,7 @@ function CambioTipoPersona(){
 
 function Guardar(p) {
     var props = {}
-    if($("#tipo_persona").val()=="NATURAL"){
+    if($("#tipo_doc_ident").val()=="DNI"){
         props = {
             'nombres':{maxLen:100},
             'a_paterno':{maxLen:100},
@@ -198,13 +198,15 @@ function Guardar(p) {
         return;
 
     ShowLoader()
-    const cod_persona = p?p.cod_persona:$("#cod_persona").val()
-    const tipo_persona = $('#tipo_persona').val()
-    const razon_social = $('#razon_social').val()
-    const nombres = $('#nombres').val()
-    const a_paterno = $('#a_paterno').val()
-    const a_materno = $('#a_materno').val()
-    const tipo_doc_ident =  $("#ldoc_ident").text()
+    var cod_persona = p?p.cod_persona:$("#cod_persona").val().toUpperCase()
+    if($("#cod_persona").val().trim()=="")
+        cod_persona = $('#doc_ident').val()
+    const tipo_persona = null
+    const razon_social = $('#razon_social').val().toUpperCase()
+    const nombres = $('#nombres').val().toUpperCase()
+    const a_paterno = $('#a_paterno').val().toUpperCase()
+    const a_materno = $('#a_materno').val().toUpperCase()
+    const tipo_doc_ident =  $("#tipo_doc_ident").val()
     const doc_ident = $('#doc_ident').val()
     const fecha_nacimiento = $('#fecha_nacimiento').val()
     const sexo = $('#sexo').val()
@@ -285,10 +287,10 @@ function Eliminar(persona) {
     }
 }
 
-function nuevo(persona) {
+function nuevaPersona(persona) {
     ShowLoader()
     Ver(persona)
     HideLoader()
 }
 
-export { nuevo }
+export { nuevaPersona }

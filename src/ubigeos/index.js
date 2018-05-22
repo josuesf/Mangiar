@@ -1,6 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
-import {nuevo} from './nuevo'
+import {nuevoUbigeo} from './nuevo'
 function Ver(ubigeos,paginas,pagina_actual) {
     var el = yo`
         <div class="card horizontal">
@@ -22,14 +22,14 @@ function Ver(ubigeos,paginas,pagina_actual) {
         </div>`;
     var container = document.getElementById('contenido_principal')
     empty(container).appendChild(el);
-    var sub_nav = yo`
+    /*var sub_nav = yo`
     <div class="collection">
         <a href="#!" class="collection-item active">Todos los Ubigeos</a>
-        <a href="#!" class="collection-item" onclick="${()=>nuevo()}">Nuevo Ubigeo</a>
+        <a href="#!" class="collection-item" onclick="${()=>nuevoUbigeo()}">Nuevo Ubigeo</a>
     </div>
         `;
     var container = document.getElementById('sub_navegador_content')
-    empty(container).appendChild(sub_nav)
+    empty(container).appendChild(sub_nav)*/
     $(".dropdown-button").dropdown();
 }
 
@@ -49,7 +49,7 @@ function VerTabla(ubigeos,paginas,pagina_actual){
                 ${ubigeos.map(u=> yo`
                 <tr>
                     <td>
-                        <a onclick=${()=>nuevo(u)} class="dropdown-button btn teal accent-3 btn-floating">
+                        <a onclick=${()=>nuevoUbigeo(u)} class="dropdown-button btn teal accent-3 btn-floating">
                         <i class="material-icons">edit</i>
                         </a>
                     </td>

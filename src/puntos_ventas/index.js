@@ -1,6 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
-import {nuevo} from './nuevo'
+import {nuevo_punto_venta} from './nuevo'
 function Ver(puntos_ventas,paginas,pagina_actual) {
     var el = yo`
         <div class="card horizontal">
@@ -22,14 +22,14 @@ function Ver(puntos_ventas,paginas,pagina_actual) {
         </div>`;
     var container = document.getElementById('contenido_principal')
     empty(container).appendChild(el);
-    var sub_nav = yo`
+    /*var sub_nav = yo`
     <div class="collection">
         <a href="#!" class="collection-item active">Todos los Puntos de Venta</a>
-        <a href="#!" class="collection-item" onclick="${()=>nuevo()}">Nuevo Punto de Venta</a>
+        <a href="#!" class="collection-item" onclick="${()=>nuevo_punto_venta()}">Nuevo Punto de Venta</a>
     </div>
         `;
     var container = document.getElementById('sub_navegador_content')
-    empty(container).appendChild(sub_nav)
+    empty(container).appendChild(sub_nav)*/
 }
 
 function Buscar(pagina_actual){
@@ -65,7 +65,7 @@ function VerTabla(puntos_ventas,paginas,pagina_actual){
                 ${puntos_ventas.map(p=> yo`
                 <tr>
                     <td>
-                        <a onclick=${()=>nuevo(p)} class="dropdown-button btn teal accent-3 btn-floating">
+                        <a onclick=${()=>nuevo_punto_venta(p)} class="dropdown-button btn teal accent-3 btn-floating">
                         <i class="material-icons">edit</i>
                         </a>
                     </td>

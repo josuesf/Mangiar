@@ -30,7 +30,7 @@ function Ver(almacen) {
                             </div>
                         </div>
                          <div class="row">
-                            <div class="input-field col s6  ${almacen ? 'hidden':''}">
+                            <div class="input-field col s6" style="display:${almacen ? "none":"display"}">
                              <input style="text-transform: uppercase;" id="almacen_cod" value="${almacen ? almacen.almacen_cod:''}" type="text" class="validate" data-length="50">
                              <label for="almacen_cod" id="lalmacen_cod" class="active" data-error="Código mayor al permitido" data-success="">Codigo Almacén</label>
                             </div>
@@ -71,14 +71,15 @@ function Ver(almacen) {
     </div>`;
     var container = document.getElementById('contenido_principal')
     empty(container).appendChild(el);
-    var sub_nav = yo`
+    $('select').material_select();
+    /*var sub_nav = yo`
     <div class="collection">
         <a href="#!" onclick="${()=>almacenes()}" class="collection-item">Todos los Almacenes</a>
         <a href="#!" class="collection-item active">Nuevo Almacén</a>
     </div>
         `;
     var container = document.getElementById('sub_navegador_content')
-    empty(container).appendChild(sub_nav)
+    empty(container).appendChild(sub_nav)*/
 }
 function Guardar(a) {
     var props = {
@@ -155,10 +156,10 @@ function Eliminar(a) {
             })
     }
 }
-function nuevo(almacen) {
+function nuevoAlmacen(almacen) {
     ShowLoader()
     Ver(almacen)
     HideLoader()
 }
 
-export { nuevo }
+export { nuevoAlmacen }

@@ -1,6 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
-import {nuevo} from './nuevo'
+import {nuevaPersona} from './nuevo'
 function Ver(personas,paginas,pagina_actual) {
     var el = yo`
         <div class="card horizontal">
@@ -22,14 +22,14 @@ function Ver(personas,paginas,pagina_actual) {
         </div>`;
     var container = document.getElementById('contenido_principal')
     empty(container).appendChild(el);
-    var sub_nav = yo`
+    /*var sub_nav = yo`
     <div class="collection">
         <a href="#!" class="collection-item active">Todas las personas</a>
-        <a href="#!" class="collection-item" onclick="${()=>nuevo()}">Nueva Persona</a>
+        <a href="#!" class="collection-item" onclick="${()=>nuevaPersona()}">Nueva Persona</a>
     </div>
         `;
     var container = document.getElementById('sub_navegador_content')
-    empty(container).appendChild(sub_nav)
+    empty(container).appendChild(sub_nav)*/
     $(".dropdown-button").dropdown();
 }
 
@@ -60,20 +60,15 @@ function VerTabla(personas,paginas,pagina_actual){
                     <th>Nombres</th>
                     <th>A. Paterno</th>
                     <th>A. Materno</th>
-                    <th>Tipo Doc.</th>
                     <th>Doc.</th>
-                    <th>Naturaleza</th>
-                    <th>Direccion.</th>
-                    <th>Telefonos</th>
-                    <th>Correo</th>
-                    <th>Sexo</th>
+                    <th>Estado</th>
                 </tr>
             </thead>
             <tbody>
                 ${personas.map(p=> yo`
                 <tr>
                     <td>
-                        <a onclick=${()=>nuevo(p)} class="dropdown-button btn teal accent-3 btn-floating">
+                        <a onclick=${()=>nuevaPersona(p)} class="dropdown-button btn teal accent-3 btn-floating">
                         <i class="material-icons">edit</i>
                         </a>
                     </td>
@@ -82,11 +77,9 @@ function VerTabla(personas,paginas,pagina_actual){
                     <td>${p.a_materno}</td>
                     <td>${p.tipo_doc_ident}</td>
                     <td>${p.doc_ident}</td>
-                    <td>${p.tipo_persona}</td>
-                    <td>${p.direccion}</td>
-                    <td>${p.tel_fijo} / ${p.telf_movil}</td>
-                    <td>${p.correo}</td>
-                    <td>${p.sexo }</td>
+                    <td>
+                        <span class="new badge ${p.estado=="ACTIVO"? 'blue':'red'}" data-badge-caption="${p.estado}"></span>
+                    </td>                   
                 </tr>
                 `)}
             </tbody>

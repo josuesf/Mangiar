@@ -1,6 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
-import {nuevo} from './nuevo'
+import {nuevaSucursal} from './nuevo'
 function Ver(sucursales,paginas,pagina_actual) {
     var el = yo`
         <div class="card horizontal">
@@ -67,7 +67,7 @@ function VerTabla(sucursales,paginas,pagina_actual){
                 ${sucursales.map(s=> yo`
                 <tr>
                     <td>
-                        <a onclick=${()=>nuevo(s)} class="dropdown-button btn teal accent-3 btn-floating">
+                        <a onclick=${()=>nuevaSucursal(s)} class="dropdown-button btn teal accent-3 btn-floating">
                         <i class="material-icons">edit</i>
                         </a>
                     </td>
