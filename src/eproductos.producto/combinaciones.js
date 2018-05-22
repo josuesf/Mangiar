@@ -1,9 +1,9 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
 import { productos } from './index'
-function Ver() {
+function Ver(combinaciones) {
     var el = yo`
-    <div>
+    <div class="col s12">
         <div id="modal1" class="modal">
             <div class="modal-content">
                 <h4>Nuevo Precio</h4>
@@ -25,26 +25,41 @@ function Ver() {
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="#!" onclick="${()=>AgregarPrecio()}" class="waves-effect waves-green teal accent-4 btn">Agregar</a>
+                <a href="#!" onclick="${() => AgregarPrecio()}" class="waves-effect waves-green teal accent-4 btn">Agregar</a>
             </div>
         </div>
-        <div class="col s7">
-            <div class="card">
-                <div class="card-stacked">
-                    <div class="card-content">
-                        <span>Combinaciones</span>
-                    </div>
-                </div>
+        <br>
+        <div class="col s8">
+            
+            <div class="row">
+                <a style="font-size:8pt;" 
+                class="waves-effect waves-light btn white teal-text text-accent-4" 
+                onclick="${() => AgregarCombinacion()}">
+                <i class="material-icons left teal-text text-accent-4">add_box</i> Agregar Combinacion</a>
+            </div>
+            <div class="row">
+                <ul class="collapsible" data-collapsible="accordion">
+                    ${combinaciones.map(c => yo`<li>
+                        <div class="collapsible-header" onclick="${() => AbrirCombinacion(c)}">
+                            <i class="material-icons">expand_more</i>${c.etiqueta_titulo}
+                        </div>
+                        <div class="collapsible-body" id="COM${c.combinacion_id}">
+                            
+                        </div>
+                    </li>`)}
+                </ul>
             </div>
         </div>
-        <div class="col s5">
-            <div class="card">
-                <div class="card-stacked">
-                    <div class="card-content">
-                        <span>Combinaciones</span>
-                    </div>
+        <div class="col s4">
+                <div class="row">
+                    <i class="material-icons left deep-purple-text text-lighten-2">radio_button_checked</i> Obligatorio
                 </div>
-            </div>
+                <div class="row">
+                    <i class="material-icons left deep-purple-text text-lighten-2">check_box</i> Opcionales
+                </div>
+                <div class="row">
+                    <i class="material-icons left deep-purple-text text-lighten-2">add_box</i> Multiple
+                </div>
         </div>
     </div>`;
     var container = document.getElementById('tab_comb')
@@ -56,18 +71,73 @@ function Ver() {
     </div>
         `;
     $('.modal').modal();
+    $(document).ready(function () {
+        $('.collapsible').collapsible();
+    });
 }
 
+function AbrirCombinacion(c) {
+    const combinacion_id = c.combinacion_id
+    var combinacion = document.getElementById('COM' + c.combinacion_id)
+    var icono = ''
+    if(parseInt(c.cantidad_maxima) == 0 ){
+        icono ='radio_button_checked'
+    }else if(parseInt(c.cantidad_maxima) == 1 ){
+        icono ='check_box'
+    }else{
+        icono ='add_box'
+    }
+    empty(combinacion)
+    const parametros = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            combinacion_id
+        })
+    }
+    fetch('http://localhost:5000/eproductos_producto/get_combinacion_detalle', parametros)
+        .then(req => req.json())
+        .then(res => {
+            if (res.err) {
+                //mostrar error
+                console.log(res.err)
+            } else {
+                const combinacion_detalle = res.com_detalle
+                combinacion.appendChild(yo`
+                <table>
+                    ${combinacion_detalle.map(d=>yo`
+                        <tr>
+                            <td><i class="deep-purple-text text-lighten-2 material-icons">${icono}</i></td>
+                            <td>${d.nombre_producto}</td>
+                            <td>S/${parseFloat(d.precio).toFixed(2)}</td>
+                        </tr>
+                    `)}
+                </table>
+                `);
+                combinacion.appendChild(yo`
+                <a style="font-size:8pt;" 
+                class="waves-effect waves-light btn white red-text text-darken-2" 
+                onclick="${() => EliminarCombinacion(combinacion_id)}">
+                <i class="material-icons left red-text text-darken-2">delete</i> Eliminar Combinacion</a>
+                `);
+            }
+            // HideLoader()
+        })
 
-function VerTablaPrecios(){
+
+}
+function VerTablaPrecios() {
     empty(document.getElementById('tprecios'))
-    PRECIOS_.map((p,i)=>
+    PRECIOS_.map((p, i) =>
         document.getElementById('tprecios').appendChild(yo`
         <tr id="${p.cod_precio}">
             <td>
                 <div class="">
-                    <a href="#!" onclick="${()=>QuitarPrecio(p.cod_precio)}"><i class="material-icons red-text text-darken-1">indeterminate_check_box</i></a>
-                    <a href="#!"  onclick="${()=>NuevoPrecio(p)}"><i class="material-icons indigo-text">edit</i></a>
+                    <a href="#!" onclick="${() => QuitarPrecio(p.cod_precio)}"><i class="material-icons red-text text-darken-1">indeterminate_check_box</i></a>
+                    <a href="#!"  onclick="${() => NuevoPrecio(p)}"><i class="material-icons indigo-text">edit</i></a>
                 </div>
             </td>
             <td>${p.nombre_precio}</td>
@@ -84,7 +154,7 @@ function Guardar(u) {
     }
     if (!Validar(props))
         return;
-    if (PRECIOS_.length==0){
+    if (PRECIOS_.length == 0) {
         NuevoPrecio()
         return;
     }
@@ -92,7 +162,7 @@ function Guardar(u) {
     const producto_id = u ? u.producto_id : -1
     const nombre = document.getElementById('nombre').value.toUpperCase()
     const cod_producto = document.getElementById('cod_producto').value.toUpperCase()
-    const alias = document.getElementById('nombre').value.substring(0,25).toUpperCase()
+    const alias = document.getElementById('nombre').value.substring(0, 25).toUpperCase()
     const cod_marca = document.getElementById('cod_marca').value.toUpperCase()
     const cod_categoria = document.getElementById('cod_categoria').value.toUpperCase()
     const imagen_url = document.getElementById('imagen_url').files.length > 0 ? document.getElementById('imagen_url').files[0].path : ''
@@ -106,8 +176,8 @@ function Guardar(u) {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            producto_id,nombre,cod_producto,
-            alias,cod_marca,cod_categoria, 
+            producto_id, nombre, cod_producto,
+            alias, cod_marca, cod_categoria,
             imagen_url, estado, imagen_anterior,
             precios
         })
@@ -159,31 +229,27 @@ function Eliminar(u) {
 }
 function combinaciones(producto_id) {
     ShowLoader()
-    Ver()
-    HideLoader()
-    // const producto_id = u?u.producto_id:-1
-    // const parametros = {
-    //     method: 'POST',
-    //     headers: {
-    //         Accept: 'application/json',
-    //         'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({
-    //         producto_id,
-    //     })
-    // }
-    // fetch('http://localhost:5000/eproductos_producto/find', parametros)
-    //     .then(req => req.json())
-    //     .then(res => {
-    //         if (res.err) {
-    //             $('#text_error').text(res.err)
-    //             $('#box_error').show()
-    //         } else {
-    //             PRECIOS_ = res.precios
-    //             Ver(res.categorias, u)
-    //         }
-    //         HideLoader()
-    //     })
+    const parametros = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            producto_id,
+        })
+    }
+    fetch('http://localhost:5000/eproductos_producto/get_combinaciones', parametros)
+        .then(req => req.json())
+        .then(res => {
+            if (res.err) {
+                //mostrar error
+                console.log(res.err)
+            } else {
+                Ver(res.combinaciones)
+            }
+            HideLoader()
+        })
 }
 
 export { combinaciones }

@@ -86,7 +86,21 @@ module.exports = {
             callback(err, r.rows)
         })
     },
-    
-
+    get_combinaciones: (params, callback) => {
+        db.query("SELECT combinacion_id,etiqueta_titulo,cantidad_maxima,cantidad_minima from eproductos.combinacion where estado='ACTIVO'", [], (err, r) => {
+            if (err) {
+                return callback(err.name + ":" + err.code + " " + err.routine, undefined)
+            }
+            callback(err, r.rows)
+        })
+    },
+    get_combinacion_detalle: (params, callback) => {
+        db.query("SELECT detalle_id,producto_id,nombre_producto,precio from eproductos.combinacion_detalle where combinacion_id=$1", params, (err, r) => {
+            if (err) {
+                return callback(err.name + ":" + err.code + " " + err.routine, undefined)
+            }
+            callback(err, r.rows)
+        })
+    },
     //...More functions
 }

@@ -61,5 +61,25 @@ router.post('/find', function (req, res) {
 		
 	})
 });
+router.post('/get_combinaciones', function (req, res) {
+    input = req.body
+	//set params
+	const params = [input.producto_id]
+	//call Model.login function
+	producto.get_combinaciones(params,function (err, combinaciones) {
+		if (err) return res.json({err})
+		return res.json({combinaciones})
+	})
+});
+router.post('/get_combinacion_detalle', function (req, res) {
+    input = req.body
+	//set params
+	const params = [input.combinacion_id]
+	//call Model.login function
+	producto.get_combinacion_detalle(params,function (err, com_detalle) {
+		if (err) return res.json({err})
+		return res.json({com_detalle})
+	})
+});
 
 module.exports = router;
