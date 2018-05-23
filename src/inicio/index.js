@@ -8,22 +8,31 @@ function Ver() {
         
                 <li class="card-custom">
                 <div class="row">
-                <p>Lorem ipsum dolor sit amet </p>
+                    <div class="card-content">
+                        <p>I am a very simple card. I am good at containing small bits of information.</p>
+                    </div>
                 </div>
                 </li>
                 <li class="card-custom">
                 <div class="row">
-                <p>Lorem ipsum dolor sit amet </p>
+                    <div class="card-content">
+                        <p>I am a very simple card. I am good at containing small bits of information.</p>
+                    </div>
+                    
                 </div>
                 </li>
                 <li class="card-custom">
                 <div class="row">
-                <p>Lorem ipsum dolor sit amet </p>
+                    <div class="card-content">
+                        <p>I am a very simple card. I am good at containing small bits of information.</p>
+                    </div>
                 </div>
                 </li>
                 <li class="card-custom">
                 <div class="row">
-                <p>Lorem ipsum dolor sit amet </p>
+                    <div class="card-content">
+                        <p>I am a very simple card. I am good at containing small bits of information.</p>
+                    </div>
                 </div>
             
                 </li>
@@ -47,7 +56,7 @@ function Ver() {
 
         var $this = $(this),
             $cards = $this.find('.card-custom'),
-            $current = $cards.filter('.card-custom--current'),
+            $current = $cards.filter('.card--current'),
             $next;
     
         $cards.on('click',function(){

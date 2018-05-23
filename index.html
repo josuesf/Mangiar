@@ -57,8 +57,6 @@
   left: 0;
   z-index: 2;
   background: #ccc;
-  border-radius: 30px;
-  padding: 40px;
   box-shadow: 0 0 40px #000;
   -webkit-transform: translateY(0) rotate(4deg) translateX(25px) scale(1);
           transform: translateY(0) rotate(4deg) translateX(25px) scale(1);
@@ -138,7 +136,6 @@
   -webkit-transform: rotate(-1deg) translateX(0%) scale(1);
           transform: rotate(-1deg) translateX(0%) scale(1);
 }
- 
  
 </style>
  
@@ -326,6 +323,13 @@
     <script src="assets/js/materialize.min.js"></script>
     <script src="assets/js/fakeLoader.js"></script>
     <script type="text/javascript">
+
+        $('.collection a').click(function() {
+            alet("click");
+            $('.collection').removeClass('active');  
+            $(this).parents('.collection').addClass('active');
+        });
+
         $(document).ready(function() {
             $('input').characterCounter(); 
         });
