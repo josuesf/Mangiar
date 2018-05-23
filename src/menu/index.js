@@ -19,26 +19,23 @@ import { nuevaPersona } from '../personas/nuevo'
 import { ubigeos } from '../ubigeos'
 import { nuevoUbigeo } from '../ubigeos/nuevo'
 
+import { cajas } from '../ecaja.caja'
+import { nuevaCaja } from '../ecaja.caja/nuevo'
+
 function menu_administracion() {
    
     var sub_nav = yo`
     <div class="row">
         <ul class="collapsible" data-collapsible="accordion">
-            <li id="liSucursales">
+            <li>
                 <div class="collapsible-header">
                     <i class="material-icons">expand_more</i>Sucursales
                 </div>
                 <div class="collapsible-body">
-                    <li>
-                        <div class="collapsible-header" onclick="${()=>sucursales()}" style="cursor:pointer">
-                            Todas las sucursales
-                        </div>
-                    </li>
-                    <li>
-                        <div class="collapsible-header" onclick="${()=>nuevaSucursal()}" style="cursor:pointer">
-                            Nueva sucursal
-                        </div>
-                    </li>
+                    <div class="collection">
+                        <a href="#!" onclick="${()=>sucursales()}" class="collection-item"> Todas las sucursales</a>
+                        <a href="#!" onclick="${()=>nuevaSucursal()}" class="collection-item">Nueva sucursal</a>
+                    </div>
                 </div>
             </li>
 
@@ -46,17 +43,11 @@ function menu_administracion() {
                 <div class="collapsible-header">
                     <i class="material-icons">expand_more</i>Almacenes
                 </div>
-                <div class="collapsible-body"  >
-                    <li>
-                        <div class="collapsible-header" onclick="${()=>almacenes()}" style="cursor:pointer">
-                            Todos los almacenes
-                        </div>
-                    </li>
-                    <li>
-                        <div class="collapsible-header" onclick="${()=>nuevoAlmacen()}" style="cursor:pointer">
-                            Nuevo almacen
-                        </div>
-                    </li>
+                <div class="collapsible-body">
+                    <div class="collection">
+                        <a href="#!" onclick="${()=>almacenes()}" class="collection-item"> Todos los almacenes</a>
+                        <a href="#!" onclick="${()=>nuevoAlmacen()}" class="collection-item">Nuevo almacen</a>
+                    </div>
                 </div>
             </li>
 
@@ -64,37 +55,23 @@ function menu_administracion() {
                 <div class="collapsible-header">
                     <i class="material-icons">expand_more</i>Puntos de Ventas
                 </div>
-                <div class="collapsible-body"  >
-                    <li>
-                        <div class="collapsible-header" onclick="${()=>puntos_ventas()}" style="cursor:pointer">
-                            Todos los puntos de ventas
-                        </div>
-                    </li>
-                    <li>
-                        <div class="collapsible-header" onclick="${()=>nuevo_punto_venta()}" style="cursor:pointer">
-                            Nuevo punto de venta
-                        </div>
-                    </li>
+                <div class="collapsible-body">
+                    <div class="collection">
+                        <a href="#!" onclick="${()=>puntos_ventas()}" class="collection-item"> Todos los puntos de ventas</a>
+                        <a href="#!" onclick="${()=>nuevo_punto_venta()}" class="collection-item">Nuevo punto de venta</a>
+                    </div>
                 </div>
             </li>
-
-            
 
             <li>
                 <div class="collapsible-header">
                     <i class="material-icons">expand_more</i>Documentos
                 </div>
-                <div class="collapsible-body"  >
-                    <li>
-                        <div class="collapsible-header" onclick="${()=>documentos()}" style="cursor:pointer">
-                            Todos los documentos
-                        </div>
-                    </li>
-                    <li>
-                        <div class="collapsible-header"onclick="${()=>nuevoDocumento()}" style="cursor:pointer">
-                            Nuevo documento
-                        </div>
-                    </li>
+                <div class="collapsible-body">
+                    <div class="collection">
+                        <a href="#!" onclick="${()=>documentos()}" class="collection-item"> Todos los documentos</a>
+                        <a href="#!" onclick="${()=>nuevoDocumento()}" class="collection-item">Nuevo documento</a>
+                    </div>
                 </div>
             </li>
 
@@ -102,17 +79,11 @@ function menu_administracion() {
                 <div class="collapsible-header">
                     <i class="material-icons">expand_more</i>Personas
                 </div>
-                <div class="collapsible-body"  >
-                    <li>
-                        <div class="collapsible-header" onclick="${()=>personas()}" style="cursor:pointer">
-                            Todas las personas
-                        </div>
-                    </li>
-                    <li>
-                        <div class="collapsible-header" onclick="${()=>nuevaPersona()}" style="cursor:pointer">
-                            Nueva persona
-                        </div>
-                    </li>
+                <div class="collapsible-body">
+                    <div class="collection">
+                        <a href="#!" onclick="${()=>personas()}" class="collection-item"> Todas las personas</a>
+                        <a href="#!" onclick="${()=>nuevaPersona()}" class="collection-item">Nueva Persona</a>
+                    </div>
                 </div>
             </li>
 
@@ -120,17 +91,23 @@ function menu_administracion() {
                 <div class="collapsible-header">
                     <i class="material-icons">expand_more</i>Ubigeos
                 </div>
-                <div class="collapsible-body"  >
-                    <li>
-                        <div class="collapsible-header" onclick="${()=>ubigeos()}" style="cursor:pointer">
-                            Todos los ubigeos
-                        </div>
-                    </li>
-                    <li>
-                        <div class="collapsible-header" onclick="${()=>nuevoUbigeo()}" style="cursor:pointer">
-                            Nueva Ubigeo
-                        </div>
-                    </li>
+                <div class="collapsible-body">
+                    <div class="collection">
+                        <a href="#!" onclick="${()=>ubigeos()}" class="collection-item"> Todos los ubigeos</a>
+                        <a href="#!" onclick="${()=>nuevoUbigeo()}" class="collection-item">Nuevo ubigeo</a>
+                    </div>
+                </div>
+            </li>
+
+            <li>
+                <div class="collapsible-header">
+                    <i class="material-icons">expand_more</i>Cajas
+                </div>
+                <div class="collapsible-body">
+                    <div class="collection">
+                        <a href="#!" onclick="${()=>cajas()}" class="collection-item"> Todas las cajas</a>
+                        <a href="#!" onclick="${()=>nuevaCaja()}" class="collection-item">Nueva caja</a>
+                    </div>
                 </div>
             </li>
 
