@@ -1320,21 +1320,18 @@ VALUES(
 ELSE
 UPDATE documento_serie SET
  cod_documento=_cod_documento,
- nro_serie=_nro_serie,
- nro_inicio=_nro_inicio,
- cod_sucursal=_cod_sucursal,
  esta_afecto=_esta_afecto,
  estado=_estado,
  actualizado_en = now(),
  usuario_actualizo = _usuario
 
-WHERE documento_serie.cod_documento= _cod_documento;
+WHERE documento_serie.cod_documento= _cod_documento  and documento_serie.nro_serie=_nro_serie and documento_serie.nro_inicio=_nro_inicio and documento_serie.cod_sucursal=_cod_sucursal;
 END IF;
 
  RETURN QUERY
  SELECT *
  FROM documento_serie d
- WHERE d.cod_documento = _cod_documento
+ WHERE d.cod_documento = _cod_documento and d.nro_serie=_nro_serie and d.nro_inicio=_nro_inicio and d.cod_sucursal=_cod_sucursal
  ORDER BY d.cod_documento;
  
  EXCEPTION WHEN OTHERS THEN 

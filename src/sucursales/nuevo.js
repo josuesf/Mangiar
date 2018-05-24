@@ -159,7 +159,7 @@ function CambioDepartamento(sucursal,ubigeos){
       
         var el = yo`
                 <div class="input-field col s12">
-                    <select id="provincia">
+                    <select id="provincia" onchange="${()=>CambioProvincia(sucursal,ubigeos)}">
                     <option value="">Seleccione una provincia</div>
                     ${ubigeos.map(u=>
                         u.cod_departamento==cod_departamento?yo`<option value="${u.cod_provincia}">${u.provincia}</option>`:yo``

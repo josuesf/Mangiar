@@ -59,6 +59,7 @@ function VerTabla(documentos,paginas,pagina_actual){
                     <th>Descripción</th>
                     <th>Tipo</th>
                     <th>Formato</th>
+                    <th>Estado</th>
                 </tr>
             </thead>
             <tbody>
@@ -72,6 +73,9 @@ function VerTabla(documentos,paginas,pagina_actual){
                     <td>${d.descripcion_doc}</td>
                     <td>${d.tipo_doc}</td>
                     <td>${d.formato_doc}</td>
+                    <td>
+                        <span class="new badge ${d.estado=="ACTIVO"? 'blue':'red'}" data-badge-caption="${d.estado}"></span>
+                    </td>
                 </tr>
                 `)}
             </tbody>
