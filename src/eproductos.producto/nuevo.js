@@ -3,7 +3,7 @@ var empty = require('empty-element');
 import { productos } from './index'
 import { combinaciones } from './combinaciones'
 var PRECIOS_ = []
-function Ver(categorias,p) {
+function Ver(categorias,almacenes,p) {
     var el = yo`
     <div class="card horizontal">
         <div class="card-stacked">
@@ -86,6 +86,17 @@ function Ver(categorias,p) {
                                 <div class="input-field col s6">
                                     <input style="text-transform:uppercase" value="${p ? p.cod_marca : ''}" id="cod_marca" type="text" class="">
                                     <label id="" class="active"> Marca de Producto</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <select id="almacen_cod">
+                                        <option value="" disabled selected></option>
+                                        ${almacenes.map(c=>
+                                        yo`<option value="${c.almacen_cod}" ${p?(p.almacen_cod==c.almacen_cod?'selected':''):''}>${c.descripcion}</option>`
+                                        )}
+                                    </select>
+                                    <label id="lalmacen_cod">Seleccione Origen</label>
                                 </div>
                             </div>
                             <div class="row">
@@ -245,13 +256,15 @@ function VerTablaPrecios(){
 }
 function GenerarCodigo(){
     var nombre_producto=document.getElementById('nombre').value
-    document.getElementById('cod_producto').value = nombre_producto.substring(0,5).trim()
+    var len_nombre =nombre_producto.length
+    document.getElementById('cod_producto').value = nombre_producto.substring(0,2).trim()+nombre_producto[len_nombre-1]+nombre_producto[len_nombre-2]+parseInt(Math.random()*10)
 }
 function Guardar(u) {
     var props = {
         'nombre': {},
         'cod_producto': {},
         'cod_categoria': {},
+        'almacen_cod':{}
     }
     if (!Validar(props))
         return;
@@ -265,7 +278,8 @@ function Guardar(u) {
     const cod_producto = document.getElementById('cod_producto').value.toUpperCase()
     const alias = document.getElementById('nombre').value.substring(0,25).toUpperCase()
     const cod_marca = document.getElementById('cod_marca').value.toUpperCase()
-    const cod_categoria = document.getElementById('cod_categoria').value.toUpperCase()
+    const cod_categoria = document.getElementById('cod_categoria').value
+    const almacen_cod = document.getElementById('almacen_cod').value
     const imagen_url = document.getElementById('imagen_url').files.length > 0 ? document.getElementById('imagen_url').files[0].path : ''
     const imagen_anterior = u ? u.imagen_url : ''
     const estado = document.getElementById('estado').checked ? 'ACTIVO' : 'INACTIVO'
@@ -278,7 +292,7 @@ function Guardar(u) {
         },
         body: JSON.stringify({
             producto_id,nombre,cod_producto,
-            alias,cod_marca,cod_categoria, 
+            alias,cod_marca,almacen_cod,cod_categoria, 
             imagen_url, estado, imagen_anterior,
             precios
         })
@@ -350,7 +364,7 @@ function nuevo(u) {
                 $('#box_error').show()
             } else {
                 PRECIOS_ = res.precios
-                Ver(res.categorias, u)
+                Ver(res.categorias,res.almacenes, u)
             }
             HideLoader()
         })

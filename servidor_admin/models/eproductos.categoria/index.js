@@ -41,5 +41,13 @@ module.exports = {
             callback(err, r.rows)
         })
     },
+    getActivos: (params, callback) => {
+        db.query("select cod_categoria,nombre_categoria,imagen_url from eproductos.categoria where estado='ACTIVO'", params, (err, r) => {
+            if (err) {
+                return callback(err.name + ":" + err.code + " " + err.routine, undefined)
+            }
+            callback(err, r.rows)
+        })
+    },
     //...More functions
 }

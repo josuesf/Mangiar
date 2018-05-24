@@ -54,6 +54,7 @@ var personas_api = require('./routes/api-personas')
 var eproductos_categoria = require('./routes/eproductos.categoria')
 var eproductos_producto = require('./routes/eproductos.producto')
 var ecaja_caja = require('./routes/ecaja.caja')
+var webservices =require('./routes/webservices')
 // function authChecker(req, res, next) {
 //   if ((req.session && req.session.authenticated)||req.path==='/login') {
 //       next();
@@ -74,6 +75,7 @@ app.use('/personas_api',personas_api);
 app.use('/eproductos_categoria',eproductos_categoria);
 app.use('/eproductos_producto',eproductos_producto);
 app.use('/ecaja_caja',ecaja_caja);
+app.use('/ws',webservices);
 //Listen Server
 var server = app.listen(5000, function (err) {
   if (err) return console.log('Hubo un error'), process.exit(1);

@@ -17,6 +17,7 @@ CREATE TABLE eproductos.producto --Josue
  cod_producto varchar(30) UNIQUE NULL,
  cod_categoria varchar(50) NOT NULL ,
  cod_marca varchar(120)  NULL ,
+ almacen_cod varchar(50) NOT NULL,
  nombre varchar(200) NOT NULL ,
  alias varchar(100)  NULL,
  imagen_url varchar(110)  NULL ,
@@ -64,7 +65,8 @@ PRIMARY KEY (producto_id,cod_unidad,cod_precio),
 FOREIGN KEY(producto_id) REFERENCES eproductos.producto(producto_id)
 	ON UPDATE NO ACTION ON DELETE NO ACTION
 );
-CREATE TABLE eproductos.stock_producto( --Josue
+CREATE TABLE eproductos.stock_producto
+( --Josue
 producto_id INT NOT NULL,
 cod_unidad varchar(10),
 cod_almacen varchar(30),
@@ -95,7 +97,8 @@ CREATE TABLE eproductos.combinacion
  usuario_actualizo varchar(50),
  PRIMARY KEY (combinacion_id)
 );
-CREATE TABLE eproductos.combinacion_detalle( --Josue
+CREATE TABLE eproductos.combinacion_detalle
+( --Josue
  detalle_id serial not null,
  combinacion_id int not null,
  producto_id int NULL,

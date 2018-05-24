@@ -84,6 +84,7 @@ almacen_cod varchar(50), --cod_almacen al que pertenece el producto
 cantidad int,
 cod_unidad varchar(10),
 descripcion_detalle varchar(256),
+precio numeric(18,4),
 cod_punto_venta varchar(30), --EJEM: Mesa1
 aplica_impuesto boolean default false,
 observacion_detalle varchar(256) null,

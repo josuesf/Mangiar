@@ -89,8 +89,9 @@ usuario_actualizo varchar(50),
  FOREIGN KEY (cod_documento) REFERENCES documento(cod_documento),
 FOREIGN KEY (cod_sucursal) REFERENCES sucursal(cod_sucursal)
 );
-CREATE TABLE punto_venta( --Omar
-cod_punto_venta varchar(30),
+CREATE TABLE punto_venta
+( --Omar
+cod_punto_venta varchar(10) primary key,
 nombre_punto varchar(50),
 cod_sucursal varchar(12),
 estado_accion varchar(20),

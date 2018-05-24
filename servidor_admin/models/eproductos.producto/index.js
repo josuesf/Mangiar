@@ -16,7 +16,7 @@ module.exports = {
         })
     },
     save: (params, images, precios, callback) => {
-        db.query("SELECT * FROM eproductos.fn_SaveProducto($1,$2,$3,$4,$5,$6,$7,$8,$9)", params, (err, r) => {
+        db.query("SELECT * FROM eproductos.fn_SaveProducto($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)", params, (err, r) => {
             if (err) {
                 return callback(err.name + ":" + err.code + " " + err.routine, undefined)
             }
@@ -72,6 +72,14 @@ module.exports = {
     },
     get_categorias: (callback) => {
         db.query("SELECT cod_categoria,nombre_categoria from eproductos.categoria where estado=$1", ["ACTIVO"], (err, r) => {
+            if (err) {
+                return callback(err.name + ":" + err.code + " " + err.routine, undefined)
+            }
+            callback(err, r.rows)
+        })
+    },
+    get_almacenes: (callback) => {
+        db.query("SELECT almacen_cod,descripcion from almacen where estado=$1", ["ACTIVO"], (err, r) => {
             if (err) {
                 return callback(err.name + ":" + err.code + " " + err.routine, undefined)
             }
