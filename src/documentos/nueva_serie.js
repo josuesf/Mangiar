@@ -1,6 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
-import { nuevo } from './nuevo'
+import { nuevoDocumento } from './nuevo'
 function Ver(documento,serie,sucursales) {
     var el = yo`
     <div>
@@ -108,7 +108,7 @@ function Eliminar(documento,serie) {
                     $('#box_error').show()
                 } else {
                     if (res.respuesta[0].fn_deleteserie == 'Se elimino correctamente') {
-                        nuevo(documento)
+                        nuevoDocumento(documento)
                     }
                 }   
                 HideLoader()
@@ -148,7 +148,7 @@ function Guardar(documento,serie) {
                 $('#box_error').show()
             } else {
                 if (res.series.length > 0) {
-                    nuevo(documento)
+                    nuevoDocumento(documento)
                 }
             }
             $("#modal").modal('close')
@@ -174,7 +174,6 @@ function nuevaserie(documento,serie) {
     fetch('http://localhost:5000/sucursales_api/get_sucursales', parametros)
         .then(req => req.json())
         .then(res => {
-            console.log(res)
             //Ver(sucursal,res.ubigeos) 
             Ver(documento,serie,res.sucursales)
             

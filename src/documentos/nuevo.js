@@ -7,102 +7,86 @@ function Ver(documento,series,paginas,pagina_actual) {
     <div class="card horizontal">
         <div class="card-stacked">
             <div class="card-content">
-                <span class="card-title">${documento ? 'Editar Documento' : 'Nuevo Documento' }</span>
-                <div class="row">
-                    <form class="col s12">
-                        <div class="row" id="box_error" style="display:none;">
-                            <div class="col s12">
-                            <div class="card-panel  red lighten-2">
-                                <span class="white-text" id = "text_error"></span>
-                            </div>
-                            </div>
-                        </div>
-                         <div class="row">
-                            <div class="col s6">
-                                <label>Estado</label>
-                                <div class="switch">
-                                    <label>
-                                    Inactivo
-                                    <input id="estado" checked="${documento ? (documento.estado=='ACTIVO' ? '1' : '0') : '0'}" type="checkbox">
-                                    <span class="lever"></span>
-                                    Activo
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                         <div class="row">
-                             <div class="input-field col s6" style="display:${documento ? "none":"display"}">
-                                <input style="text-transform: uppercase;" id="cod_documento" type="text" class="validate">
-                                <label class="active" for="cod_documento" id="lcod_documento" data-error="" data-success="">Codigo Documento</label>
-                            </div>
-                            <div class="input-field col s6">
-                                <input style="text-transform: uppercase;" value="${documento ? documento.descripcion_doc : ''}" id="descripcion_doc" type="text">
-                                <label class="active" for="descripcion_doc" id="ldescripcion_doc" data-error="" data-success="">Descripcion</label>
-                            </div>
-                            
-                        </div>
-                         
-                        <div class="row">
-                            
-                            <div class="input-field col s6">
-                                <input value="${documento ? documento.tipo_doc : ''}" id="tipo_doc" type="text" class="validate">
-                                <label for="tipo_doc" class="active">Tipo</label>
-                            </div>
 
-                            <div class="input-field col s6">
-                                <input value="${documento ? documento.formato_doc : ''}" id="formato_doc" type="text" class="validate">
-                                <label for="formato_doc" class="active">Formato</label>
-                            </div>
-                             
-                        </div>
-                        
-                          
-                        <div class="row">
-                            <div class="col s6">
-                                <a onclick=${() => Guardar(documento)} class="waves-effect waves-light btn">Guardar Documento</a>
-                            </div>
-                            ${documento?yo`
-                            <div class="col s6">
-                                <a onclick=${() => Eliminar(documento)} class="waves-effect waves-light btn red lighten-3">Eliminar Documento</a>
-                            </div>
-                            `:yo``}
-                        </div>
-                        <div class="row">
-                            ${documento?yo`
-                            <div class="col s6">
-                                <a onclick=${() => AgregarSerie(documento)} class="waves-effect waves-light btn blue accent-2 lighten-3">Agregar serie</a>
-                            </div>
-                            `:yo``}
-                        </div>
-                    </form>
+                <div class="col s12">
+                    <ul class="tabs">
+                        <li class="tab col s3"><a class="active" href="#tab_documento">Documento</a></li>
+                        ${documento && yo`<li class="tab col s3"><a href="#tab_serie" onclick="${()=>CargarTabSeries(documento,series,paginas,pagina_actual)}">Series</a></li>`}
+                    </ul>
                 </div>
-                ${documento?
-                    yo`
+
+                <div id="tab_documento" class="col s12">
+                    <br><br>
                     <div class="row">
                         <form class="col s12">
-                            <div class="input-field col s12">
-                                <i class="material-icons prefix">search</i>
-                                <input id="serie_busqueda" onkeyup="${()=>BuscarSerie(documento,1)}" type="number" class="validate">
-                                <label for="serie_busqueda" >Ingrese el numero de la serie para buscar</label>
+                            <div class="row" id="box_error" style="display:none;">
+                                <div class="col s12">
+                                <div class="card-panel  red lighten-2">
+                                    <span class="white-text" id = "text_error"></span>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col s6">
+                                    <label>Estado</label>
+                                    <div class="switch">
+                                        <label>
+                                        Inactivo
+                                        <input id="estado" checked="${documento ? (documento.estado=='ACTIVO' ? '1' : '0') : '0'}" type="checkbox">
+                                        <span class="lever"></span>
+                                        Activo
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s6" style="display:${documento ? "none":"display"}">
+                                    <input style="text-transform: uppercase;" id="cod_documento" type="text" class="validate">
+                                    <label class="active" for="cod_documento" id="lcod_documento" data-error="" data-success="">Codigo Documento</label>
+                                </div>
+                                <div class="input-field col s6">
+                                    <input style="text-transform: uppercase;" value="${documento ? documento.descripcion_doc : ''}" id="descripcion_doc" type="text">
+                                    <label class="active" for="descripcion_doc" id="ldescripcion_doc" data-error="" data-success="">Descripcion</label>
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="row">
+                                
+                                <div class="input-field col s6">
+                                    <input value="${documento ? documento.tipo_doc : ''}" id="tipo_doc" type="text" class="validate">
+                                    <label for="tipo_doc" class="active">Tipo</label>
+                                </div>
+
+                                <div class="input-field col s6">
+                                    <input value="${documento ? documento.formato_doc : ''}" id="formato_doc" type="text" class="validate">
+                                    <label for="formato_doc" class="active">Formato</label>
+                                </div>
+                                
+                            </div>
+                            
+                            
+                            <div class="row">
+                                <div class="col s6">
+                                    <a onclick=${() => Guardar(documento)} class="waves-effect waves-light btn">Guardar Documento</a>
+                                </div>
+                                ${documento?yo`
+                                <div class="col s6">
+                                    <a onclick=${() => Eliminar(documento)} class="waves-effect waves-light btn red lighten-3">Eliminar Documento</a>
+                                </div>
+                                `:yo``}
                             </div>
                         </form>
-                    </div>`: yo``
-                }
-                ${documento?
-                    yo`
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <div id="div_tabla">                            
-                                ${VerTablaSeries(documento,series,paginas,pagina_actual)}
-                            </div>
-                        </div>
-                    </div>`: yo``
-                }
+                    </div>
+                </div>
+                ${documento && yo`<div id="tab_serie" class="col s12"></div>`}
+                
             </div>
         </div>
     </div>`;
     var container = document.getElementById('contenido_principal')
     empty(container).appendChild(el);
+    $('ul.tabs').tabs();
     /*var sub_nav = yo`
     <div class="collection">
         <a href="#!" onclick="${()=>documentos()}" class="collection-item">Todos los Documentos</a>
@@ -124,6 +108,7 @@ function VerTablaSeries(documento,series,paginas,pagina_actual){
                     <th>Nro Inicio</th>
                     <th>Sucursal</th>
                     <th>Esta afectado</th>
+                    <th>Estado</th>
                 </tr>
             </thead>
             <tbody>
@@ -137,7 +122,10 @@ function VerTablaSeries(documento,series,paginas,pagina_actual){
                     <td>${s.nro_serie}</td>
                     <td>${s.nro_inicio}</td>
                     <td>${s.cod_sucursal}</td>
-                    <td>${s.esta_afecto}</td>
+                    <td>${s.esta_afecto==0?'NO':'SI'}</td>
+                    <td>
+                        <span class="new badge ${s.estado=="ACTIVO"? 'blue':'red'}" data-badge-caption="${s.estado}"></span>
+                    </td>
                 </tr>
                 `)}
             </tbody>
@@ -159,6 +147,40 @@ function VerTablaSeries(documento,series,paginas,pagina_actual){
         </ul>
     </div>`;
 }
+
+
+function CargarTabSeries(documento,series,paginas,pagina_actual){
+    var el = yo`
+        <div class="row"> 
+            <br><br>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col s12">
+                        <a onclick=${() => AgregarSerie(documento)} class="waves-effect waves-light btn blue accent-2 lighten-3">Agregar serie</a>
+                    </div>
+                </div> 
+                <div class="row">
+                    <form class="col s12">
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">search</i>
+                            <input id="serie_busqueda" onkeyup="${()=>BuscarSerie(documento,1)}" type="number" class="validate">
+                            <label for="serie_busqueda" >Ingrese el numero de la serie para buscar</label>
+                        </div>
+                    </form>
+                </div> 
+                <div class="row">
+                    <div class="input-field col s12">
+                        <div id="div_tabla">                            
+                            ${VerTablaSeries(documento,series,paginas,pagina_actual)}
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </div>`
+    var container = document.getElementById('tab_serie')
+    empty(container).appendChild(el);
+}
+
 
 function fetchSeries(documento,tamano_pagina,_numero_pagina,serie_busqueda,callback){ 
         const parametros = {
@@ -230,16 +252,16 @@ function Guardar(d) {
     fetch('http://localhost:5000/documentos_api/save_documento', parametros)
         .then(req => req.json())
         .then(res => {
-            console.log(res)
+            HideLoader()
             if (res.err) {
                 $('#text_error').text(res.err)
                 $('#box_error').show()
             } else {
                 if (res.documentos.length > 0) {
-                    documentos()
+                    nuevoDocumento(res.documentos[0])
                 }
             }
-            HideLoader()
+             
         })
 }
 
