@@ -128,6 +128,20 @@ module.exports = {
             SAVE_SYNC(combinaciones_producto,0,"INSERT INTO eproductos.combinaciones_producto(combinacion_id, producto_id, etiqueta_titulo, cantidad_minima,cantidad_maxima, estado, creado_en, usuario_creacion)VALUES ($1, $2, $3, $4,$5, $6, now(), $7); ",params.usuario,callback)
         })
     },
+    get_productos_todos: (params, callback) => {
+        var query_db = "SELECT p.producto_id,p.cod_producto,cod_categoria,cod_marca,"
+        query_db+="almacen_cod,nombre,alias,imagen_url,'PEN' cod_moneda,"
+        query_db+="'S/.' simbolo,(select valor_precio from eproductos.precios_producto pp "
+        query_db+="where pp.producto_id=p.producto_id limit 1), "
+        query_db+=" 0 detalles,1 precios"
+        query_db+=" from eproductos.producto p where estado='ACTIVO' "
+        db.query(query_db, params, (err, r) => {
+            if (err) {
+                return callback(err.name + ":" + err.code + " " + err.routine, undefined)
+            }
+            callback(err, r.rows)
+        })
+    },
     //...More functions
 }
 

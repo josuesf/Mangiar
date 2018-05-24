@@ -39,5 +39,15 @@ router.post('/get_categorias_todas', function (req, res) {
 		return res.json({categorias})
 	})
 });
+router.post('/get_productos_todos', function (req, res) {
+    const input = req.body
+	//call Model account
+	const producto = require('../models/eproductos.producto')
+	//call Model.login function
+	producto.get_productos_todos([], function (err, productos) {
+		if (err) return res.json({err})
+		return res.json({productos})
+	})
+});
 
 module.exports = router;
