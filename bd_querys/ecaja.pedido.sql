@@ -2,8 +2,8 @@
 FUNCTION eproductos.fn_SavePedido
 Descripcion: Guarda o aactualiza un pedido
 Parametros: necesarios para un pedido
-Fecha:17052018
-Ejecucion: SELECT * from eproductos.fn_SaveComanda(4,'CLIENTES VARIOS','PEN',26.50,'OCUPADO','ME1','ADMIN')
+Fecha:17052018 
+Ejecucion: SELECT * from eproductos.fn_SaveComanda(-1,'CLIENTES VARIOS','PEN',26.50,'OCUPADO','ME1','ADMIN')
 DROP: DROP FUNCTION eproductos.fn_SaveComanda(
 pnumero int,
  pnombre_cliente varchar(12),
@@ -33,6 +33,10 @@ BEGIN
 
 IF( (select count(*) from ecaja.pedido where ecaja.pedido.numero=pnumero) = 0) THEN
 pnumero=(select p.numero from ecaja.pedido p where p.cod_documento = 'COM' and p.nro_serie=1 order by p.numero desc limit 1)+1;
+if(pnumero is null)then
+pnumero=1;
+end if;
+
 pcod_sucursal = (select cod_sucursal from sucursal order by creado_en limit 1);  
 INSERT INTO ecaja.pedido(
 	cod_documento,
