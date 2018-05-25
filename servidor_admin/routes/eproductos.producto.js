@@ -36,7 +36,7 @@ router.post('/save_producto', function (req, res) {
 		input.almacen_cod,
 		input.nombre,
 		input.alias,
-		input.imagen_url != "" ? input.cod_producto + Date.now() + '.png' : '',
+		input.imagen_url != "" ? input.cod_producto + Date.now() + '.png' : 'meal.png',
 		input.estado,
 		req.app.locals.usuario
 	]
