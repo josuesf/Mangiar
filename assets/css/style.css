@@ -1,0 +1,399 @@
+/*------ CSS Use Case Example START ------*/
+ 
+.background-0 { background: #C87D26; }
+.background-1 { background: #569D99; }
+.background-2 { background: #740039; }
+.background-3 { background: #839FC5; }
+.background-4 { background: #6A4F76; }
+.background-5 { background: #57636D; }
+.background-6 { background: #6D5242; }
+.background-7 { background: #4F5051; }
+
+.background-0,
+.background-1,
+.background-2,
+.background-3,
+.background-4,
+.background-5,
+.background-6,
+.background-7 {
+  transition: all 400ms ease;
+}
+
+/* class created only for a better preview*/
+.stage {
+    position: absolute;
+    opacity: 1;
+    max-width: 300px;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+}
+
+.stage.hidden {
+  opacity: 0;
+  transition: all 400ms ease;
+}
+
+@media screen and (max-width: 600px) {
+    .stage {
+        max-width: 100%;
+      }
+  }
+  
+ .title {
+     width: 100%;
+     padding-bottom: 30px;
+     text-align: center;
+     font-weight: 400;
+     font-size: 22px;
+     color: #fff;
+ }
+
+ .card-content {
+   position: relative;
+   padding: 5px;
+ }
+ 
+ .card-image {
+   width: 100%;
+   height: 100%;
+ }
+ .card-image img {
+   border-top-left-radius: 10px;
+   border-top-right-radius: 10px;
+   -o-object-fit: cover;
+      object-fit: cover;
+   width: 100%;
+   height: 100%;
+   min-height: 330px;
+ }
+ 
+ .card-titles {
+   position: absolute;
+   bottom: 0;
+   padding: 40px 30px;
+ }
+ 
+ .card-footer {
+   display: -webkit-box;
+   display: -ms-flexbox;
+   display: flex;
+   -webkit-box-pack: center;
+       -ms-flex-pack: center;
+           justify-content: center;
+   -webkit-box-align: center;
+       -ms-flex-align: center;
+           align-items: center;
+   padding: 25px 35px;
+ }
+ 
+ .popular-destinations-text {
+   font-size: 16px;
+   font-weight: 400;
+   color: #8E9AA4;
+   width: 100%;
+   min-width: 110px;
+ }
+ 
+ .popular-destinations-images {
+     display: -webkit-box;
+     display: -ms-flexbox;
+     display: flex;
+     -webkit-box-pack: end;
+         -ms-flex-pack: end;
+             justify-content: flex-end;
+     width: 100%;
+ }
+ 
+ .circle {
+     width: 40px;
+     height: 40px;
+     border-radius:  50%;
+     background: #fff;
+     margin-left: 8px;
+ }
+ 
+ .circle img {
+     border-radius: 50%
+ }
+ 
+ /* global actions buttons*/
+.global-actions {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    padding-top: 30px;
+    min-width: 200px;
+}
+ 
+ .top-action,
+ .right-action,
+ .left-action {
+     border-radius: 50%;
+     display: -webkit-box;
+     display: -ms-flexbox;
+     display: flex;
+   -webkit-box-align: center;
+       -ms-flex-align: center;
+           align-items: center;
+     -webkit-box-pack: center;
+         -ms-flex-pack: center;
+             justify-content: center;
+     background: #fff;
+   -webkit-box-shadow: 0 3px 4px 0px rgba(0,0,0,0.5);
+           box-shadow: 0 3px 4px 0px rgba(0,0,0,0.5);
+ }
+ .right-action,
+ .left-action {
+     width: 60px;
+     height: 60px;
+ }
+ 
+.top-action {
+    width: 40px;
+    height: 40px;
+    margin: 0 20px;
+}
+
+.final-state.active {
+  position: absolute;
+  opacity: 1;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  transition: all 400ms ease;
+}
+
+.final-state.hidden {
+  opacity: 0;
+}
+
+
+/*------ CSS Use Case Example END ------*/
+
+/*----- Stacked Cards component css START -----*/
+ 
+.no-transition {
+  -webkit-transition: none ! important;
+  transition: none ! important;
+}
+
+ .stackedcards-overflow {
+     overflow-y: hidden !important;
+ }
+ 
+ .stackedcards.init {
+     opacity: 0;/* set the opacity to 0 if you want a fade-in effect to stacked cards on page load */
+ }
+ 
+ .stackedcards {
+     position: relative;
+ }
+ 
+ .stackedcards * {
+     -webkit-user-select: none;
+             -moz-user-select: none;
+              -ms-user-select: none;
+          user-select: none;
+ }
+ 
+ .stackedcards--animatable {
+     -webkit-transition: all 400ms ease;
+             -o-transition: all 400ms ease;
+             transition: all 400ms ease;
+ }
+ 
+ .stackedcards .stackedcards-container > *,
+ .stackedcards-overlay {
+     position: absolute;
+     width: 100%; /* set 100% */
+     height: 100%; /* set 100% */
+     will-change: transform, opacity;
+     top: 0;
+     border-radius: 10px;
+     min-width: 265px;
+ }
+ 
+ .stackedcards-overlay.left > div,
+ .stackedcards-overlay.right > div,
+ .stackedcards-overlay.top > div {
+     width: 100%;
+     height: 100%;
+     -webkit-box-align: center;
+         -ms-flex-align: center;
+             align-items: center;
+     display: -webkit-box;
+     display: -ms-flexbox;
+     display: flex;
+     -webkit-box-pack: center;
+         -ms-flex-pack: center;
+             justify-content: center;
+ }
+ 
+ .stackedcards-overlay.left,
+ .stackedcards-overlay.right,
+ .stackedcards-overlay.top {
+     -webkit-box-align: center;
+         -ms-flex-align: center;
+             align-items: center;
+     display: -webkit-box;
+     display: -ms-flexbox;
+     display: flex;
+     -webkit-box-pack: center;
+         -ms-flex-pack: center;
+             justify-content: center;
+     left: 0;
+     opacity: 0;
+     top: 0;
+     height: 100%;
+ }
+ 
+ .stackedcards-overlay.top,
+ .stackedcards-overlay.right,
+ .stackedcards-overlay.left {
+     background: #fff;
+ }
+ 
+ .stackedcards-overlay.left:empty,
+ .stackedcards-overlay.right:empty,
+ .stackedcards-overlay.top:empty {
+   display: none !important;
+ }
+ 
+ .stackedcards-overlay-hidden {
+     display: none;
+ }
+ 
+ .stackedcards-origin-bottom {
+     -webkit-transform-origin: bottom;
+             -ms-transform-origin: bottom;
+         transform-origin: bottom;
+ }
+ 
+ .stackedcards-origin-top {
+     -webkit-transform-origin: top;
+             -ms-transform-origin: top;
+         transform-origin: top;
+ }
+ 
+ .stackedcards-bottom,
+ .stackedcards-top,
+ .stackedcards-none {
+     background: #fff; /* set card background background */
+    box-shadow: 0 6px 12px 0 rgba(0,0,0,0.30);  
+    height: 100%;
+ }
+ 
+ .stackedcards .stackedcards-container > :nth-child(1) {
+     position: relative;
+     display: block;
+ }
+
+/*----- Stacked Cards component css END -----*/
+ 
+
+
+article {
+	height: 260px;
+	text-align:center;
+	padding: 20px;
+	box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+    color:#FFF;
+    animation:bounceIn 2.8s;
+}
+article img{
+	max-width: 160px;
+	max-height: 130px;
+	padding:0;
+}
+article img.err{ /* applied when image does not load */
+	 width:100%;
+	background-color:rgba(0,0,0,0.2);
+ }
+article h1{
+	font-size: 2em;
+	margin-bottom: 5px;
+}
+
+article span{
+    margin-bottom: 20px;
+    display: block;
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+article span + div.circle{
+	font-size: 100px;
+	margin-top: 20px;
+	background: rgba(0, 0, 0, 0.3);
+	display: inline-block;
+	width: auto;
+	height: 80px;
+    border-radius: 60px;
+    text-align: center;
+}
+
+
+article[title="item1"]{ background-color:#9BB83F;}
+article[title="item2"]{ background-color:#D68D53;}
+article[title="item3"]{ background-color:#bd383b;}
+ 
+@keyframes bounceIn{
+	
+	0%,20%,40%,60%,80%,100%{animation-timing-function:cubic-bezier(0.215, 0.610, 0.355, 1.000)}
+	0%{opacity:0;transform:scale3d(.3,.3,.3)}
+	10%{transform:scale3d(1.1,1.1,1.1)}
+	40%{transform:scale3d(.9,.9,.9)}
+	60%{opacity:1;transform:scale3d(1.03,1.03,1.03)}
+	80%{transform:scale3d(.97,.97,.97)}
+	100%{opacity:1;transform:scale3d(1,1,1)}
+}
+
+
+.main-card{
+    position: relative;
+    margin-top: 10px;
+    width: auto;
+    height: auto;
+}
+
+.card-custom{
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: all 0.5s ease;
+}
+
+.card-custom:hover{
+    transform: rotateY(180deg);
+}
+
+.card-front{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+}
+
+.card-back{ 
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    transform: rotateY(180deg);
+}
+
+
+   
