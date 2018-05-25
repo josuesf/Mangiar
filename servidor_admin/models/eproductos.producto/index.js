@@ -28,9 +28,9 @@ module.exports = {
             if (err) {
                 return callback(err.name + ":" + err.code + " " + err.routine, undefined)
             }
-            if (images.anterior != '') {
+            if (images.anterior != '' && images.anterior!='meal.png') {
                 // fs.unlinkSync(__dirname + '/../../../public/images/'+images.anterior);
-                if (images.nueva != '')
+                if (images.nueva != '' )
                     fs.unlink(__dirname + '/../../../public/images/' + images.anterior, function (err) {
                         if (err) return console.log(err);
                         console.log('file deleted successfully');
@@ -97,6 +97,7 @@ module.exports = {
     get_precios: (params, callback) => {
         db.query("SELECT cod_unidad,cod_precio,nombre_precio,cod_moneda,valor_precio from eproductos.precios_producto where producto_id=$1 order by creado_en", params, (err, r) => {
             if (err) {
+                console.log(err)
                 return callback(err.name + ":" + err.code + " " + err.routine, undefined)
             }
             callback(err, r.rows)
@@ -113,6 +114,22 @@ module.exports = {
     get_combinaciones_producto: (params, callback) => {
         db.query("SELECT combinacion_id,etiqueta_titulo,cantidad_maxima,cantidad_minima from eproductos.combinaciones_producto where producto_id=$1 and estado='ACTIVO' ", params, (err, r) => {
             if (err) {
+                return callback(err.name + ":" + err.code + " " + err.routine, undefined)
+            }
+            callback(err, r.rows)
+        })
+    },
+    get_combinaciones_producto_detalle: (params, callback) => {
+        dbselect = 'select p.combinacion_id,p.etiqueta_titulo,p.cantidad_maxima,p.cantidad_minima,';
+        dbselect+='cd.detalle_id,cd.producto_id,cd.nombre_producto nombre,cd.precio valor_precio,'
+        dbselect+='(select almacen_cod from eproductos.producto pa where pa.producto_id=cd.producto_id) '
+        dbselect+='from eproductos.combinaciones_producto p '
+        dbselect+='inner join eproductos.combinacion_detalle cd '
+        dbselect+='on p.combinacion_id=cd.combinacion_id '
+        dbselect+='where p.producto_id=$1'
+        db.query(dbselect, params, (err, r) => {
+            if (err) {
+                console.log(err)
                 return callback(err.name + ":" + err.code + " " + err.routine, undefined)
             }
             callback(err, r.rows)
@@ -141,7 +158,8 @@ module.exports = {
         query_db+="almacen_cod,nombre,alias,imagen_url,'PEN' cod_moneda,"
         query_db+="'S/.' simbolo,(select valor_precio from eproductos.precios_producto pp "
         query_db+="where pp.producto_id=p.producto_id limit 1), "
-        query_db+=" 0 detalles,1 precios"
+        query_db+="(select count(*) from eproductos.combinaciones_producto cb where cb.producto_id=p.producto_id) detalles,"
+        query_db+="(select count(*) from eproductos.precios_producto prep where prep.producto_id=p.producto_id) precios"
         query_db+=" from eproductos.producto p where estado='ACTIVO' "
         db.query(query_db, params, (err, r) => {
             if (err) {

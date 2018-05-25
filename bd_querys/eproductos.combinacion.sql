@@ -1,4 +1,4 @@
-/*
+﻿/*
 FUNCION
 Nombre: fn_DeleteCombinacionDetalle
 Descripcion: Eliminina un combinacion detalle
@@ -52,7 +52,7 @@ FUNCION
 Nombre: fn_SaveCombinacion
 Descripcion: guarda una combinacion
 Parametros: 
-Ejecucion: SELECT * FROM eproductos.fn_SaveCombinacion(params)
+Ejecucion: SELECT * FROM eproductos.fn_SaveCombinacion(-1,'Elije sabores',1,0,'ACTIVO','ADMIN')
 */
 CREATE OR REPLACE FUNCTION eproductos.fn_SaveCombinacion
 (
@@ -82,7 +82,7 @@ IF( (SELECT COUNT(*) from eproductos.combinacion where eproductos.combinacion.co
     usuario_actualizo
     ) 
 VALUES(
-	_etiqueta_titulo,
+ _etiqueta_titulo,
     _cantidad_minima,
     _cantidad_maxima,
     _estado,
@@ -90,7 +90,7 @@ VALUES(
     _usuario_creacion,
     null,
     null
-    ) RETURNING combinacion_id;
+    ) RETURNING eproductos.combinacion.combinacion_id;
 
 ELSE
 RETURN QUERY
@@ -101,7 +101,7 @@ UPDATE eproductos.combinacion SET
  estado =_estado ,
  actualizado_en = now(),
  usuario_actualizo = _usuario_creacion
-WHERE eproductos.combinacion.combinacion_id=_combinacion_id RETURNING combinacion_id;
+WHERE eproductos.combinacion.combinacion_id=_combinacion_id RETURNING eproductos.combinacion.combinacion_id;
 END IF;
 
  

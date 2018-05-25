@@ -61,6 +61,28 @@ router.post('/get_productos_by_mesa', function (req, res) {
 		return res.json({productos_selec})
 	})
 });
+router.post('/get_combinaciones_producto', function (req, res) {
+    const input = req.body
+	//call Model account
+	const params = [input.producto_id]
+	const producto = require('../models/eproductos.producto')
+	//call Model.login function
+	producto.get_combinaciones_producto_detalle(params, function (err, combinaciones) {
+		if (err) return res.json({err})
+		return res.json({combinaciones})
+	})
+});
+router.post('/get_precios_producto', function (req, res) {
+    const input = req.body
+	//call Model account
+	const params = [input.producto_id]
+	const producto = require('../models/eproductos.producto')
+	//call Model.login function
+	producto.get_precios(params, function (err, precios) {
+		if (err) return res.json({err})
+		return res.json({precios})
+	})
+});
 router.post('/confirmar_ecaja_pedido', function (req, res) {
     const input = req.body
 	//call Model account
