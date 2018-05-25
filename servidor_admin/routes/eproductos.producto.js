@@ -3,6 +3,17 @@ var router = express.Router();
 var md5 = require('md5')
 //call Model account
 const producto = require('../models/eproductos.producto')
+
+router.post('/get_all_productos', function (req, res) {
+	input = req.body
+	//set params
+	const params = []
+	//call Model.login function
+	producto.getAll(params, function (err, productos) {
+		if (err) return res.json({ err })
+		return res.json({ productos })
+	})
+});
 // define the home page route
 router.post('/get_productos', function (req, res) {
 	input = req.body

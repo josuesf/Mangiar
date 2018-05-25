@@ -2,6 +2,14 @@
 const db = require('../../../connectionbd')
 const fs = require('fs')
 module.exports = {
+    getAll: (params, callback) => {
+        db.query('SELECT * FROM eproductos.producto', params, (err, r) => {
+            if (err) {
+                return callback(err.name + ":" + err.code + " " + err.routine, undefined)
+            }
+            callback(err, r.rows)
+        })
+    },
     get: (params, callback) => {
         db.query('SELECT * FROM eproductos.fn_GetProductos($1,$2,$3)', params, (err, r) => {
             if (err) {

@@ -53,6 +53,7 @@ var almacenes_api = require('./routes/api-almacenes')
 var personas_api = require('./routes/api-personas')
 var eproductos_categoria = require('./routes/eproductos.categoria')
 var eproductos_producto = require('./routes/eproductos.producto')
+var eproductos_combinacion = require('./routes/eproductos.combinacion')
 var ecaja_caja = require('./routes/ecaja.caja')
 var webservices =require('./routes/webservices')
 // function authChecker(req, res, next) {
@@ -74,6 +75,7 @@ app.use('/almacenes_api',almacenes_api);
 app.use('/personas_api',personas_api);
 app.use('/eproductos_categoria',eproductos_categoria);
 app.use('/eproductos_producto',eproductos_producto);
+app.use('/eproductos_combinacion',eproductos_combinacion);
 app.use('/ecaja_caja',ecaja_caja);
 app.use('/ws',webservices);
 //Listen Server
