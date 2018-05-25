@@ -31,7 +31,8 @@ module.exports = {
         })
     },
     getActivos:(params,callback)=>{
-        db.query('SELECT cod_punto_venta "Cod_Mesa",nombre_punto "Nom_Mesa",estado_accion "Estado_Mesa",0 "Nro_Cuentas",usuario_accion "Mesero" FROM punto_venta where estado=$1', ["ACTIVO"], (err, r) => {
+        const nro_cuentas = '(SELECT count(distinct d.pedido_id) from ecaja.pedido_detalle d inner join ecaja.pedido p on d.pedido_id=p.pedido_id where d.cod_punto_venta=pv.cod_punto_venta)'
+        db.query('SELECT cod_punto_venta "cod_mesa",nombre_punto "nombre_mesa",estado_accion,'+nro_cuentas+' "Nro_Cuentas",usuario_accion "Mesero" FROM punto_venta pv where estado=$1', ["ACTIVO"], (err, r) => {
             if (err) {
                 return callback(err.name+":"+err.code+" "+err.routine, undefined)
             }

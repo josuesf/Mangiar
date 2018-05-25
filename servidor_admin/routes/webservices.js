@@ -49,5 +49,36 @@ router.post('/get_productos_todos', function (req, res) {
 		return res.json({productos})
 	})
 });
-
+//get_productos_by_mesa
+router.post('/get_productos_by_mesa', function (req, res) {
+    const input = req.body
+	//call Model account
+	const params = [input.cod_mesa]
+	const pedido = require('../models/ecaja.pedido')
+	//call Model.login function
+	pedido.getPedidobyPunto(params, function (err, productos_selec) {
+		if (err) return res.json({err})
+		return res.json({productos_selec})
+	})
+});
+router.post('/confirmar_ecaja_pedido', function (req, res) {
+    const input = req.body
+	//call Model account
+	const params = [
+		input.numero==''?-1:input.numero,
+		input.nombre_cliente,
+		input.cod_moneda,
+		input.total,
+		input.estado_pedido,
+		input.cod_mesa,
+		input.usuario_registro
+	]
+	console.log(params)
+	const pedido = require('../models/ecaja.pedido')
+	//call Model.login function
+	pedido.confirmar_pedido(params,input.productos,input.usuario_registro, function (err, pedido) {
+		if (err) return res.json({err})
+		return res.json({numero:pedido[0].numero,pedido_id:pedido[0].pedido_id})
+	})
+});
 module.exports = router;
