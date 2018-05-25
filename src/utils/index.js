@@ -43,6 +43,7 @@ function transformUi(moveX,moveY,opacity,elementObj) {
         }
         
         if(stackedOptions === "Top"){
+            console.log("top")
             elTrans = elementsMargin * (items - 1);
             if(element){     
                 element.style.webkitTransform = "translateX(" + moveX + "px) translateY(" + (moveY + elTrans) + "px) translateZ(0) rotate(" + rotateElement + "deg)";
@@ -168,6 +169,64 @@ function setActiveHidden() {
         listElNodesObj[currentPosition - 1].classList.add('stackedcards-hidden');
         listElNodesObj[currentPosition].classList.add('stackedcards-active');
     }		 
+};
+
+function onSwipeRight() {
+    removeNoTransition();
+    transformUi(400, 0, 0, currentElementObj);
+    if(useOverlays){
+        transformUi(400, 0, 0, rightObj); //Move rightOverlay
+        transformUi(400, 0, 0, topObj); //Move topOverlay
+        resetOverlayRight();
+    }
+
+    currentPosition = currentPosition + 1;
+    updateUi();
+    currentElement();
+    changeBackground();
+    changeStages();
+    setActiveHidden();
+};
+
+function resetOverlayRight() {
+    if(!(currentPosition >= maxElements)){
+        if(useOverlays){
+            setTimeout(function(){
+                
+                if(stackedOptions === "Top"){+2
+                    
+                    elTrans = elementsMargin * (items - 1);
+                
+                } else if(stackedOptions === "Bottom" || stackedOptions === "None"){
+                    
+                    elTrans = 0;
+                
+                }
+                
+                if(!isFirstTime){
+                    
+                    rightObj.classList.add('no-transition');
+                    topObj.classList.add('no-transition');
+                    
+                }
+                
+                requestAnimationFrame(function(){
+                    
+                    rightObj.style.transform = "translateX(0) translateY(" + elTrans + "px) translateZ(0)";
+                    rightObj.style.webkitTransform = "translateX(0) translateY(" + elTrans + "px) translateZ(0)";
+                    rightObj.style.opacity = '0';
+                    
+                    topObj.style.transform = "translateX(0) translateY(" + elTrans + "px) translateZ(0)";
+                    topObj.style.webkitTransform = "translateX(0) translateY(" + elTrans + "px) translateZ(0)";
+                    topObj.style.opacity = '0';
+                
+                });
+
+            },300);
+            
+            isFirstTime = false;
+        }
+    }
 };
 
 function onSwipeLeft() {
@@ -332,4 +391,20 @@ function onActionLeft() {
     }
 };
 
-export { Init , onActionLeft }
+function onActionRight() {
+    if(!(currentPosition >= maxElements)){
+        if(useOverlays) {
+            rightObj.classList.remove('no-transition');
+            topObj.classList.remove('no-transition');
+            rightObj.style.zIndex = '8';
+            transformUi(0, 0, 1, rightObj);
+        }
+
+        setTimeout(function(){
+            onSwipeRight();
+            resetOverlayRight();
+        },300);
+    }
+};
+
+export { Init , onActionLeft , onActionRight }

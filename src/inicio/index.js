@@ -1,69 +1,28 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
-import { Init,onActionLeft } from '../utils'
+import { Init,onActionLeft,onActionRight } from '../utils'
  
 function Ver(puntos_ventas,paginas) {
-    var el =''
-    if(paginas <= 4){
-        el = yo `
-            <div class="row">
-                <p></p>
-                <div class="row">
-                    ${puntos_ventas.map(p=> yo`
-                        <div class="col m3"> 
-                            <div class="card">
-                                <div class="main-card">
-                                    <div class="card-custom">
-                                        <div class="card-front">
-                                            <article title="${p.estado=="ACTIVO"? 'item1':p.estado=="ESPERA"?'item2':'item3'}"><h1>${p.nombre_punto}</h1><div class="circle"></div></article>
-                                        </div>
-                                        <div class="card-back">
-                                            <article title="${p.estado=="ACTIVO"? 'item1':p.estado=="ESPERA"?'item2':'item3'}"><h1>Detalles</h1>
-                                                <div class="row"> 
-                                                    <div class="section">
-                                                        <a class="waves-effect waves-light btn-small">
-                                                            <i class="material-icons left">local_printshop</i>Facturar
-                                                        </a>
-                                                    </div>
-                                                    <div class="section">
-                                                        <a class="waves-effect waves-light btn-small">
-                                                            <i class="material-icons left">panorama_fish_eye</i>Ver más
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </article>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> 
-                        </div>
-                    `)}
-                </div>
-            </div>`;
-    }else{
-        const numeroFilas = Math.floor(paginas/4)
-        const restante = paginas % 4
-        el = yo `
-            <div class="container">
-                ${Array.apply(null, Array(numeroFilas)).map(e=>yo`
+    var el = yo `
+            <div class="container"> 
                     <div class="row">
                         ${puntos_ventas.map(p=> yo`
                             <div class="col m3"> 
                                 <div class="main-card">
                                     <div class="card-custom">
                                         <div class="card-front">
-                                            <article title="${p.estado=="ACTIVO"? 'item1':p.estado=="ESPERA"?'item2':'item3'}"><h1>${p.nombre_punto}</h1><div class="row text-center"><div class="circle"></div></div></article>
+                                            <article title="${p.estado=="LIBRE"? 'item1':p.estado=="PENDIENTE"?'item2':'item3'}"><h4>${p.nombre_punto}</h4><div class="row text-center"><div class="circle"></div></div></article>
                                         </div>
                                         <div class="card-back">
-                                            <article title="${p.estado=="ACTIVO"? 'item1':p.estado=="ESPERA"?'item2':'item3'}"><h1>Detalles</h1>
+                                            <article title="${p.estado=="LIBRE"? 'item1':p.estado=="PENDIENTE"?'item2':'item3'}"><h4>Detalles</h4>
                                                 <div class="row"> 
                                                     <div class="section">
-                                                        <a class="waves-effect waves-light btn-small">
+                                                        <a class="btn waves-effect waves-light btn-small">
                                                             <i class="material-icons left">local_printshop</i>Facturar
                                                         </a>
                                                     </div>
                                                     <div class="section">
-                                                        <a class="waves-effect waves-light btn-small" onclick=${()=>VerDetallesPedido()}>
+                                                        <a class="btn waves-effect waves-light btn-small" onclick=${()=>VerDetallesPedido()}>
                                                             <i class="material-icons left">panorama_fish_eye</i>Ver más
                                                         </a>
                                                     </div>
@@ -75,38 +34,8 @@ function Ver(puntos_ventas,paginas) {
                             </div>
                         `)}
                     </div>
-                `)}
-                <div class="row">
-                    ${puntos_ventas.map(p=> yo`
-                        <div class="col m3"> 
-                            <div class="main-card">
-                                <div class="card-custom">
-                                    <div class="card-front">
-                                        <article title="${p.estado=="ACTIVO"? 'item1':p.estado=="ESPERA"?'item2':'item3'}"><h1>${p.nombre_punto}</h1><div class="row text-center"><div class="circle"></div></div></article>
-                                    </div>
-                                    <div class="card-back">
-                                        <article title="${p.estado=="ACTIVO"? 'item1':p.estado=="ESPERA"?'item2':'item3'}"><h1>Detalles</h1>
-                                            <div class="row"> 
-                                                <div class="section">
-                                                    <a class="waves-effect waves-light btn-small">
-                                                        <i class="material-icons left">local_printshop</i>Facturar
-                                                    </a>
-                                                </div>
-                                                <div class="section">
-                                                    <a class="waves-effect waves-light btn-small" onclick=${()=>VerDetallesPedido()}>
-                                                        <i class="material-icons left">panorama_fish_eye</i>Ver más
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </article>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `)}
-                </div>
+                
             </div>`; 
-    }
     //const numeroFilas = Math.floor(paginas/4) 
      
     var container = document.getElementById('contenido_principal')
@@ -290,9 +219,8 @@ function VerDetallesPedido() {
                                 <div class="stackedcards--animatable stackedcards-overlay left"><img src="https://image.ibb.co/heTxf7/20_status_close_3x.png" width="auto" height="auto"/></div>
                             </div>
                             <div class="global-actions">
-                                <div class="left-action" onclick=${()=>onActionLeft()}><img src="https://image.ibb.co/heTxf7/20_status_close_3x.png" width="26" height="26"/></div>
-                                <div class="top-action"><img src="https://image.ibb.co/m1ykYS/rank_army_star_2_3x.png" width="18" height="16"/></div>
-                                <div class="right-action"><img src="https://image.ibb.co/dCuESn/Path_3x.png" width="30" height="28"/></div>
+                                <div class="left-action" onclick=${()=>onActionLeft()} style="cursor:pointer"><img src="https://image.ibb.co/heTxf7/20_status_close_3x.png" width="26" height="26"/></div>
+                                <div class="right-action" onclick=${()=>onActionRight()} style="cursor:pointer"><img src="https://image.ibb.co/dCuESn/Path_3x.png" width="30" height="28"/></div>
                             </div>
                         </div>
                     
