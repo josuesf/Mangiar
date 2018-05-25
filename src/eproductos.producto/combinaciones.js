@@ -2,6 +2,7 @@ var yo = require('yo-yo')
 var empty = require('empty-element');
 import { productos } from './index'
 var COMBINACIONES_PRODUCTO = []
+var ITEMS = []
 function Ver(combinaciones, combinaciones_producto, producto_id) {
     var el = yo`
     <div class="col s12">
@@ -11,7 +12,7 @@ function Ver(combinaciones, combinaciones_producto, producto_id) {
                 <div class="row">
                     <a style="font-size:8pt;" 
                     class="waves-effect waves-light btn white teal-text text-accent-4" 
-                    onclick="${() => console.log('Nuevo')}">
+                    onclick="${() => VerNuevaCombinacion()}">
                     <i class="material-icons left teal-text text-accent-4">add_box</i> Nueva Combinacion</a>
                     <ul class="collapsible" data-collapsible="accordion">
                         ${combinaciones.map(c => yo`<li>
@@ -21,7 +22,8 @@ function Ver(combinaciones, combinaciones_producto, producto_id) {
                                 <label for="filled-in-box${c.combinacion_id}"></label>
                                 </p>
 
-                                <i class="material-icons">remove_red_eye</i>${c.etiqueta_titulo}
+                                <i class="material-icons">remove_red_eye</i><a href="#!" onclick="${()=>EliminarCombinacion(c)}"><i class="material-icons red-text text-darken-1">indeterminate_check_box</i></a>
+                                <a href="#!" onclick="${()=>VerEditarCombinacion(c)}"><i class="material-icons indigo-text">edit</i></a>${c.etiqueta_titulo}
                             </div>
                             <div class="collapsible-body" id="MOC${c.combinacion_id}">
                                 
@@ -33,6 +35,12 @@ function Ver(combinaciones, combinaciones_producto, producto_id) {
             <div class="modal-footer">
                 <a href="#!" onclick="${() => GuardarCombinaciones(producto_id)}" class="waves-effect waves-green teal accent-4 btn">Guardar</a>
             </div>
+        </div>
+        <div id="modalNuevaCombinacion" class="modal col s6 modal-fixed-footer">
+            
+        </div>
+        <div id="modalAgregarItem" class="modal col s6 modal-fixed-footer">
+            
         </div>
         <br>
         <div class="col s8">
@@ -90,6 +98,38 @@ function SeleccionarCombinacion(c, producto_id) {
         return com;
     })
 }
+
+function EliminarCombinacion(combinacion){
+    var txt;
+    var r = confirm("Esta seguro de eliminar?");
+    if (r == true) {
+        ShowLoader()
+        const combinacion_id = combinacion.combinacion_id
+        const parametros = {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                combinacion_id,
+            })
+        }
+        fetch('http://localhost:5000/eproductos_combinacion/delete_combinacion', parametros)
+            .then(req => req.json())
+            .then(res => {
+                if (res.err) {
+                    $('#text_error').text(res.err)
+                    $('#box_error').show()
+                } else {
+                    console.log('Se elimino hay q hacer algo')
+                }
+                HideLoader()
+            })
+        
+    }
+}
+
 function GuardarCombinaciones(producto_id) {
     console.log(COMBINACIONES_PRODUCTO.filter(c => c.producto_id != null))
     ShowLoader()
@@ -116,9 +156,171 @@ function GuardarCombinaciones(producto_id) {
             HideLoader()
         })
 }
+function VerEditarCombinacion(combinacion){
+    var combinacion_id  = combinacion.combinacion_id
+    const parametros = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            combinacion_id
+        })
+    }
+    fetch('http://localhost:5000/eproductos_combinacion/get_combinacion_detalle', parametros)
+        .then(req => req.json())
+        .then(res => {
+            if (res.err) {
+                $('#text_error').text(res.err)
+                $('#box_error').show()
+            } else {
+                var it = res.items 
+                ITEMS = []
+                for(var i = 0 ; i < it.length ; i++){
+                    var e = it[i]
+                    var dic = {
+                        'detalle_id': e.detalle_id,
+                        'producto_id': e.producto_id,
+                        'nombre_producto': e.nombre_producto,
+                        'cod_moneda': e.cod_moneda,
+                        'precio': e.precio
+                    }
+                    ITEMS.push(dic)
+                }
+                VerNuevaCombinacion(combinacion)
+            }
+            HideLoader()
+        })
+}
+
 function VerCombinaciones() {
     $('#modalCombinaciones').modal('open');
 }
+
+function hideAlMenos(){
+    var tipo = document.getElementById('tipo_combinacion').value
+    var cant = document.getElementById('input_cantidad_minima')
+    if(tipo == 'OBLIGATORIO'){
+        cant.classList.add('hide')
+    }else{
+        cant.classList.remove('hide')
+    }
+}
+
+function VerNuevaCombinacion(combinacion){
+    $('#modalNuevaCombinacion').modal('open');
+    if(combinacion == undefined)
+        ITEMS = []
+    var el = yo`
+    <div>
+        <div class="modal-content">
+            <h5>${combinacion?'Editar':'Nueva'} Combinacion</h5>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input value="${combinacion ? combinacion.etiqueta_titulo : ''}" id="etiqueta_titulo" type="text" class="validate" placeholder="Elije sabores">
+                    <label for="etiqueta_titulo" class="active" id="letiqueta_titulo">Etiqueta</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6">
+                    <select id="tipo_combinacion" onchange="${(ev)=>hideAlMenos()}">
+                        <option value="OBLIGATORIO" ${combinacion? combinacion.cantidad_maxima==0?'selected':'':'selected'}>Obligatorio</option>
+                        <option value="OPCIONAL" ${combinacion? combinacion.cantidad_maxima==1?'selected':'':''}>Opcionales</option>
+                        <option value="MULTIPLE" ${combinacion? combinacion.cantidad_maxima>=2?'selected':'':''}>Multiple</option>
+                    </select>
+                    <label>Tipo de combinacion</label>
+                </div>
+                <div class="input-field col s6" id="input_cantidad_minima">
+                    <input value="${combinacion ? combinacion.cantidad_minima : ''}" id="cantidad_minima" type="text" class="validate" placeholder="Ejmp. 1, 2, 3">
+                    <label for="cantidad_minima" class="active" id="lcantidad_minima">Seleccione al menos</label>
+                </div>
+            </div>
+            <div class="row">
+                <a style="font-size:8pt;" class="waves-effect waves-light btn white teal-text text-accent-4" 
+                onclick="${() => VerAgregarItem()}">
+                <i class="material-icons left teal-text text-accent-4">add</i> Agregar item</a>
+            </div>
+            <div id="tableItems">
+                <table class="col s12 table">
+                    <thead>
+                        <td></td>
+                        <td><label>Nombre</label></td>
+                        <td><label>Moneda</label></td>
+                        <td><label>Valor</label></td>
+                    </thead>
+                    <tbody id="titems">
+                        ${ITEMS.map((it,i)=>
+                        yo`
+                        <tr id="${it.detalle_id}">
+                            <td>
+                                <div class="">
+                                    <a href="#!" onclick="${()=>EliminarItem(it,i)}"><i class="material-icons red-text text-darken-1">indeterminate_check_box</i></a>
+                                    <a href="#!" onclick="${()=>VerAgregarItem(it,i)}"><i class="material-icons indigo-text">edit</i></a>
+                                </div>
+                            </td>
+                            <td>${it.nombre_producto}</td>
+                            <td>SOLES</td>
+                            <td>${parseFloat(it.precio).toFixed(2)}</td>
+                        </tr>
+                        `)}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" onclick="${()=>GuardarCombinacion(combinacion)}" class="waves-effect waves-green teal accent-4 btn">Guardar</a>
+            <a href="#!" onclick="${()=>$('#modalNuevaCombinacion').modal('close')}" class="waves-effect waves-green red btn">Cancelar</a>
+        </div>
+    </div>
+    `
+    var container = document.getElementById('modalNuevaCombinacion')
+    empty(container).appendChild(el);
+    $('select').material_select();
+    hideAlMenos()
+}
+
+function GuardarCombinacion(combinacion){
+    var props = {
+        'etiqueta_titulo': {},
+    }
+    if (!Validar(props) || ITEMS.length == 0)
+        return;
+    var combinacion_id = combinacion? combinacion.combinacion_id : -1
+    var etiqueta_titulo = document.getElementById('etiqueta_titulo').value
+    var cantidad_minima = document.getElementById('tipo_combinacion').value == 'OBLIGATORIO'? 1 : parseInt(document.getElementById('cantidad_minima').value)
+    var cantidad_maxima = document.getElementById('tipo_combinacion').value == 'OBLIGATORIO'? 0 : document.getElementById('tipo_combinacion').value == 'OPCIONAL'? 1 : 50
+    var estado = 'ACTIVO'
+
+    const parametros = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            combinacion_id,
+            etiqueta_titulo,
+            cantidad_maxima,
+            cantidad_minima,
+            estado,
+            ITEMS
+        })
+    }
+    fetch('http://localhost:5000/eproductos_combinacion/save_combinacion', parametros)
+        .then(req => req.json())
+        .then(res => {
+            if (res.err) {
+                $('#text_error').text(res.err)
+                $('#box_error').show()
+            } else {
+                $('#modalNuevaCombinacion').modal('close');
+            }
+            HideLoader()
+        })
+
+}
+
 function AbrirCombinacion(c, id_seccion) {
     const combinacion_id = c.combinacion_id
     var combinacion = document.getElementById(id_seccion + c.combinacion_id)
@@ -175,6 +377,168 @@ function AbrirCombinacion(c, id_seccion) {
 
 
 }
+
+function EliminarItem(it, i){
+    var txt;
+    var r = confirm("Esta seguro de eliminar?");
+    if (r == true) {
+        ShowLoader()
+        if(it.detalle_id != -1){
+            const detalle_id = it.detalle_id
+            const parametros = {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    detalle_id,
+                })
+            }
+            fetch('http://localhost:5000/eproductos_combinacion/delete_combinacion_detalle', parametros)
+                .then(req => req.json())
+                .then(res => {
+                    if (res.err) {
+                        $('#text_error').text(res.err)
+                        $('#box_error').show()
+                    } else {
+                        ITEMS.splice(i,1)
+                        reloadTableItems()
+                    }
+                    HideLoader()
+                })
+        }else{
+            ShowLoader()
+            ITEMS.splice(i,1)
+            reloadTableItems()
+            HideLoader()
+        }
+    }
+}
+function VerAgregarItem(item,i){
+    $('#modalAgregarItem').modal('open')
+    var el = yo`
+    <div>
+        <div class="modal-content">
+            <h5>${item?'Editar':'Agregar'} Item</h5>
+            <div class="row">
+                <div class="col s12">
+                    <div class="input-field col s12">
+                        <input type="text" value="${item? item.nombre_producto:''}" id="nombre_producto" style="text-transform:uppercase" class="autocomplete">
+                        <label for="nombre_producto" class="active" id="lnombre_producto">Nombre del item</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6">
+                    <select id="cod_moneda">
+                        <option value="PEN" selected>Soles</option>
+                    </select>
+                    <label>Tipo de moneda</label>
+                </div>
+                <div class="input-field col s6">
+                    <input value="${item? item.precio:''}" id="precio" type="text" class="validate">
+                    <label for="precio" id="lprecio" class="active" data-error="Ejem: 10.00" data-success="Correcto">Valor Precio</label>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" onclick="${()=>guardarItem(item,i)}" class="waves-effect waves-green teal accent-4 btn">${item? 'Guardar':'Agregar'}</a>
+            <a href="#!" onclick="${()=>$('#modalAgregarItem').modal('close')}" class="waves-effect waves-green red btn">Cancelar</a>
+        </div>
+    </div>
+    `
+    function guardarItem(item){
+        var props = {
+            'nombre_producto': {},
+            'precio': {number_msg:'Ingrese monto valido'},
+        }
+        if (!Validar(props))
+            return;
+        
+        var selpe = midata[document.getElementById('nombre_producto').value]
+        var it = {
+            'detalle_id':item?item.detalle_id:-1,
+            'nombre_producto': document.getElementById('nombre_producto').value.toUpperCase(),
+            'cod_moneda': document.getElementById('cod_moneda').value,
+            'precio': parseFloat(document.getElementById('precio').value).toFixed(2)
+        }
+        if(selpe != undefined){
+            it['producto_id'] = selpe.producto_id
+        }else{
+            it['producto_id'] = null
+        }
+        if(item){
+            ITEMS[i] = it
+        }else{
+            ITEMS.push(it)
+        }
+        reloadTableItems()
+        $('#modalAgregarItem').modal('close')
+    }
+
+    var container = document.getElementById('modalAgregarItem')
+    empty(container).appendChild(el);
+    $('select').material_select();
+    var midata = {}
+    const parametros = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({})
+        
+    }
+    
+    fetch('http://localhost:5000/eproductos_producto/get_all_productos', parametros)
+        .then(req => req.json())
+        .then(res => {
+            var pro = res.productos
+            var data = {}
+            for(var i = 0 ; i < pro.length ; i++){
+                var p = pro[i]
+                midata[p.nombre] = p
+                data[p.nombre] = null
+            }
+            $('input.autocomplete').autocomplete({
+                data,
+                limit: 5, 
+                minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
+              });
+
+        })
+}
+
+function reloadTableItems(){
+    var table = yo`<table class="col s12 table">
+    <thead>
+        <td></td>
+        <td><label>Nombre</label></td>
+        <td><label>Moneda</label></td>
+        <td><label>Valor</label></td>
+    </thead>
+    <tbody id="titems">
+        ${ITEMS.map((it,i)=>
+        yo`
+        <tr id="${it.detalle_id}">
+            <td>
+                <div class="">
+                    <a href="#!" onclick="${()=>EliminarItem(it,i)}"><i class="material-icons red-text text-darken-1">indeterminate_check_box</i></a>
+                    <a href="#!"  onclick="${()=>VerAgregarItem(it,i)}"><i class="material-icons indigo-text">edit</i></a>
+                </div>
+            </td>
+            <td>${it.nombre_producto}</td>
+            <td>SOLES</td>
+            <td>${parseFloat(it.precio).toFixed(2)}</td>
+        </tr>
+        `)}
+    </tbody>
+</table>`
+    var container = document.getElementById('tableItems')
+    empty(container).appendChild(table);
+}
+
 function VerTablaPrecios() {
     empty(document.getElementById('tprecios'))
     PRECIOS_.map((p, i) =>

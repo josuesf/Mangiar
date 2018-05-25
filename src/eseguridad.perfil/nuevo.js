@@ -31,7 +31,7 @@ function Ver(perfil, modulos) {
                         </div>
                         <div class="row">
                             ${!perfil? yo`<div class="input-field col s6">
-                                <input id="cod_perfil" type="text" class="validate">
+                                <input id="cod_perfil" type="text" style="text-transform:uppercase" class="validate">
                                 <label for="cod_perfil" class="active" id="lcod_perfil">Codigo perfil</label>
                             </div>`:yo``}
                             <div class="input-field col s6">

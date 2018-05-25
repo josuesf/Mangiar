@@ -22,7 +22,7 @@ function Ver(modulo) {
                                 <div class="switch">
                                     <label>
                                     Inactivo
-                                    <input id="estado" checked="${modulo ? (modulo.estado == "ACTIVO" ? 'true' : 'false') : 'false'}" type="checkbox">
+                                    <input id="estado" checked="${modulo ? (modulo.estado == "ACTIVO" ? 'true' : 'false') : 'true'}" type="checkbox">
                                     <span class="lever"></span>
                                     Activo
                                     </label>
@@ -33,7 +33,7 @@ function Ver(modulo) {
                                 <div class="switch">
                                     <label>
                                     No accede
-                                    <input id="nivel" checked="${modulo ? (modulo.nivel == 1 ? 'true' : 'false') : 'false'}" type="checkbox">
+                                    <input id="nivel" checked="${modulo ? (modulo.nivel == 1 ? 'true' : 'false') : 'true'}" type="checkbox">
                                     <span class="lever"></span>
                                     Accede
                                     </label>
@@ -42,7 +42,7 @@ function Ver(modulo) {
                         </div>
                         <div class="row">
                             ${!modulo? yo`<div class="input-field col s6">
-                                <input id="cod_modulo" type="text" class="validate">
+                                <input id="cod_modulo" style="text-transform:uppercase" type="text" class="validate">
                                 <label for="cod_modulo" class="active" id="lcod_modulo">Codigo modulo</label>
                             </div>`:yo``}
                             <div class="input-field col s6">
