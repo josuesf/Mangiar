@@ -106,9 +106,9 @@ pnumero int,
 CREATE OR REPLACE FUNCTION eproductos.fn_SaveComanda_Detalle
 (
  ppedido_id int,
- pid_detalle integer,
+ pid_detalle varchar(20),
  pproducto_id integer,
- pid_referencia integer,
+ pid_referencia varchar(20),
  palmacen_cod varchar(50),
  pcantidad integer,
  pdescripcion_detalle varchar(256),
@@ -179,9 +179,9 @@ CREATE OR REPLACE FUNCTION eproductos.fn_GetPedidoByPunto
 RETURNS TABLE(
 pedido_id int,
 numero int,
-id_detalle integer,
+id_detalle varchar(20),
 producto_id integer,
-id_referencia integer,
+id_referencia varchar(20),
 almacen_cod varchar(50),
 cantidad integer,
 nombre varchar(256),

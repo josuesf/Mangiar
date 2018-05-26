@@ -29,7 +29,7 @@ module.exports = {
                         pedido_id,
                         producto_detalles[i].id_detalle,
                         producto_detalles[i].producto_id,
-                        producto_detalles[i].id_referencia|0,
+                        producto_detalles[i].id_referencia?producto_detalles[i].id_referencia:'0',
                         producto_detalles[i].almacen_cod,
                         producto_detalles[i].cantidad,
                         producto_detalles[i].nombre,
@@ -38,6 +38,7 @@ module.exports = {
                         producto_detalles[i].estado_detalle,
                         usuario_registro
                     ]
+                    console.log(item_detalle)
                     db.query('SELECT * from eproductos.fn_SaveComanda_Detalle($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)', item_detalle, (err, r) => {
                         return;
                     })

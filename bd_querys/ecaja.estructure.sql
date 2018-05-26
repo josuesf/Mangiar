@@ -77,9 +77,9 @@ usuario_actualizo varchar(50),
 CREATE TABLE ecaja.pedido_detalle
 (
 pedido_id int,
-id_detalle int,
+id_detalle varchar(20),
 producto_id int,
-id_referencia int,
+id_referencia varchar(20),
 almacen_cod varchar(50), --cod_almacen al que pertenece el producto
 cantidad int,
 cod_unidad varchar(10),
