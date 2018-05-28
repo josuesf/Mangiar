@@ -22,14 +22,14 @@ function Ver(personas,paginas,pagina_actual) {
         </div>`;
     var container = document.getElementById('contenido_principal')
     empty(container).appendChild(el);
-    /*var sub_nav = yo`
+    var sub_nav = yo`
     <div class="collection">
         <a href="#!" class="collection-item active">Todas las personas</a>
         <a href="#!" class="collection-item" onclick="${()=>nuevaPersona()}">Nueva Persona</a>
     </div>
         `;
     var container = document.getElementById('sub_navegador_content')
-    empty(container).appendChild(sub_nav)*/
+    empty(container).appendChild(sub_nav)
     $(".dropdown-button").dropdown();
 }
 

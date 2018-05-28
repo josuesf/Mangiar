@@ -9,6 +9,7 @@ import { login } from '../login'
 import {cuentas} from '../eseguridad.cuenta'
 import { modulos } from '../eseguridad.modulo'
 import { perfiles } from '../eseguridad.perfil'
+import { personas } from '../personas'
 function Ver(login) {
     var el = login ? yo`
         <nav>
@@ -24,6 +25,9 @@ function Ver(login) {
                         <ul id="Opciones" class="dropdown-content">
                             <li>
                                 <a onclick="${() => menu_administracion()}">Administracion</a>
+                            </li>
+                            <li>
+                                <a onclick="${() => personas()}">Personas</a>
                             </li>
                             <li>
                                 <a onclick="${() => productos()}">Productos</a>

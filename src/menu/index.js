@@ -77,18 +77,6 @@ function menu_administracion() {
 
             <li>
                 <div class="collapsible-header">
-                    <i class="material-icons">expand_more</i>Personas
-                </div>
-                <div class="collapsible-body">
-                    <div class="collection">
-                        <a href="#!" onclick="${()=>personas()}" class="collection-item"> Todas las personas</a>
-                        <a href="#!" onclick="${()=>nuevaPersona()}" class="collection-item">Nueva Persona</a>
-                    </div>
-                </div>
-            </li>
-
-            <li>
-                <div class="collapsible-header">
                     <i class="material-icons">expand_more</i>Ubigeos
                 </div>
                 <div class="collapsible-body">
