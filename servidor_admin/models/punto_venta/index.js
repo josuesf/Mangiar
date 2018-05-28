@@ -31,8 +31,24 @@ module.exports = {
         })
     },
     getActivos:(params,callback)=>{
-        const nro_cuentas = '(SELECT count(distinct d.pedido_id) from ecaja.pedido_detalle d inner join ecaja.pedido p on d.pedido_id=p.pedido_id where d.cod_punto_venta=pv.cod_punto_venta)'
+        const nro_cuentas = "(SELECT count(distinct d.pedido_id) from ecaja.pedido_detalle d inner join ecaja.pedido p on d.pedido_id=p.pedido_id where d.cod_punto_venta=pv.cod_punto_venta AND p.estado_pedido='EN ATENCION')"
         db.query('SELECT cod_punto_venta "cod_mesa",nombre_punto "nombre_mesa",estado_accion,'+nro_cuentas+' "Nro_Cuentas",usuario_accion "Mesero" FROM punto_venta pv where estado=$1', ["ACTIVO"], (err, r) => {
+            if (err) {
+                return callback(err.name+":"+err.code+" "+err.routine, undefined)
+            }
+            callback(err, r.rows)
+        })
+    },
+    getCuentas:(params,callback)=>{
+        db.query('SELECT distinct p.numero, p.nro_serie,p.pedido_id,d.cod_punto_venta FROM punto_venta pv inner join ecaja.pedido_detalle d on d.cod_punto_venta=pv.cod_punto_venta inner join ecaja.pedido p on d.pedido_id=p.pedido_id where pv.cod_punto_venta=$1 and p.estado_pedido=$2', params, (err, r) => {
+            if (err) {
+                return callback(err.name+":"+err.code+" "+err.routine, undefined)
+            }
+            callback(err, r.rows)
+        })
+    },
+    getPedidoDetalle:(params,callback)=>{
+        db.query('SELECT d.*, p.* FROM ecaja.pedido_detalle d inner join ecaja.pedido p on d.pedido_id=p.pedido_id where d.pedido_id=$1 and d.cod_punto_venta=$2', params, (err, r) => {
             if (err) {
                 return callback(err.name+":"+err.code+" "+err.routine, undefined)
             }

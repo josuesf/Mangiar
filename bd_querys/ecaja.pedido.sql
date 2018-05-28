@@ -210,3 +210,100 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql;
+
+
+/*
+FUNCTION ecaja.fn_SaveComprobantePedido
+Descripcion: Guarda o actualiza Comprobante de un pedido
+Ejecucion: SELECT * from ecaja.fn_savecomprobantepedido('COM',1,1,'S001',2,'-1','CLIENTES VARIOS','NINGUNA','ninguna',12.0000,0.0000,'EMITIDO','jjjjjjj','12-12-2018','ADMIN')
+ 
+*/
+CREATE OR REPLACE FUNCTION ecaja.fn_SaveComprobantePedido
+(
+ pcod_documento varchar(5),
+ pnro_serie int,
+ pnumero int,
+ pcod_sucursal varchar(30),
+ ppedido_id int,
+ pcod_persona varchar(12),
+ pnombre_cliente varchar(200),
+ pdireccion_cliente varchar(256),
+ pconcepto varchar(100),
+ ptotal numeric(18,4),
+ pimpuesto numeric(18,4),
+ pestado varchar(25),
+ pobs varchar(256),
+ pfecha_emision timestamp,
+ pusuario_registro varchar(50)
+)
+RETURNS varchar(100) AS
+$$
+DECLARE
+BEGIN
+
+IF( (select count(*) from ecaja.comprobante where ecaja.comprobante.comp_cod_documento=pcod_documento and ecaja.comprobante.comp_nro_serie=pnro_serie and ecaja.comprobante.comp_numero=pnumero and ecaja.comprobante.comp_cod_sucursal=pcod_sucursal) = 0) THEN
+ 
+INSERT INTO ecaja.comprobante(
+	comp_cod_documento,
+	comp_nro_serie,
+	comp_numero,
+	comp_cod_sucursal,
+	pedido_id,
+	cod_persona,
+	nombre_cliente,
+	direccion_cliente,
+	comp_concepto,
+	comp_total,
+	comp_impuesto,
+	comp_estado,
+	comp_obs,
+	fecha_emision,
+	estado,
+	creado_en,
+	usuario_creacion)
+VALUES(
+	 pcod_documento ,
+	 pnro_serie,
+	 pnumero,
+	 pcod_sucursal,
+	 ppedido_id,
+	 pcod_persona,
+	 pnombre_cliente,
+	 pdireccion_cliente,
+	 pconcepto,
+	 ptotal,
+	 pimpuesto,
+	 pestado,
+	 pobs,
+	 pfecha_emision,
+	 'ACTIVO',	
+	 now(),
+	 pusuario_registro);
+
+UPDATE ecaja.pedido SET 
+ estado_pedido = 'TERMINADO'
+WHERE pedido_id=ppedido_id;
+RETURN 'El comprobante fue guardado correctamente';
+ELSE
+ 
+UPDATE ecaja.comprobante SET
+ cod_persona = pcod_persona,
+ nombre_cliente=pnombre_persona,
+ direccion_cliente=pdireccion_cliente,
+ comp_concepto=pconcepto,
+ comp_total=ptotal,
+ comp_impuesto=pimpuesto,
+ comp_estado=pestado,
+ actualizado_en=now(),
+ usuario_actualizo=pusuario_registro
+ where ecaja.comprobante.comp_cod_documento=pcod_documento and ecaja.comprobante.comp_nro_serie=pnro_serie and ecaja.comprobante.comp_numero=pnumero and ecaja.comprobante.comp_cod_sucursal=pcod_sucursal;
+
+RETURN 'El comprobante fue actualizado correctamente';
+END IF;
+  
+ 
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$
+LANGUAGE plpgsql;

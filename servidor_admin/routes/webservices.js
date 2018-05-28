@@ -28,6 +28,33 @@ router.post('/get_puntos_venta', function (req, res) {
 		return res.json({puntos_venta})
 	})
 });
+
+router.post('/get_cuentas_by_punto_venta', function (req, res) {
+    const input = req.body
+	//call Model account
+	const punto_venta = require('../models/punto_venta')
+	//set params
+	const params = [input.cod_punto_venta,"EN ATENCION"]
+	//call Model.login function
+	punto_venta.getCuentas(params, function (err, punto_venta) {
+		if (err) return res.json({err})
+		return res.json({punto_venta})
+	})
+});
+
+router.post('/get_pedido_detalle', function (req, res) {
+    const input = req.body
+	//call Model account
+	const punto_venta = require('../models/punto_venta')
+	//set params
+	const params = [input.pedido_id,input.cod_punto_venta]
+	//call Model.login function
+	punto_venta.getPedidoDetalle(params, function (err, punto_venta) {
+		if (err) return res.json({err})
+		return res.json({punto_venta})
+	})
+});
+
 //get_categorias_todas
 router.post('/get_categorias_todas', function (req, res) {
     const input = req.body
@@ -101,6 +128,35 @@ router.post('/confirmar_ecaja_pedido', function (req, res) {
 	pedido.confirmar_pedido(params,input.productos,input.usuario_registro, function (err, pedido) {
 		if (err) return res.json({err})
 		return res.json({numero:pedido[0].numero,pedido_id:pedido[0].pedido_id})
+	})
+});
+
+router.post('/save_ecaja_comprobante', function (req, res) {
+    const input = req.body
+	//call Model account
+	const params = [
+		cod_documento,
+		nro_serie,
+		numero,
+		cod_sucursal,
+		pedido_id,
+		cod_persona,
+		nombre_cliente,
+		direccion_cliente,
+		concepto,
+		total,
+		impuesto,
+		estado,
+		obs,
+		fecha,
+		req.app.locals.usuario
+	]
+	console.log(params)
+	const pedido = require('../models/ecaja.pedido')
+	//call Model.login function
+	pedido.save_comprobante(params, function (err, pedido) {
+		if (err) return res.json({err})
+		return res.json({resultado:pedido})
 	})
 });
 module.exports = router;
