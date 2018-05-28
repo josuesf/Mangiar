@@ -299,7 +299,7 @@ function VerDetalles(punto_venta,tipo){
             if (res.err) {
                 console.log(res.err)
             } else {
-                SeleccionarCuenta(res.punto_venta[0],tipo)
+                VerSeleccionCuentas(res.punto_venta,tipo)
             }
         })
     }else{
