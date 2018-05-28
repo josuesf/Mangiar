@@ -4,73 +4,155 @@ var empty = require('empty-element');
 import { Init,onActionLeft,onActionRight } from '../utils'
  
 function Ver(puntos_venta) {
-    var el = yo`
-    <div class="row">
-        ${puntos_venta.map(e=>yo` 
-        <div class="col m3"> 
-            <div class="card-container manual-flip">
-                <div class="card">
-                    <div class="front" title="${e.estado_accion}">
-                        <div class="header">
-                            <h5 class="motto">Punto de Venta</h5>
-                        </div>
-                        
-                        <div class="content">
-                            <div class="main">
-                                ${e.Nro_Cuentas>0?yo`
-                                    <div class="yellow ball-animation" style="text-align: -webkit-center;text-align: center;">
-                                        <h4 style="display:inline-block;">${e.Nro_Cuentas}</h4>
-                                    </div>`:yo`
-                                    <div class="yellow ball" style="text-align: -webkit-center;text-align: center;">
-                                        <h4 style="display:inline-block;"><i class="material-icons">airplay</i></h4>
-                                    </div>` 
-                                }
-                                <h3 class="name">${e.nombre_mesa}</h3>
-                                <p class="center white-text">${e.Mesero}</p>
+
+    var rows = puntos_venta.length
+    var el = ''
+    if(rows<=4){
+        el = yo`
+        <div>
+            <div class="row">
+                ${puntos_venta.map(e=>yo` 
+                        <div class="col m3"> 
+                            <div class="card-container manual-flip">
+                                <div class="card">
+                                    <div class="front" title="${e.estado_accion}">
+                                        <div class="header">
+                                            <h5 class="motto">Punto de Venta</h5>
+                                        </div>
+                                        
+                                        <div class="content">
+                                            <div class="main">
+                                                ${e.Nro_Cuentas>0?yo`
+                                                    <div class="yellow ball-animation" style="text-align: -webkit-center;text-align: center;">
+                                                        <h4 style="display:inline-block;">${e.Nro_Cuentas}</h4>
+                                                    </div>`:yo`
+                                                    <div class="yellow ball" style="text-align: -webkit-center;text-align: center;">
+                                                        <h4 style="display:inline-block;"><i class="material-icons">airplay</i></h4>
+                                                    </div>` 
+                                                }
+                                                <h3 class="name">${e.nombre_mesa}</h3>
+                                                <p class="center white-text">${e.Mesero}</p>
+                                            </div>
+                                            <div id=${e.cod_mesa} class="footer" style="cursor:pointer" onclick=${()=>RotarCard(e.cod_mesa)}>
+                                                Ver Detalles                                
+                                            </div>
+                                        </div>
+                                    </div> 
+                                    <div class="back" title="${e.estado_accion}">
+                                        <div class="header">
+                                            <h5 class="motto">Descripción</h5>
+                                        </div>
+                                        <div class="content">
+                                            <div class="main">
+                                                <div class="row">
+                                                    <div class="col m12">
+                                                        <a class="waves-effect yellow black-text btn btn-small btn-block" style="font-size: 12px;width: 100%;padding: 0 0.5rem;" onclick=${()=>VerDetalles(e,"R")}><i class="material-icons left">receipt</i> Comprobante</a>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col m12">
+                                                        <a class="waves-effect  yellow black-text btn btn-small btn-block" style="font-size: 12px;width: 100%;padding: 0 0.5rem;" onclick=${()=>VerDetalles(e,"D")}><i class="material-icons left">format_list_bulleted</i> Detalles</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="footer" style="cursor:pointer" onclick=${()=>RotarCard(e.cod_mesa)}>
+                                                Atras
+                                            </div>
+                                        </div>
+                                    </div>  
+                                </div> 
                             </div>
-                            <div id=${e.cod_mesa} class="footer" style="cursor:pointer" onclick=${()=>RotarCard(e.cod_mesa)}>
-                                Ver Detalles                                
-                            </div>
                         </div>
-                    </div> 
-                    <div class="back" title="${e.estado_accion}">
-                        <div class="header">
-                            <h5 class="motto">Descripción</h5>
-                        </div>
-                        <div class="content">
-                            <div class="main">
-                                <div class="row">
-                                    <div class="col m12">
-                                        <a class="waves-effect yellow black-text btn btn-small btn-block" style="font-size: 12px;width: 100%;padding: 0 0.5rem;" onclick=${()=>VerDetalles(e,"R")}><i class="material-icons left">receipt</i> Comprobante</a>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col m12">
-                                        <a class="waves-effect  yellow black-text btn btn-small btn-block" style="font-size: 12px;width: 100%;padding: 0 0.5rem;" onclick=${()=>VerDetalles(e,"D")}><i class="material-icons left">format_list_bulleted</i> Detalles</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="footer" style="cursor:pointer" onclick=${()=>RotarCard(e.cod_mesa)}>
-                                Atras
-                            </div>
-                        </div>
-                    </div>  
-                </div> 
+                        `)}
             </div>
-        </div>
-        `)}
-    </div>`; 
-    //const numeroFilas = Math.floor(paginas/4) 
-     
-    var container = document.getElementById('contenido_principal')
-    empty(container).appendChild(el);
-    var sub_nav = yo `
-    <div class="collection">
-        <a href="#!" class="collection-item active">Todas las mesas</a>
-        <a href="#!" class="collection-item">Mesas Ocupadas</a>
-        <a href="#!" class="collection-item">Mesas Libres</a>
-    </div>
-        `;
+        </div>`; 
+        //const numeroFilas = Math.floor(paginas/4) 
+        
+        var container = document.getElementById('contenido_principal')
+        empty(container).appendChild(el);
+        var sub_nav = yo `
+        <div class="collection">
+            <a href="#!" class="collection-item active">Todas las mesas</a>
+            <a href="#!" class="collection-item">Mesas Ocupadas</a>
+            <a href="#!" class="collection-item">Mesas Libres</a>
+        </div>`;
+    }else{
+        var numero_filas = Math.trunc(rows/4)
+        var sobrante = rows % 4
+        el = yo`
+        <div>
+            ${Array.apply(null,Array(numero_filas)).map((a,x)=>yo`
+                <div class="row">
+                    ${puntos_venta.map((e,y)=>
+                        y<((x+1)*4)?yo` 
+                            <div class="col m3"> 
+                                <div class="card-container manual-flip">
+                                    <div class="card">
+                                        <div class="front" title="${e.estado_accion}">
+                                            <div class="header">
+                                                <h5 class="motto">Punto de Venta</h5>
+                                            </div>
+                                            
+                                            <div class="content">
+                                                <div class="main">
+                                                    ${e.Nro_Cuentas>0?yo`
+                                                        <div class="yellow ball-animation" style="text-align: -webkit-center;text-align: center;">
+                                                            <h4 style="display:inline-block;">${e.Nro_Cuentas}</h4>
+                                                        </div>`:yo`
+                                                        <div class="yellow ball" style="text-align: -webkit-center;text-align: center;">
+                                                            <h4 style="display:inline-block;"><i class="material-icons">airplay</i></h4>
+                                                        </div>` 
+                                                    }
+                                                    <h3 class="name">${e.nombre_mesa}</h3>
+                                                    <p class="center white-text">${e.Mesero}</p>
+                                                </div>
+                                                <div id=${e.cod_mesa} class="footer" style="cursor:pointer" onclick=${()=>RotarCard(e.cod_mesa)}>
+                                                    Ver Detalles                                
+                                                </div>
+                                            </div>
+                                        </div> 
+                                        <div class="back" title="${e.estado_accion}">
+                                            <div class="header">
+                                                <h5 class="motto">Descripción</h5>
+                                            </div>
+                                            <div class="content">
+                                                <div class="main">
+                                                    <div class="row">
+                                                        <div class="col m12">
+                                                            <a class="waves-effect yellow black-text btn btn-small btn-block" style="font-size: 12px;width: 100%;padding: 0 0.5rem;" onclick=${()=>VerDetalles(e,"R")}><i class="material-icons left">receipt</i> Comprobante</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col m12">
+                                                            <a class="waves-effect  yellow black-text btn btn-small btn-block" style="font-size: 12px;width: 100%;padding: 0 0.5rem;" onclick=${()=>VerDetalles(e,"D")}><i class="material-icons left">format_list_bulleted</i> Detalles</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="footer" style="cursor:pointer" onclick=${()=>RotarCard(e.cod_mesa)}>
+                                                    Atras
+                                                </div>
+                                            </div>
+                                        </div>  
+                                    </div> 
+                                </div>
+                            </div>
+                            `:yo``)}
+                </div>`
+            )}
+           
+        </div>`; 
+        //const numeroFilas = Math.floor(paginas/4) 
+        
+        var container = document.getElementById('contenido_principal')
+        empty(container).appendChild(el);
+        var sub_nav = yo `
+        <div class="collection">
+            <a href="#!" class="collection-item active">Todas las mesas</a>
+            <a href="#!" class="collection-item">Mesas Ocupadas</a>
+            <a href="#!" class="collection-item">Mesas Libres</a>
+        </div>`;
+
+    }
     var container = document.getElementById('sub_navegador_content')
     empty(container).appendChild(sub_nav) 
     //$(".dropdown-button").dropdown();
@@ -206,6 +288,7 @@ function VerInvoice(pedido_detalle){
                             <tr>
                                 <th>Producto</th>
                                 <th>Cantidad</th>
+                                <th>Moneda</th>
                                 <th class="center">Precio</th>
                                 <th class="center">Total</th>
                             </tr>
@@ -213,9 +296,10 @@ function VerInvoice(pedido_detalle){
                         <tbody>
                             ${pedido_detalle.map(e=>yo` 
                                 <tr>
-                                    <td class="col-md-9"><em>${e.descripcion_detalle}</em></td>
-                                    <td class="col-md-1">${e.cantidad}</td>
-                                    <td class="col-md-1 center">${e.cod_moneda=="PEN"?"S/ ":"USD "}${e.precio}</td>
+                                    <td class="col-md-9">${e.descripcion_detalle}</td>
+                                    <td class="col-md-1" contenteditable="true">${e.cantidad}</td>
+                                    <td class="col-md-1" contenteditable="true">${e.cod_moneda=="PEN"?"S/ ":"USD "}</td>
+                                    <td class="col-md-1 center" contenteditable="true">${e.precio}</td>
                                     <td class="col-md-1 center">${parseFloat(e.cantidad)*parseFloat(e.precio)}</td>
                                 </tr>
                             `)}
@@ -295,13 +379,6 @@ function RotarCard(idBtn){
 
 function VerDetalles(punto_venta,tipo){ 
     if(punto_venta.Nro_Cuentas==1){   
-        fetchCuentas(punto_venta,function(res){
-            if (res.err) {
-                console.log(res.err)
-            } else {
-                VerSeleccionCuentas(res.punto_venta,tipo)
-            }
-        })
     }else{
         fetchCuentas(punto_venta,function(res){
             if (res.err) {
@@ -309,6 +386,7 @@ function VerDetalles(punto_venta,tipo){
             } else {
                 VerSeleccionCuentas(res.punto_venta,tipo)
             }
+            HideLoader()
         })
     }
 }
