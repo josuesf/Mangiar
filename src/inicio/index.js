@@ -1,6 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
-var htmlToPdf = require('html-to-pdf');
+//var htmlToPdf = require('html-to-pdf');
 import { Init,onActionLeft,onActionRight } from '../utils'
  
 function Ver(puntos_venta) {
@@ -190,7 +190,7 @@ function VerInvoice(pedido_detalle){
                             </div>
                             <div class="col s6 m6 right">
                                 <p>
-                                    <em>Fecha:</em>
+                                    <em>Fecha: </em>
                                 </p>
                                 <p>
                                     <em>Numero #: </em>
@@ -295,6 +295,13 @@ function RotarCard(idBtn){
 
 function VerDetalles(punto_venta,tipo){ 
     if(punto_venta.Nro_Cuentas==1){   
+        fetchCuentas(punto_venta,function(res){
+            if (res.err) {
+                console.log(res.err)
+            } else {
+                SeleccionarCuenta(res.punto_venta[0],tipo)
+            }
+        })
     }else{
         fetchCuentas(punto_venta,function(res){
             if (res.err) {
@@ -302,7 +309,6 @@ function VerDetalles(punto_venta,tipo){
             } else {
                 VerSeleccionCuentas(res.punto_venta,tipo)
             }
-            HideLoader()
         })
     }
 }
