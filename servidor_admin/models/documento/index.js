@@ -64,5 +64,22 @@ module.exports = {
             callback(err, r.rows)
         })
     },
+    get_tipos_documentos: (params,callback) => {
+        db.query("SELECT distinct d.cod_documento, d.tipo_doc,d.descripcion_doc from documento d inner join documento_serie det on d.cod_documento=det.cod_documento where det.cod_sucursal=$1 and det.esta_afecto='1'", params, (err, r) => {
+            if (err) {
+                return callback(err.name + ":" + err.code + " " + err.routine, undefined)
+            }
+            callback(err, r.rows)
+        })
+    },
+
+    get_series_by_documento: (params,callback) => {
+        db.query("SELECT * from documento_serie where cod_documento=$1", params, (err, r) => {
+            if (err) {
+                return callback(err.name + ":" + err.code + " " + err.routine, undefined)
+            }
+            callback(err, r.rows)
+        })
+    },
     //...More functions
 }

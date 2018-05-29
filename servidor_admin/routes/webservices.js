@@ -110,6 +110,32 @@ router.post('/get_precios_producto', function (req, res) {
 		return res.json({precios})
 	})
 });
+
+router.post('/get_tipo_comprobantes', function (req, res) {
+    const input = req.body
+	//call Model account
+	const params = [input.cod_sucursal]
+	const documento = require('../models/documento')
+	//call Model.login function
+	documento.get_tipos_documentos(params, function (err, documentos) {
+		if (err) return res.json({err})
+		return res.json({documentos})
+	})
+});
+
+router.post('/get_series_by_documento', function (req, res) {
+    const input = req.body
+	//call Model account
+	const params = [input.cod_documento]
+	const documento = require('../models/documento')
+	//call Model.login function
+	documento.get_series_by_documento(params, function (err, series) {
+		if (err) return res.json({err})
+		return res.json({series})
+	})
+});
+
+
 router.post('/confirmar_ecaja_pedido', function (req, res) {
     const input = req.body
 	//call Model account
@@ -135,20 +161,20 @@ router.post('/save_ecaja_comprobante', function (req, res) {
     const input = req.body
 	//call Model account
 	const params = [
-		cod_documento,
-		nro_serie,
-		numero,
-		cod_sucursal,
-		pedido_id,
-		cod_persona,
-		nombre_cliente,
-		direccion_cliente,
-		concepto,
-		total,
-		impuesto,
-		estado,
-		obs,
-		fecha,
+		input.cod_documento,
+		input.nro_serie,
+		input.numero,
+		input.cod_sucursal,
+		input.pedido_id,
+		input.cod_persona,
+		input.nombre_cliente,
+		input.direccion_cliente,
+		input.concepto,
+		input.total,
+		input.impuesto,
+		input.estado,
+		input.obs,
+		input.fecha,
 		req.app.locals.usuario
 	]
 	console.log(params)

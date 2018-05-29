@@ -2,6 +2,8 @@ var yo = require('yo-yo')
 var empty = require('empty-element');
 //var htmlToPdf = require('html-to-pdf');
 import { Init,onActionLeft,onActionRight } from '../utils'
+
+var contador = 0
  
 function Ver(puntos_venta) {
 
@@ -239,8 +241,8 @@ function VerSeleccionCuentas(cuentas,tipo){
                 </div>
                 <div class="row">
                     <div class="collection">
-                        ${cuentas.map(e=>yo` 
-                            <a href="javascript:void(0);" class="collection-item" onclick=${()=>SeleccionarCuenta(e,tipo)}><i class="material-icons left">label_outline</i> CUENTA : ${e.nro_serie}-${e.numero}</a>
+                        ${cuentas.map((e,i)=>yo` 
+                            <a href="javascript:void(0);" class="collection-item" onclick=${()=>SeleccionarCuenta(e,tipo)}><i class="material-icons left">label_outline</i> CUENTA : ${i}</a>
                         `)}
                     </div>
                 </div>
@@ -254,29 +256,98 @@ function VerSeleccionCuentas(cuentas,tipo){
 }
 
 function VerInvoice(pedido_detalle){
+    const idFila = contador
+    try{
+        $('#modal-details').modal('close');
+    }catch(e){}
+
     var el = yo` 
-        <div class="modal-content" id="divInvoice">
+        <div class="card">
+            <div class="card-content">
                 <div class="row">
                     <div class="col m12 s12">
                         <div class="row">
-                            <div class="col s6 m6">
-                                <address>
-                                    <strong>Nombre Empresa</strong>
-                                    <br>
-                                    Direccion
-                                    <br>
-                                    Pais y Ciudad
-                                    <br>
-                                    <abbr title="Phone">Telefono</abbr> ########
-                                </address>
+                            <div class="col s8 m8">
+                                <div class="row">
+                                    <div class="input-field col s6">
+                                        <select id="tipo_doc_ident" onchange="${()=>CambioTipoDoc()}">
+                                            <option value="DNI" ${pedido_detalle[0].tipo_doc_ident=="DNI"?'selected':''}>DNI</option>
+                                            <option value="RUC" ${pedido_detalle[0].tipo_doc_ident=="RUC"?'selected':''}>RUC</option>
+                                        </select>
+                                        <label class="active">Tipo Documento</label>
+                                    </div>
+                                    <div class="input-field col s6">
+                                        <input style="text-transform: uppercase;"  id="numero_doc" type="text" class="validate" value="${pedido_detalle[0].doc_ident}">
+                                        <label class="active">Nro. Doc.</label>
+                                    </div>
+                                </div>
+                                <div class="row" id="divRazonSocial" style="display:none">
+                                    <div class="input-field col s12">
+                                        <input style="text-transform: uppercase;" id="razon_social" type="text" class="validate" data-length="120" value="${pedido_detalle[0].razon_social}">
+                                        <label class="active" for="razon_social" id="lrazon_social" data-error="nombre mayor al tamaño permitido" data-success="">Razon Social</label>
+                                    </div>
+                                </div>
+                                <div class="row" id="divNombres">
+                                    <div class="input-field col s12">
+                                        <div class="row">
+                                            <input style="text-transform: uppercase;" id="nombres" type="text" class="validate" data-length="40" value="${pedido_detalle[0].nombres}">
+                                            <label class="active" for="nombres" id="lnombres" data-error="nombre mayor al tamaño permitido" data-success="">Nombres</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row" id="divApellidos">
+                                    <div class="input-field col s6">
+                                        <input style="text-transform: uppercase;" id="a_paterno" type="text" class="validate" data-length="30" value="${pedido_detalle[0].a_paterno}">
+                                        <label class="active" for="a_paterno" id="la_paterno" data-success="">Apellido Paterno</label>
+                                    </div>
+                                    <div class="input-field col s6">
+                                        <input style="text-transform: uppercase;" id="a_materno" type="text" class="validate" data-length="30" value="${pedido_detalle[0].a_materno}">
+                                        <label class="active" for="a_materno" id="la_materno" data-success="">Apellido Materno</label>
+                                    </div>
+                                </div> 
+
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <div class="row">
+                                            <input style="text-transform: uppercase;" id="direccion" type="text" class="validate" value="${pedido_detalle[0].direccion}">
+                                            <label class="active">Direccion</label>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
-                            <div class="col s6 m6 right">
-                                <p>
-                                    <em>Fecha: </em>
-                                </p>
-                                <p>
-                                    <em>Numero #: </em>
-                                </p>
+                            <div class="col s4 m4 right">
+                                <div class="card grey lighten-4">
+                                    <div class="card-content">
+                                        <div class="row">
+                                            <div class="col s12 m12 center">
+                                                <h5 id="tituloComprobante">COMPROBANTE</h5>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col s12 m12" id="divTipoComprobante">
+                                                <select id="cod_documento">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col s6 m6" id="divSeries">
+                                                <select id="nro_serie"> 
+                                                </select>
+                                            </div>
+                                            <div class="col s6 m6">
+                                                <input style="text-transform: uppercase;"  id="numero" type="number" class="validate" val="0">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s12">
+                                                <input value="" id="fecha" type="text" class="datepicker">
+                                                <label for="fecha" class="active">Fecha</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
@@ -293,16 +364,18 @@ function VerInvoice(pedido_detalle){
                                 <th class="center">Total</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="bodyComprobante">
                             ${pedido_detalle.map(e=>yo` 
-                                <tr>
-                                    <td class="col-md-9">${e.descripcion_detalle}</td>
-                                    <td class="col-md-1" contenteditable="true">${e.cantidad}</td>
-                                    <td class="col-md-1" contenteditable="true">${e.cod_moneda=="PEN"?"S/ ":"USD "}</td>
-                                    <td class="col-md-1 center" contenteditable="true">${e.precio}</td>
-                                    <td class="col-md-1 center">${parseFloat(e.cantidad)*parseFloat(e.precio)}</td>
+                                <tr id="${idFila}-${e.producto_id}">
+                                    <td><input style="text-transform: uppercase;" type="text" class="validate" value="${e.descripcion_detalle}" disabled></td>
+                                    <td class="Cantidad"><input style="text-transform: uppercase;" type="number" class="validate" value="${parseFloat(e.cantidad).toFixed(2)}" onkeyup="${()=>CambioCelda(pedido_detalle[0].cod_moneda=="PEN"?"S/ ":"USD ",idFila+"-"+e.producto_id)}"></td>
+                                    <td class="Moneda"><input style="text-transform: uppercase;" type="text" class="validate" value="${e.cod_moneda=='PEN'?'S/ ':'USD'}" disabled></td>
+                                    <td class="Precio"><input style="text-transform: uppercase;" type="number" class="validate" value="${e.precio}" onkeyup="${()=>CambioCelda(pedido_detalle[0].cod_moneda=="PEN"?"S/ ":"USD ",idFila+"-"+e.producto_id)}"></td>
+                                    <td class="Total"><input style="text-transform: uppercase;" type="number" class="validate" value="${(parseFloat(e.cantidad)*parseFloat(e.precio)).toFixed(2)}" disabled></td>
                                 </tr>
                             `)}
+                        </tbody>
+                        <tbody>
                             
                             <tr>
                                 <td>   </td>
@@ -317,10 +390,10 @@ function VerInvoice(pedido_detalle){
                                 </td>
                                 <td class="center">
                                     <p>
-                                        <strong>${pedido_detalle[0].cod_moneda=="PEN"?"S/ ":"USD "}${pedido_detalle[0].total}</strong>
+                                        <strong id="SumaTotal">${pedido_detalle[0].cod_moneda=="PEN"?"S/ ":"USD "}${parseFloat(pedido_detalle[0].total).toFixed(2)}</strong>
                                     </p>
                                     <p>
-                                        <strong>${pedido_detalle[0].descuento==""?"0":pedido_detalle[0].descuento}</strong>
+                                    <strong id="Descuento" contenteditable="true" onkeyup="${()=>CambioDescuento(pedido_detalle[0].cod_moneda=="PEN"?"S/ ":"USD ")}">${pedido_detalle[0].descuento=="" || pedido_detalle[0].descuento==null || empty(pedido_detalle[0].descuento)?"0":pedido_detalle[0].descuento}</strong>
                                     </p>
                                 </td>
                             </tr>
@@ -328,30 +401,136 @@ function VerInvoice(pedido_detalle){
                                 <td>   </td>
                                 <td>   </td>
                                 <td class="right"><h5><strong>Total: </strong></h5></td>
-                                <td class="center"><h5><strong>${pedido_detalle[0].cod_moneda=="PEN"?"S/ ":"USD "}${pedido_detalle[0].total}</strong></h5></td>
+                                <td class="center"><h5><strong id="totalGlobal">${pedido_detalle[0].cod_moneda=="PEN"?"S/ ":"USD "}${parseFloat(pedido_detalle[0].total).toFixed(2)}</strong></h5></td>
                             </tr>
                         </tbody>
                     </table>
                     <a class="waves-effect grey darken-4 btn" onclick=${()=>AceptarPedido(pedido_detalle)}><i class="material-icons left">check</i>Aceptar</a>
                 </div>
+            </div>
         </div>
         `
-        var container = document.getElementById('modal-details')
-        empty(container).appendChild(el);
+    var container = document.getElementById('contenido_principal')
+    empty(container).appendChild(el) 
+    $('select').material_select()
+    TraerTiposComprobantes(pedido_detalle[0].cod_sucursal)
+
+    $('.datepicker').pickadate({
+        selectMonths: true,
+        selectYears: 200, 
+        format: 'dd-mm-yyyy'
+    });
+    var $input = $('#fecha').pickadate()
+    var picker = $input.pickadate('picker')
+    picker.set('select', new Date())
+    CambioTipoDoc()
 }
 
-function AceptarPedido(pedido){
-    fetchComprobante(pedido,function(res){
+function LlenarTipoDocumentos(documentos){
+    var el = yo`
+        <select id="cod_documento">
+        ${documentos.map(e => yo`
+             <option value="${e.cod_documento}" onchange=${()=>TraerSeriesNumeros(e.cod_documento)}>${e.descripcion_doc}</option>
+        `)}
+        </select>` 
+        
+    var container = document.getElementById('divTipoComprobante')
+    empty(container).appendChild(el)
+    $('select').material_select()
+}
+
+
+function LlenarSeries(series){
+    var el = yo`
+        <select id="nro_serie">
+        ${series.map(e => yo`
+             <option value="${e.nro_serie}">${e.nro_serie}</option>
+        `)}
+        </select>`  
+        
+    var container = document.getElementById('divSeries')
+    empty(container).appendChild(el)
+    $('select').material_select()
+}
+
+function CambioCelda(moneda,idTR){
+    var Cantidad = $("#"+idTR).find("td.Cantidad").find("input").val()
+    var Precio = $("#"+idTR).find("td.Precio").find("input").val()
+    $("#"+idTR).find("td.Total").find("input").val((parseFloat(Cantidad)*parseFloat(Precio)).toFixed(2))
+    CalcularSuma(moneda)
+}
+
+function CambioTipoDoc(){
+    if($("#tipo_doc_ident").val()=="DNI"){
+        $("#divNombres").show()
+        $("#divApellidos").show()
+        $("#divRazonSocial").hide()
+    }else{
+        $("#divNombres").hide()
+        $("#divApellidos").hide()
+        $("#divRazonSocial").show()
+    }
+}
+
+function CambioDescuento(moneda){
+    var descuento = $("#Descuento").text()
+    var total = parseFloat($("#SumaTotal").text().trim().replace("S/","").replace("USD",""))*parseFloat(descuento)/100
+    $("#totalGlobal").text(moneda+" "+(parseFloat($("#SumaTotal").text().trim().replace("S/","").replace("USD",""))-total).toFixed(2))
+}
+
+function CalcularSuma(moneda){ 
+    var suma = 0
+    $('#bodyComprobante tr').each(function () {
+        suma=suma+ parseFloat($(this).find("td.Total").find("input").val())
+    })
+
+    $("#SumaTotal").text(moneda+" "+suma)
+    CambioDescuento(moneda)
+}
+
+function AceptarPedido(pedido_detalle){
+    var cod_documento = $("#cod_documento").val()
+    var nro_serie = parseInt($("#nro_serie").val())
+    var numero = parseInt($("#numero").val().trim()==""?"0":$("#numero").val().trim())
+    var cod_sucursal = pedido_detalle[0].cod_sucursal
+    var pedido_id = pedido_detalle[0].pedido_id
+    var cod_persona = pedido_detalle[0].cod_persona
+    var nombre_cliente = $("#divNombres").css("display")=="none"?$("#razon_social").val():$("#nombres").val()+" "+$("#a_paterno")+" "+$("#a_materno")
+    var direccion_cliente = $("#direccion").val()
+    var concepto = "COMPROBANTE"
+    var total = $("#totalGlobal").text().replace("S/","").replace("USD","")
+    var impuesto = 0
+    var estado = "EMITIDO"
+    var obs = ""
+    var fecha = $("#fecha").val()
+    var params = {
+        cod_documento,
+		nro_serie,
+		numero,
+		cod_sucursal,
+		pedido_id,
+		cod_persona,
+		nombre_cliente,
+		direccion_cliente,
+		concepto,
+		total,
+		impuesto,
+		estado,
+		obs,
+		fecha,
+    }
+    fetchComprobante(params,function(res){
         if (res.err) {
             console.log(res.err)
         } else {
-            console.log(res)
-            $("#modal-details").modal("hide")
+            console.log(res) 
+            inicio()
         }
     })
 }
 
 function SeleccionarCuenta(cuenta,tipo){
+    contador=0
     if(tipo=="R"){
         fetchPedidoDetalle(cuenta,function(res){
             if (res.err) {
@@ -363,7 +542,7 @@ function SeleccionarCuenta(cuenta,tipo){
             }
         })
     }else{
-        $('#modal-details').modal('hide');
+        $('#modal-details').modal('close');
     }
 }
 
@@ -379,14 +558,20 @@ function RotarCard(idBtn){
 
 function VerDetalles(punto_venta,tipo){ 
     if(punto_venta.Nro_Cuentas==1){   
+        fetchCuentas(punto_venta,function(res){
+            if (res.err) {
+                console.log(res.err)
+            } else {
+                SeleccionarCuenta(res.punto_venta[0],tipo)
+            } 
+        })
     }else{
         fetchCuentas(punto_venta,function(res){
             if (res.err) {
                 console.log(res.err)
             } else {
                 VerSeleccionCuentas(res.punto_venta,tipo)
-            }
-            HideLoader()
+            } 
         })
     }
 }
@@ -411,31 +596,19 @@ function Aceptar(){
     }, 300);*/
 }
 
-function fetchComprobante(pedido,callback){ 
+function fetchComprobante(params,callback){ 
     const parametros = {
         method: 'POST',
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            cod_documento: pedido.cod_documento,
-            nro_serie: pedido.nro_serie,
-            numero: pedido.numero,
-            cod_sucursal: pedido.cod_sucursal,
-            pedido_id: pedido.pedido_id,
-            cod_persona:pedido.cod_persona,
-            nombre_cliente:pedido.nombre_cliente,
-            direccion_cliente:'',
-            concepto:'',
-            total:pedido.total,
-            impuesto:0,
-            estado:'EMITIDO',
-            obs:'',
-            fecha:'12-12-2018'
-        })
+
+        body: JSON.stringify(
+            params
+        )
     }
-    fetch('http://localhost:5000/ws/get_pedido_detalle', parametros)
+    fetch('http://localhost:5000/ws/save_ecaja_comprobante', parametros)
         .then(req => req.json())
         .then(res => {
             callback(res)
@@ -461,6 +634,43 @@ function fetchPedidoDetalle(cuenta,callback){
             callback(res)
         })
 }
+
+function fetchDocumentos(cod_sucursal,callback){ 
+    const parametros = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            cod_sucursal
+        })
+    }
+    fetch('http://localhost:5000/ws/get_tipo_comprobantes', parametros)
+        .then(req => req.json())
+        .then(res => {
+            callback(res)
+        })
+}
+
+function fetchSeriesNumeros(cod_documento,callback){ 
+    const parametros = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            cod_documento
+        })
+    }
+    fetch('http://localhost:5000/ws/get_series_by_documento', parametros)
+        .then(req => req.json())
+        .then(res => {
+            callback(res)
+        })
+}
+
 
 
 function fetchCuentas(punto_venta,callback){
@@ -496,6 +706,31 @@ function fetchPuntosVentas(callback){
         .then(res => {
             callback(res)
         })
+}
+
+function TraerTiposComprobantes(cod_sucursal){
+    fetchDocumentos(cod_sucursal,function(res){
+        if (res.err) {
+            console.log(res.err)
+        } else {
+            if(res.documentos.length>0){
+                LlenarTipoDocumentos(res.documentos)
+                TraerSeriesNumeros(res.documentos[0].cod_documento)
+            }
+        }
+    })
+}
+
+function TraerSeriesNumeros(cod_documento){
+    fetchSeriesNumeros(cod_documento,function(res){
+        if (res.err) {
+            console.log(res.err)
+        } else {
+            if(res.series.length>0){
+                LlenarSeries(res.series)
+            }
+        }
+    })
 }
 
 function inicio() {
