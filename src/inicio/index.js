@@ -1,6 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
-//var htmlToPdf = require('html-to-pdf');
+
 import { Init,onActionLeft,onActionRight } from '../utils'
 
 var contador = 0
@@ -72,12 +72,7 @@ function Ver(puntos_venta) {
         
         var container = document.getElementById('contenido_principal')
         empty(container).appendChild(el);
-        var sub_nav = yo `
-        <div class="collection">
-            <a href="#!" class="collection-item active">Todas las mesas</a>
-            <a href="#!" class="collection-item">Mesas Ocupadas</a>
-            <a href="#!" class="collection-item">Mesas Libres</a>
-        </div>`;
+        
     }else{
         var numero_filas = Math.trunc(rows/4)
         var sobrante = rows % 4
@@ -147,14 +142,14 @@ function Ver(puntos_venta) {
         
         var container = document.getElementById('contenido_principal')
         empty(container).appendChild(el);
-        var sub_nav = yo `
-        <div class="collection">
-            <a href="#!" class="collection-item active">Todas las mesas</a>
-            <a href="#!" class="collection-item">Mesas Ocupadas</a>
-            <a href="#!" class="collection-item">Mesas Libres</a>
-        </div>`;
-
+      
     }
+    var sub_nav = yo `
+    <div class="collection">
+        <a href="#!" class="collection-item active">Todas las mesas</a>
+        <a href="#!" class="collection-item">Mesas Ocupadas</a>
+        <a href="#!" class="collection-item">Mesas Libres</a>
+    </div>`;
     var container = document.getElementById('sub_navegador_content')
     empty(container).appendChild(sub_nav) 
     //$(".dropdown-button").dropdown();
@@ -262,7 +257,7 @@ function VerInvoice(pedido_detalle){
     }catch(e){}
 
     var el = yo` 
-        <div class="card">
+        <div class="card" id="divInvoice">
             <div class="card-content">
                 <div class="row">
                     <div class="col m12 s12">
@@ -274,7 +269,7 @@ function VerInvoice(pedido_detalle){
                                             <option value="DNI" ${pedido_detalle[0].tipo_doc_ident=="DNI"?'selected':''}>DNI</option>
                                             <option value="RUC" ${pedido_detalle[0].tipo_doc_ident=="RUC"?'selected':''}>RUC</option>
                                         </select>
-                                        <label class="active">Tipo Documento</label>
+                                        <label>Tipo Documento</label>
                                     </div>
                                     <div class="input-field col s6">
                                         <input style="text-transform: uppercase;"  id="numero_doc" type="text" class="validate" value="${pedido_detalle[0].doc_ident}">
@@ -337,7 +332,7 @@ function VerInvoice(pedido_detalle){
                                                 </select>
                                             </div>
                                             <div class="col s6 m6">
-                                                <input style="text-transform: uppercase;"  id="numero" type="number" class="validate" val="0">
+                                                <input style="text-transform: uppercase;"  id="numero" type="number" class="validate" value="0">
                                             </div>
                                         </div>
                                         <div class="row">
@@ -523,7 +518,7 @@ function AceptarPedido(pedido_detalle){
         if (res.err) {
             console.log(res.err)
         } else {
-            console.log(res) 
+            
             inicio()
         }
     })
@@ -733,7 +728,8 @@ function TraerSeriesNumeros(cod_documento){
     })
 }
 
-function inicio() {
+function inicio() { 
+
     ShowLoader()
     fetchPuntosVentas(function(res){
         if (res.err) {
