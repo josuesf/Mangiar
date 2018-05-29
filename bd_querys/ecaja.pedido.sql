@@ -288,7 +288,7 @@ ELSE
  
 UPDATE ecaja.comprobante SET
  cod_persona = pcod_persona,
- nombre_cliente=pnombre_persona,
+ nombre_cliente=pnombre_cliente,
  direccion_cliente=pdireccion_cliente,
  comp_concepto=pconcepto,
  comp_total=ptotal,
@@ -297,7 +297,9 @@ UPDATE ecaja.comprobante SET
  actualizado_en=now(),
  usuario_actualizo=pusuario_registro
  where ecaja.comprobante.comp_cod_documento=pcod_documento and ecaja.comprobante.comp_nro_serie=pnro_serie and ecaja.comprobante.comp_numero=pnumero and ecaja.comprobante.comp_cod_sucursal=pcod_sucursal;
-
+UPDATE ecaja.pedido SET 
+ estado_pedido = 'TERMINADO'
+WHERE pedido_id=ppedido_id;
 RETURN 'El comprobante fue actualizado correctamente';
 END IF;
   
