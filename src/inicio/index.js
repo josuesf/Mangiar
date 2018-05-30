@@ -786,6 +786,62 @@ function inicio() {
 
     var loc = window.location.pathname;
     var dir = loc.substring(0, loc.lastIndexOf('/'));
+
+    /*
+    var doc = new jsPDF('p', 'pt'); 
+          var resd= doc.autoTableHtmlToJson(document.getElementById("IED"));
+          var ress= doc.autoTableHtmlToJson(document.getElementById("IES"));
+
+          var base='{{ SITE_URL }}';
+          var operador=operadorGlobal;
+
+          doc.setFontSize(10);
+          doc.setFontStyle('bold');
+          doc.text("SISTEMA INTEGRAL - CIERRE CAJA", 10, 20);
+          doc.setFontSize(8);
+          doc.setFontStyle('normal');
+          doc.text("BASE : " + base, 10, doc.autoTableEndPosY()+35);
+          doc.text("OPERADOR: "+ operador, 10, doc.autoTableEndPosY()+50);
+          doc.text("FECHA DESDE : "+$("#fechad").text(), 10, doc.autoTableEndPosY()+65);
+          doc.text("FECHA HASTA : "+$("#fechah").text(), 140, doc.autoTableEndPosY()+65);
+          
+          doc.setFontSize(8);
+          doc.setFontStyle('bold');
+
+
+          doc.text("MOVIMIENTOS DOLARES", 10, doc.autoTableEndPosY()+85);
+          doc.autoTable(resd.columns, resd.data, {
+              startY: 95,
+              margin: {horizontal: 10},
+              headerStyles: {rowHeight: 12, fontSize: 7,valign: 'middle'},
+              styles: {overflow: 'linebreak'},
+              bodyStyles: {rowHeight: 12, fontSize: 8, valign: 'middle'}, 
+              theme: 'grid',
+              pageBreak: 'avoid',
+          });
+
+          doc.text("MOVIMIENTOS SOLES", 10, doc.autoTableEndPosY()+20);
+
+          doc.autoTable(ress.columns, ress.data, {
+              startY: doc.autoTableEndPosY()+30,
+              margin: {horizontal: 10},
+              headerStyles: {rowHeight: 12, fontSize: 7,valign: 'middle'},
+              styles: {overflow: 'linebreak'},
+              bodyStyles: {rowHeight: 12, fontSize: 8, valign: 'middle'}, 
+              theme: 'grid',
+              pageBreak: 'avoid',
+          });
+
+          doc.text("Saldo que aparece en el sistema SOLES : "+ $("#sis_S").text()+ " DOLARES : "+$("#sis_D").text(), 10, doc.autoTableEndPosY()+30);
+
+          doc.text("Observaciones : "+ $("#obse").val(), 10, doc.autoTableEndPosY()+50);
+
+          doc.save('reporteCierreCajaSD.pdf'); 
+            
+
+    */
+
+
     /*var doc = new jsPDF('p', 'pt'); 
     doc.text("SISTEMA INTEGRAL - CIERRE CAJA", 10, 20);
     var pdf =btoa(doc.output());
