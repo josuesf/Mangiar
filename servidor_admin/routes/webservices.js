@@ -157,6 +157,33 @@ router.post('/confirmar_ecaja_pedido', function (req, res) {
 	})
 });
 
+router.post('/save_pdf', function (req, res) {
+	var fs = require('fs');
+	const input = req.body
+	var b64string = input.data
+	var buf = Buffer.from(b64string, 'base64');
+	fs.writeFile("assets/media/recibo.pdf", buf , function(err) {
+		if(err) {
+			return res.json({respuesta:err});
+		}else{
+			return res.json({respuesta:'ok'})
+			console.log("File saved successfully!");
+		}
+	});
+	/*const data = input.data
+
+	var fs = require('fs');
+	fs.writeFile("assets/media/recibo.pdf", data , function(err) {
+		if(err) {
+			return res.json({respuesta:err});
+		}else{
+			return res.json({respuesta:'ok'})
+			console.log("File saved successfully!");
+		}
+	});*/
+	 
+});
+
 router.post('/save_ecaja_comprobante', function (req, res) {
     const input = req.body
 	//call Model account

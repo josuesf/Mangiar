@@ -151,11 +151,26 @@ function Ver(persona) {
     var container = document.getElementById('sub_navegador_content')
     empty(container).appendChild(sub_nav)*/
     $('select').material_select();
+
     $('.datepicker').pickadate({
+        container: 'body',
+        selectMonths: true,
+        selectYears: 200, 
+        format: 'yyyy-mm-dd',
+        monthsFull:["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Setiembre","Octubre","Noviembre","Diciembre"],
+        monthsShort:["Ener","Feb","Mar","Abr","May","Jun","Jul","Agos","Set","Oct","Nov","Dic"],
+        weekdaysFull:["Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado"],
+        weekdaysShort:["Dom","Lun","Mar","Mie","Jue","Vie","Sab"],
+        weekdaysLetter:["D","L","M","Mi","J","V","S"],
+        today:"Hoy",
+        clear:"Limpiar",
+        close:"Ok"
+    });
+    /*$('.datepicker').pickadate({
         selectMonths: true,
         selectYears: 200, 
         format: 'yyyy-mm-dd'
-    });
+    });*/
     var $input = $('#fecha_nacimiento').pickadate()
     var picker = $input.pickadate('picker')
     picker.set('select', new Date())

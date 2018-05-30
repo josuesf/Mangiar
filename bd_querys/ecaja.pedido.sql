@@ -239,6 +239,7 @@ CREATE OR REPLACE FUNCTION ecaja.fn_SaveComprobantePedido
 RETURNS varchar(100) AS
 $$
 DECLARE
+   nro_cuentas int;
 BEGIN
 
 IF( (select count(*) from ecaja.comprobante where ecaja.comprobante.comp_cod_documento=pcod_documento and ecaja.comprobante.comp_nro_serie=pnro_serie and ecaja.comprobante.comp_numero=pnumero and ecaja.comprobante.comp_cod_sucursal=pcod_sucursal) = 0) THEN
@@ -302,8 +303,15 @@ UPDATE ecaja.pedido SET
 WHERE pedido_id=ppedido_id;
 RETURN 'El comprobante fue actualizado correctamente';
 END IF;
-  
- 
+
+nro_cuentas = (SELECT count(distinct d.pedido_id) from ecaja.pedido_detalle d inner join ecaja.pedido p on d.pedido_id=p.pedido_id inner join punto_venta pv on d.cod_punto_venta=pv.cod_punto_venta AND p.estado_pedido='EN ATENCION');
+
+IF (nro_cuentas==0) THEN 
+
+	UPDATE punto_venta pv	
+	SET pv.estado_accion='LIBRE'
+	WHERE pv.cod_punto_venta = (SELECT distinct(d.cod_punto_venta) FROM ecaja.pedido_detalle d WHERE d.pedido_id=ppedido_id);
+END IF;
  EXCEPTION WHEN OTHERS THEN 
  RAISE;
 END;

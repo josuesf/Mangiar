@@ -3,7 +3,7 @@ var empty = require('empty-element');
 
 import { Init,onActionLeft,onActionRight } from '../utils'
 
-var contador = 0
+var contador = 0 
  
 function Ver(puntos_venta) {
 
@@ -35,7 +35,7 @@ function Ver(puntos_venta) {
                                                 <h3 class="name">${e.nombre_mesa}</h3>
                                                 <p class="center white-text">${e.Mesero}</p>
                                             </div>
-                                            <div id=${e.cod_mesa} class="footer" style="cursor:pointer" onclick=${()=>RotarCard(e.cod_mesa)}>
+                                            <div id=${e.cod_mesa} class="footer" style="cursor:pointer" onclick=${()=>RotarCard(e.Nro_Cuentas,e.cod_mesa)}>
                                                 Ver Detalles                                
                                             </div>
                                         </div>
@@ -57,7 +57,7 @@ function Ver(puntos_venta) {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="footer" style="cursor:pointer" onclick=${()=>RotarCard(e.cod_mesa)}>
+                                            <div class="footer" style="cursor:pointer" onclick=${()=>RotarCard(e.Nro_Cuentas,e.cod_mesa)}>
                                                 Atras
                                             </div>
                                         </div>
@@ -237,7 +237,7 @@ function VerSeleccionCuentas(cuentas,tipo){
                 <div class="row">
                     <div class="collection">
                         ${cuentas.map((e,i)=>yo` 
-                            <a href="javascript:void(0);" class="collection-item" onclick=${()=>SeleccionarCuenta(e,tipo)}><i class="material-icons left">label_outline</i> CUENTA : ${i}</a>
+                            <a href="javascript:void(0);" class="collection-item" onclick=${()=>SeleccionarCuenta(e,tipo)}><i class="material-icons left">label_outline</i> CUENTA : ${i+1}</a>
                         `)}
                     </div>
                 </div>
@@ -252,10 +252,6 @@ function VerSeleccionCuentas(cuentas,tipo){
 
 function VerInvoice(pedido_detalle){
     const idFila = contador
-    try{
-        $('#modal-details').modal('close');
-    }catch(e){}
-
     var el = yo` 
         <div class="card" id="divInvoice">
             <div class="card-content">
@@ -272,20 +268,20 @@ function VerInvoice(pedido_detalle){
                                         <label>Tipo Documento</label>
                                     </div>
                                     <div class="input-field col s6">
-                                        <input style="text-transform: uppercase;"  id="numero_doc" type="text" class="validate" value="${pedido_detalle[0].doc_ident}">
-                                        <label class="active">Nro. Doc.</label>
+                                        <input style="text-transform: uppercase;"  id="numero_doc" type="text" class="validate" value="${pedido_detalle[0].doc_ident!=null?pedido_detalle[0].doc_ident:''}">
+                                        <label class="active" for="numero_doc" id="lnumero_doc" data-error="" data-success="">Nro. Doc.</label>
                                     </div>
                                 </div>
                                 <div class="row" id="divRazonSocial" style="display:none">
                                     <div class="input-field col s12">
-                                        <input style="text-transform: uppercase;" id="razon_social" type="text" class="validate" data-length="120" value="${pedido_detalle[0].razon_social}">
+                                        <input style="text-transform: uppercase;" id="razon_social" type="text" class="validate" data-length="120" value="${pedido_detalle[0].razon_social!=null?pedido_detalle[0].razon_social:''}">
                                         <label class="active" for="razon_social" id="lrazon_social" data-error="nombre mayor al tamaño permitido" data-success="">Razon Social</label>
                                     </div>
                                 </div>
                                 <div class="row" id="divNombres">
                                     <div class="input-field col s12">
                                         <div class="row">
-                                            <input style="text-transform: uppercase;" id="nombres" type="text" class="validate" data-length="40" value="${pedido_detalle[0].nombres}">
+                                            <input style="text-transform: uppercase;" id="nombres" type="text" class="validate" data-length="40" value="${pedido_detalle[0].nombres!=null?pedido_detalle[0].nombres:''}">
                                             <label class="active" for="nombres" id="lnombres" data-error="nombre mayor al tamaño permitido" data-success="">Nombres</label>
                                         </div>
                                     </div>
@@ -293,11 +289,11 @@ function VerInvoice(pedido_detalle){
                                 
                                 <div class="row" id="divApellidos">
                                     <div class="input-field col s6">
-                                        <input style="text-transform: uppercase;" id="a_paterno" type="text" class="validate" data-length="30" value="${pedido_detalle[0].a_paterno}">
+                                        <input style="text-transform: uppercase;" id="a_paterno" type="text" class="validate" data-length="30" value="${pedido_detalle[0].a_paterno!=null?pedido_detalle[0].a_paterno:''}">
                                         <label class="active" for="a_paterno" id="la_paterno" data-success="">Apellido Paterno</label>
                                     </div>
                                     <div class="input-field col s6">
-                                        <input style="text-transform: uppercase;" id="a_materno" type="text" class="validate" data-length="30" value="${pedido_detalle[0].a_materno}">
+                                        <input style="text-transform: uppercase;" id="a_materno" type="text" class="validate" data-length="30" value="${pedido_detalle[0].a_materno!=null?pedido_detalle[0].a_materno:''}">
                                         <label class="active" for="a_materno" id="la_materno" data-success="">Apellido Materno</label>
                                     </div>
                                 </div> 
@@ -305,7 +301,7 @@ function VerInvoice(pedido_detalle){
                                 <div class="row">
                                     <div class="input-field col s12">
                                         <div class="row">
-                                            <input style="text-transform: uppercase;" id="direccion" type="text" class="validate" value="${pedido_detalle[0].direccion}">
+                                            <input style="text-transform: uppercase;" id="direccion" type="text" class="validate" value="${pedido_detalle[0].direccion!=null?pedido_detalle[0].direccion:''}">
                                             <label class="active">Direccion</label>
                                         </div>
                                     </div>
@@ -333,12 +329,13 @@ function VerInvoice(pedido_detalle){
                                             </div>
                                             <div class="col s6 m6">
                                                 <input style="text-transform: uppercase;"  id="numero" type="number" class="validate" value="0">
+                                                <label class="active" for="numero" id="lnumero" data-error="" data-success="">Número</label>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="input-field col s12">
                                                 <input value="" id="fecha" type="text" class="datepicker">
-                                                <label for="fecha" class="active">Fecha</label>
+                                                <label for="fecha" class="active" for="fecha" id="lfecha" data-error="" data-success="">Fecha</label>
                                             </div>
                                         </div>
                                     </div>
@@ -375,12 +372,13 @@ function VerInvoice(pedido_detalle){
                             <tr>
                                 <td>   </td>
                                 <td>   </td>
+                                <td>   </td>
                                 <td class="right">
                                     <p>
                                         <strong>Subtotal: </strong>
                                     </p>
                                     <p>
-                                        <strong>Descuento: </strong>
+                                        <strong>Descuento(%): </strong>
                                     </p>
                                 </td>
                                 <td class="center">
@@ -393,6 +391,7 @@ function VerInvoice(pedido_detalle){
                                 </td>
                             </tr>
                             <tr>
+                                <td>   </td>
                                 <td>   </td>
                                 <td>   </td>
                                 <td class="right"><h5><strong>Total: </strong></h5></td>
@@ -411,9 +410,18 @@ function VerInvoice(pedido_detalle){
     TraerTiposComprobantes(pedido_detalle[0].cod_sucursal)
 
     $('.datepicker').pickadate({
+        container: 'body',
         selectMonths: true,
         selectYears: 200, 
-        format: 'dd-mm-yyyy'
+        format: 'yyyy-mm-dd',
+        monthsFull:["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Setiembre","Octubre","Noviembre","Diciembre"],
+        monthsShort:["Ener","Feb","Mar","Abr","May","Jun","Jul","Agos","Set","Oct","Nov","Dic"],
+        weekdaysFull:["Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado"],
+        weekdaysShort:["Dom","Lun","Mar","Mie","Jue","Vie","Sab"],
+        weekdaysLetter:["D","L","M","Mi","J","V","S"],
+        today:"Hoy",
+        clear:"Limpiar",
+        close:"Ok"
     });
     var $input = $('#fecha').pickadate()
     var picker = $input.pickadate('picker')
@@ -484,13 +492,37 @@ function CalcularSuma(moneda){
 }
 
 function AceptarPedido(pedido_detalle){
+
+    var props = {}
+    if($("#tipo_doc_ident").val()=="DNI"){
+        props = {
+            'nombres':{maxLen:100},
+            'a_paterno':{maxLen:100},
+            'a_materno':{maxLen:100},
+            'numero_doc':{maxLen:15},
+            'fecha':{},
+            'numero':{},
+        }
+    }else{
+        props = {
+            'razon_social':{maxLen:120},
+            'numero_doc':{maxLen:15},
+            'fecha':{},
+            'numero':{},
+        }
+    }
+
+    if(!Validar(props))
+        return;
+
+
     var cod_documento = $("#cod_documento").val()
     var nro_serie = parseInt($("#nro_serie").val())
     var numero = parseInt($("#numero").val().trim()==""?"0":$("#numero").val().trim())
     var cod_sucursal = pedido_detalle[0].cod_sucursal
     var pedido_id = pedido_detalle[0].pedido_id
     var cod_persona = pedido_detalle[0].cod_persona
-    var nombre_cliente = $("#divNombres").css("display")=="none"?$("#razon_social").val():$("#nombres").val()+" "+$("#a_paterno")+" "+$("#a_materno")
+    var nombre_cliente = $("#divNombres").css("display")=="none"?$("#razon_social").val():$("#nombres").val()+" "+$("#a_paterno").val()+" "+$("#a_materno").val()
     var direccion_cliente = $("#direccion").val()
     var concepto = "COMPROBANTE"
     var total = $("#totalGlobal").text().replace("S/","").replace("USD","")
@@ -519,14 +551,20 @@ function AceptarPedido(pedido_detalle){
             console.log(res.err)
         } else {
             
-            inicio()
+            
+            //inicio()
         }
     })
 }
 
 function SeleccionarCuenta(cuenta,tipo){
     contador=0
+    try{
+        $('#modal-details').modal('close');
+    }catch(e){}
+
     if(tipo=="R"){
+        ShowLoader()
         fetchPedidoDetalle(cuenta,function(res){
             if (res.err) {
                 console.log(res.err)
@@ -535,18 +573,21 @@ function SeleccionarCuenta(cuenta,tipo){
                 if(res.punto_venta.length>0)
                     VerInvoice(res.punto_venta)
             }
+            HideLoader()
         })
     }else{
-        $('#modal-details').modal('close');
+        //$('#modal-details').modal('close');
     }
 }
 
-function RotarCard(idBtn){
-    var $card = $("#"+idBtn).closest('.card-container');
-    if($card.hasClass('hover')){
-        $card.removeClass('hover');
-    } else {
-        $card.addClass('hover');
+function RotarCard(nro_cuentas,idBtn){
+    if(nro_cuentas>0){
+        var $card = $("#"+idBtn).closest('.card-container');
+        if($card.hasClass('hover')){
+            $card.removeClass('hover');
+        } else {
+            $card.addClass('hover');
+        }
     }
 }
 
@@ -590,6 +631,7 @@ function Aceptar(){
       
     }, 300);*/
 }
+
 
 function fetchComprobante(params,callback){ 
     const parametros = {
@@ -729,6 +771,49 @@ function TraerSeriesNumeros(cod_documento){
 }
 
 function inicio() { 
+    //const win = new BrowserWindow({ width: 800, height: 600 })
+    //PDFWindow.addSupport(win)
+    //console.log(loc)
+    //console.log(dir)
+
+
+    /*const winPDF = new BrowserWindow({
+        width: 800,
+        height: 600
+      })
+    PDFWindow.addSupport(winPDF) 
+    winPDF.loadURL(dir+'/assets/media/reporteMovimientosCtaAhorros.pdf')*/
+
+    var loc = window.location.pathname;
+    var dir = loc.substring(0, loc.lastIndexOf('/'));
+    /*var doc = new jsPDF('p', 'pt'); 
+    doc.text("SISTEMA INTEGRAL - CIERRE CAJA", 10, 20);
+    var pdf =btoa(doc.output());
+
+    const parametros = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            data : pdf
+        })
+    }
+    fetch('http://localhost:5000/ws/save_pdf', parametros)
+        .then(req => req.json())
+        .then(res => {
+            console.log(res)
+            if(res.respuesta=="ok"){
+                const winPDF = new BrowserWindow({
+                    width: 800,
+                    height: 600
+                  })
+                PDFWindow.addSupport(winPDF) 
+                winPDF.loadURL(dir+'/assets/media/recibo.pdf')
+            }
+        })*/
+ 
 
     ShowLoader()
     fetchPuntosVentas(function(res){
