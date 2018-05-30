@@ -13,8 +13,8 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage }).single('picture');
 var app = express();
 app.use(express.static('public'));
-app.use(bodyParser.json()); // support json encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+app.use(bodyParser.json({limit: '50mb'})); // support json encoded bodies
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true })); // support encoded bodies
 app.disable('x-powered-by');
 app.use(session({ secret: '_secret_', cookie: { maxAge: 60 * 60 * 1000 }, saveUninitialized: false, resave: false }));
 // app.use(authChecker);

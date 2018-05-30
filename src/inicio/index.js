@@ -6,11 +6,8 @@ import { Init,onActionLeft,onActionRight } from '../utils'
 var contador = 0 
  
 function Ver(puntos_venta) {
-
-    var rows = puntos_venta.length
-    var el = ''
-    if(rows<=4){
-        el = yo`
+ 
+    var  el = yo`
         <div>
             <div class="row">
                 ${puntos_venta.map(e=>yo` 
@@ -70,80 +67,9 @@ function Ver(puntos_venta) {
         </div>`; 
         //const numeroFilas = Math.floor(paginas/4) 
         
-        var container = document.getElementById('contenido_principal')
-        empty(container).appendChild(el);
-        
-    }else{
-        var numero_filas = Math.trunc(rows/4)
-        var sobrante = rows % 4
-        el = yo`
-        <div>
-            ${Array.apply(null,Array(numero_filas)).map((a,x)=>yo`
-                <div class="row">
-                    ${puntos_venta.map((e,y)=>
-                        y<((x+1)*4)?yo` 
-                            <div class="col m3"> 
-                                <div class="card-container manual-flip">
-                                    <div class="card">
-                                        <div class="front" title="${e.estado_accion}">
-                                            <div class="header">
-                                                <h5 class="motto">Punto de Venta</h5>
-                                            </div>
-                                            
-                                            <div class="content">
-                                                <div class="main">
-                                                    ${e.Nro_Cuentas>0?yo`
-                                                        <div class="yellow ball-animation" style="text-align: -webkit-center;text-align: center;">
-                                                            <h4 style="display:inline-block;">${e.Nro_Cuentas}</h4>
-                                                        </div>`:yo`
-                                                        <div class="yellow ball" style="text-align: -webkit-center;text-align: center;">
-                                                            <h4 style="display:inline-block;"><i class="material-icons">airplay</i></h4>
-                                                        </div>` 
-                                                    }
-                                                    <h3 class="name">${e.nombre_mesa}</h3>
-                                                    <p class="center white-text">${e.Mesero}</p>
-                                                </div>
-                                                <div id=${e.cod_mesa} class="footer" style="cursor:pointer" onclick=${()=>RotarCard(e.cod_mesa)}>
-                                                    Ver Detalles                                
-                                                </div>
-                                            </div>
-                                        </div> 
-                                        <div class="back" title="${e.estado_accion}">
-                                            <div class="header">
-                                                <h5 class="motto">Descripción</h5>
-                                            </div>
-                                            <div class="content">
-                                                <div class="main">
-                                                    <div class="row">
-                                                        <div class="col m12">
-                                                            <a class="waves-effect yellow black-text btn btn-small btn-block" style="font-size: 12px;width: 100%;padding: 0 0.5rem;" onclick=${()=>VerDetalles(e,"R")}><i class="material-icons left">receipt</i> Comprobante</a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col m12">
-                                                            <a class="waves-effect  yellow black-text btn btn-small btn-block" style="font-size: 12px;width: 100%;padding: 0 0.5rem;" onclick=${()=>VerDetalles(e,"D")}><i class="material-icons left">format_list_bulleted</i> Detalles</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="footer" style="cursor:pointer" onclick=${()=>RotarCard(e.cod_mesa)}>
-                                                    Atras
-                                                </div>
-                                            </div>
-                                        </div>  
-                                    </div> 
-                                </div>
-                            </div>
-                            `:yo``)}
-                </div>`
-            )}
-           
-        </div>`; 
-        //const numeroFilas = Math.floor(paginas/4) 
-        
-        var container = document.getElementById('contenido_principal')
-        empty(container).appendChild(el);
-      
-    }
+    var container = document.getElementById('contenido_principal')
+    empty(container).appendChild(el);
+    
     var sub_nav = yo `
     <div class="collection">
         <a href="#!" class="collection-item active">Todas las mesas</a>
@@ -346,7 +272,7 @@ function VerInvoice(pedido_detalle){
                     </div>
                 </div>
                 <div class="row">
-                    <table class="table table-hover">
+                    <table class="table table-hover" id="tablaComprobante">
                         <thead>
                             <tr>
                                 <th>Producto</th>
@@ -359,11 +285,11 @@ function VerInvoice(pedido_detalle){
                         <tbody id="bodyComprobante">
                             ${pedido_detalle.map(e=>yo` 
                                 <tr id="${idFila}-${e.producto_id}">
-                                    <td><input style="text-transform: uppercase;" type="text" class="validate" value="${e.descripcion_detalle}" disabled></td>
-                                    <td class="Cantidad"><input style="text-transform: uppercase;" type="number" class="validate" value="${parseFloat(e.cantidad).toFixed(2)}" onkeyup="${()=>CambioCelda(pedido_detalle[0].cod_moneda=="PEN"?"S/ ":"USD ",idFila+"-"+e.producto_id)}"></td>
-                                    <td class="Moneda"><input style="text-transform: uppercase;" type="text" class="validate" value="${e.cod_moneda=='PEN'?'S/ ':'USD'}" disabled></td>
-                                    <td class="Precio"><input style="text-transform: uppercase;" type="number" class="validate" value="${e.precio}" onkeyup="${()=>CambioCelda(pedido_detalle[0].cod_moneda=="PEN"?"S/ ":"USD ",idFila+"-"+e.producto_id)}"></td>
-                                    <td class="Total"><input style="text-transform: uppercase;" type="number" class="validate" value="${(parseFloat(e.cantidad)*parseFloat(e.precio)).toFixed(2)}" disabled></td>
+                                    <td class="Detalle"><p style="display:none" class="pDetalle pValor">${e.descripcion_detalle}</p> <input style="text-transform: uppercase;" type="text" class="validate" value="${e.descripcion_detalle}" disabled></td>
+                                    <td class="Cantidad"><p style="display:none" class="pCantidad pValor">${parseFloat(e.cantidad).toFixed(2)}</p><input style="text-transform: uppercase;" type="number" class="validate" value="${parseFloat(e.cantidad).toFixed(2)}" onkeyup="${()=>CambioCelda(pedido_detalle[0].cod_moneda=="PEN"?"S/ ":"USD ",idFila+"-"+e.producto_id)}"></td>
+                                    <td class="Moneda"><p style="display:none" class="pMoneda pValor">${e.cod_moneda=='PEN'?'S/ ':'USD'}</p><input style="text-transform: uppercase;" type="text" class="validate" value="${e.cod_moneda=='PEN'?'S/ ':'USD'}" disabled></td>
+                                    <td class="Precio"><p style="display:none" class="pPrecio pValor">${e.precio}</p><input style="text-transform: uppercase;" type="number" class="validate" value="${e.precio}" onkeyup="${()=>CambioCelda(pedido_detalle[0].cod_moneda=="PEN"?"S/ ":"USD ",idFila+"-"+e.producto_id)}"></td>
+                                    <td class="Total"><p style="display:none" class="pTotal pValor">${(parseFloat(e.cantidad)*parseFloat(e.precio)).toFixed(2)}</p><input style="text-transform: uppercase;" type="number" class="validate" value="${(parseFloat(e.cantidad)*parseFloat(e.precio)).toFixed(2)}" disabled></td>
                                 </tr>
                             `)}
                         </tbody>
@@ -460,6 +386,11 @@ function CambioCelda(moneda,idTR){
     var Cantidad = $("#"+idTR).find("td.Cantidad").find("input").val()
     var Precio = $("#"+idTR).find("td.Precio").find("input").val()
     $("#"+idTR).find("td.Total").find("input").val((parseFloat(Cantidad)*parseFloat(Precio)).toFixed(2))
+
+    $("#"+idTR).find("td.Cantidad").find("p.pCantidad").text(Cantidad)
+    $("#"+idTR).find("td.Precio").find("p.pPrecio").text(Precio)
+    $("#"+idTR).find("td.Total").find("p.pTotal").text((parseFloat(Cantidad)*parseFloat(Precio)).toFixed(2))
+
     CalcularSuma(moneda)
 }
 
@@ -551,8 +482,34 @@ function AceptarPedido(pedido_detalle){
             console.log(res.err)
         } else {
             
-            
-            //inicio()
+            var loc = window.location.pathname;
+            var dir = loc.substring(0, loc.lastIndexOf('/'));
+            var pdf =btoa(generateInvoice());
+
+            const parametros = {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    data : pdf
+                })
+            }
+            fetch('http://localhost:5000/ws/save_pdf', parametros)
+                .then(req => req.json())
+                .then(res => {
+                    console.log(res)
+                    if(res.respuesta=="ok"){
+                        const winPDF = new BrowserWindow({
+                            width: 800,
+                            height: 600
+                        })
+                        PDFWindow.addSupport(winPDF) 
+                        winPDF.loadURL(dir+'/assets/media/recibo.pdf')
+                        inicio()
+                    }
+                })
         }
     })
 }
@@ -771,104 +728,6 @@ function TraerSeriesNumeros(cod_documento){
 }
 
 function inicio() { 
-    //const win = new BrowserWindow({ width: 800, height: 600 })
-    //PDFWindow.addSupport(win)
-    //console.log(loc)
-    //console.log(dir)
-
-
-    /*const winPDF = new BrowserWindow({
-        width: 800,
-        height: 600
-      })
-    PDFWindow.addSupport(winPDF) 
-    winPDF.loadURL(dir+'/assets/media/reporteMovimientosCtaAhorros.pdf')*/
-
-    var loc = window.location.pathname;
-    var dir = loc.substring(0, loc.lastIndexOf('/'));
-
-    /*
-    var doc = new jsPDF('p', 'pt'); 
-          var resd= doc.autoTableHtmlToJson(document.getElementById("IED"));
-          var ress= doc.autoTableHtmlToJson(document.getElementById("IES"));
-
-          var base='{{ SITE_URL }}';
-          var operador=operadorGlobal;
-
-          doc.setFontSize(10);
-          doc.setFontStyle('bold');
-          doc.text("SISTEMA INTEGRAL - CIERRE CAJA", 10, 20);
-          doc.setFontSize(8);
-          doc.setFontStyle('normal');
-          doc.text("BASE : " + base, 10, doc.autoTableEndPosY()+35);
-          doc.text("OPERADOR: "+ operador, 10, doc.autoTableEndPosY()+50);
-          doc.text("FECHA DESDE : "+$("#fechad").text(), 10, doc.autoTableEndPosY()+65);
-          doc.text("FECHA HASTA : "+$("#fechah").text(), 140, doc.autoTableEndPosY()+65);
-          
-          doc.setFontSize(8);
-          doc.setFontStyle('bold');
-
-
-          doc.text("MOVIMIENTOS DOLARES", 10, doc.autoTableEndPosY()+85);
-          doc.autoTable(resd.columns, resd.data, {
-              startY: 95,
-              margin: {horizontal: 10},
-              headerStyles: {rowHeight: 12, fontSize: 7,valign: 'middle'},
-              styles: {overflow: 'linebreak'},
-              bodyStyles: {rowHeight: 12, fontSize: 8, valign: 'middle'}, 
-              theme: 'grid',
-              pageBreak: 'avoid',
-          });
-
-          doc.text("MOVIMIENTOS SOLES", 10, doc.autoTableEndPosY()+20);
-
-          doc.autoTable(ress.columns, ress.data, {
-              startY: doc.autoTableEndPosY()+30,
-              margin: {horizontal: 10},
-              headerStyles: {rowHeight: 12, fontSize: 7,valign: 'middle'},
-              styles: {overflow: 'linebreak'},
-              bodyStyles: {rowHeight: 12, fontSize: 8, valign: 'middle'}, 
-              theme: 'grid',
-              pageBreak: 'avoid',
-          });
-
-          doc.text("Saldo que aparece en el sistema SOLES : "+ $("#sis_S").text()+ " DOLARES : "+$("#sis_D").text(), 10, doc.autoTableEndPosY()+30);
-
-          doc.text("Observaciones : "+ $("#obse").val(), 10, doc.autoTableEndPosY()+50);
-
-          doc.save('reporteCierreCajaSD.pdf'); 
-            
-
-    */
-
-
-    /*var doc = new jsPDF('p', 'pt'); 
-    doc.text("SISTEMA INTEGRAL - CIERRE CAJA", 10, 20);
-    var pdf =btoa(doc.output());
-
-    const parametros = {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            data : pdf
-        })
-    }
-    fetch('http://localhost:5000/ws/save_pdf', parametros)
-        .then(req => req.json())
-        .then(res => {
-            console.log(res)
-            if(res.respuesta=="ok"){
-                const winPDF = new BrowserWindow({
-                    width: 800,
-                    height: 600
-                  })
-                PDFWindow.addSupport(winPDF) 
-                winPDF.loadURL(dir+'/assets/media/recibo.pdf')
-            }
-        })*/
  
 
     ShowLoader()
@@ -880,6 +739,130 @@ function inicio() {
         }
         HideLoader()
     })
+}
+
+
+function generateInvoice() {
+    $(".pValor").css("display","block")
+    var companyJSON={
+        CompanyName:'GRIFOS MARECELOS S.R.L SLSLL',
+        CompanyRUC: "20101001010",
+        CompanyAddress: "UVIMA 5 G9 SAN JERONIMO"
+    };
+
+    var company_logo = {
+        src:null,//'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAdgAAAGWCAIAAABU6QXSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAU/SURBVHhe7dQxAQAADMOg+TfdycgDIrgBkBIxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFATMQAMREDxEQMEBMxQEzEADERA8REDBATMUBMxAAxEQPERAwQEzFAanvaPG1kiWmMAQAAAABJRU5ErkJggg==',
+        w: 80,
+        h: 50
+    };
+      
+
+    var fontSizes={
+        HeadFontSize:16,
+        TitleFontSize:12,
+        SubTitleFontSize:11,
+        NormalFontSize:10,
+        SmallFontSize:8
+    };
+       
+    var lineSpacing={
+        MarginTop:25,
+        MarginSeccionCliente :55,
+        NormalSpacing:25,
+    };
+  
+    var doc = new jsPDF('p', 'pt');
+  
+    var rightStartCol1=370;
+    var rightStartCol2=450;
+
+
+    var InitialstartX=40;
+    var startX=50;
+    var InitialstartY=40;
+    var startY=0;
+
+    var lineHeights=12;
+
+    doc.setFontSize(fontSizes.SubTitleFontSize);
+    doc.setFont('times');
+    doc.setFontType('bold');
+
+    if(company_logo.src!=null){
+        doc.addImage(company_logo.src, 'PNG', startX,startY+=50, company_logo.w,company_logo.h);
+        doc.textAlign(companyJSON.CompanyName, {align: "left"}, startX, startY+=15+company_logo.h);
+    }else{
+        doc.setFontSize(fontSizes.HeadFontSize);
+        doc.setFontType('bold');
+        doc.textAlign(companyJSON.CompanyName, {align: "left"}, startX, startY+=30+company_logo.h); 
+        doc.setFontSize(fontSizes.SubTitleFontSize);
+        doc.setFontType('normal');
+        doc.textAlign(companyJSON.CompanyAddress, {align: "left"}, startX, startY+20); 
+        startY+=30
+    }
+
+    doc.setLineWidth(1);
+    doc.roundedRect(startX-10, startY+lineSpacing.MarginSeccionCliente-20, 520, 80, 3, 3); 
+
+    doc.setFontSize(fontSizes.NormalFontSize);
+    doc.setFontType('bold');
+    doc.textAlign("SEÑOR(ES) :", {align: "left"}, startX, startY+=lineSpacing.MarginSeccionCliente);
+    doc.setFontType('normal');
+   // var w = doc.getStringUnitWidth('GSTIN') * NormalFontSize;
+    doc.textAlign($("#tipo_doc_ident").val()=="DNI"?$("#nombres").val()+" "+$("#a_paterno").val()+" "+$("#a_materno").val():$("#razon_social").val(), {align: "left"}, 120, startY);
+    
+    doc.setFontType('bold');
+    doc.textAlign($("#tipo_doc_ident").val()+" :", {align: "left"}, startX, startY+=lineSpacing.NormalSpacing);
+    doc.setFontType('normal');
+    doc.textAlign("47171096", {align: "left"}, 120, startY);
+
+    doc.setFontType('bold');
+    doc.textAlign("DIRECCION :", {align: "left"}, startX, startY+=lineSpacing.NormalSpacing);
+    doc.setFontType('normal');
+    doc.textAlign($("#direccion").val(), {align: "left"}, 120, startY);
+
+    doc.setFont('helvetica');
+    doc.setFontType('bold'); 
+    doc.setFontSize(fontSizes.NormalFontSize);
+    doc.textAlign("FECHA EMISION : ", {align: "left"},  rightStartCol1+60, startY-50);
+    doc.textAlign($("#fecha").val(), {align: "left"}, rightStartCol1+70, startY-30);
+
+ 
+    var tempY=InitialstartY;
+ 
+    doc.setLineWidth(2);
+    doc.roundedRect(360, tempY, 200, 100, 3, 3); 
+    //doc.rect(230, tempY, 230, 180); 
+    doc.setFont('helvetica');
+    doc.setFontType('bold'); 
+    doc.setFontSize(fontSizes.TitleFontSize);
+    doc.textAlign("R.U.C. "+companyJSON.CompanyRUC, {align: "left"},  rightStartCol1+30, tempY+=lineSpacing.MarginTop);
+    doc.setFont('helvetica');
+    doc.setFontType('bold'); 
+    doc.setFontSize(fontSizes.TitleFontSize);
+    doc.textAlign($("#cod_documento option:selected").text(), {align: "left"},  rightStartCol1+10, tempY+=lineSpacing.NormalSpacing); 
+
+    doc.setFont('helvetica');
+    doc.setFontType('bold'); 
+    doc.setFontSize(fontSizes.TitleFontSize);
+    doc.textAlign("Serie "+$("#nro_serie").val(), {align: "left"},  rightStartCol1+20, tempY+=lineSpacing.NormalSpacing);
+    doc.textAlign("Nº "+$("#numero").val(), {align: "left"},  rightStartCol1+100, tempY);
+
+
+    var resd= doc.autoTableHtmlToJson(document.getElementById("tablaComprobante")); 
+
+    doc.autoTable(resd.columns, resd.data, {
+        startY: startY+30,
+        startX: 80,
+        margin: {horizontal: 30},
+        headerStyles: {rowHeight: 12, fontSize: 7,valign: 'middle'},
+        styles: {overflow: 'linebreak'},
+        bodyStyles: {rowHeight: 12, fontSize: 8, valign: 'middle'}, 
+        theme: 'plain',
+        pageBreak: 'avoid',
+    });
+ 
+    return doc.output();
 }
 
 export {

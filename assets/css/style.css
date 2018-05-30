@@ -43,12 +43,15 @@
 }
 
 /* hide back of pane during swap */
+.back {
+	position: absolute;
+}
+
 .front, .back {
 	-webkit-backface-visibility: hidden;
    -moz-backface-visibility: hidden;
      -o-backface-visibility: hidden;
         backface-visibility: hidden;
-	position: absolute;
 	top: 0;
 	left: 0;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.14);
@@ -67,12 +70,7 @@
         transform: rotateY( 180deg );
         z-index: 3;
 }
-
-.back .btn-simple{
-    position: absolute;
-    left: 0;
-    bottom: 4px;
-}
+ 
 /*        Style       */
 
 
@@ -83,7 +81,7 @@
 }
 .card-container, .front, .back {
 	width: 100%;
-	height: auto;
+	height: 100%;
 	border-radius: 4px;
 }
 .card .cover{
@@ -162,81 +160,7 @@
 .card .stats p{
 	color: #777777;
 }
-/*      Just for presentation        */
-
-.title{
-    color: #506A85;
-    text-align: center;
-    font-weight: 300;
-    font-size: 44px;
-    margin-bottom: 90px;
-    line-height: 90%;
-}
-.title small{
-    font-size: 17px;
-    color: #999;
-    text-transform: uppercase;
-    margin: 0;
-}
-.space-30{
-	height: 30px;
-	display: block;
-}
-.space-50{
-    height: 50px;
-    display: block;
-}
-.space-200{
-    height: 200px;
-    display: block;
-}
-.white-board{
-    background-color: #FFFFFF;
-    min-height: 200px;
-    padding: 60px 60px 20px;
-}
-.ct-heart{
-    color: #F74933;
-}
-
- pre.prettyprint{
-    background-color: #ffffff;
-    border: 1px solid #999;
-    margin-top: 20px;
-    padding: 20px;
-    text-align: left;
-}
-.atv, .str{
-    color: #05AE0E;
-}
-.tag, .pln, .kwd{
-     color: #3472F7;
-}
-.atn{
-  color: #2C93FF;
-}
-.pln{
-   color: #333;
-}
-.com{
-    color: #999;
-}
-
-.btn-simple{
-    opacity: .8;
-    color: #666666;
-    background-color: transparent;
-}
-
-.btn-simple:hover,
-.btn-simple:focus{
-    background-color: transparent;
-    box-shadow: none;
-    opacity: 1;
-}
-.btn-simple i{
-    font-size: 16px;
-}
+ 
  
 /*       Fix bug for IE      */
 
