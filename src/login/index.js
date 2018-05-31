@@ -64,7 +64,7 @@ function Ingresar() {
                 $('#text_error').text(res.err)
                 $('#box_error').show()
             } else {
-                navegador(res.cuenta.usuario)
+                navegador(res.cuenta.usuario,res.modulos)
                 inicio()
             }
             HideLoader()

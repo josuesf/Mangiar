@@ -205,9 +205,9 @@
     animation-delay: .5s;
 }
 
-div[title="LIBRE"]{ background-color:#9BB83F;}
-div[title="OCUPADO"]{ background-color:#bd383b;}
-div[title="PENDIENTE"]{ background-color:#D68D53;}
+div[title="LIBRE"]{ background-color:rgb(71, 226, 159);}
+div[title="OCUPADO"]{ background-color:#e87274;}
+div[title="PENDIENTE"]{ background-color:rgb(255, 240, 152);}
 
 @keyframes bouncing {  
     50% {

@@ -23,7 +23,7 @@ module.exports = {
         })
     },
     getModulosPerfil: (params, callback) => {
-        db.query('SELECT p.cod_perfil, p.cod_modulo, m.nombre, p.nivel_acceso, p.estado from eseguridad.perfil_modulo p inner join eseguridad.modulo m on p.cod_modulo=m.cod_modulo where p.cod_perfil=$1', params, (err, r) => {
+        db.query('SELECT p.cod_perfil, p.cod_modulo, m.nombre,m.ruta_modulo, p.nivel_acceso, p.estado from eseguridad.perfil_modulo p inner join eseguridad.modulo m on p.cod_modulo=m.cod_modulo where p.cod_perfil=$1', params, (err, r) => {
             if(err){
                 return callback(err.name+":"+err.code+" "+err.routine, undefined)
             }
@@ -79,4 +79,13 @@ module.exports = {
             callback(err, r.rows)
         })
     },
+    get_perfiles_simple :(params,callback)=>{
+        db.query('SELECT cod_perfil,nombre FROM eseguridad.perfil where estado=$1 and cod_perfil!=$2', ['ACTIVO','ADMINROOT'], (err, r) => {
+            if(err){
+                console.log(err)
+                return callback(err.name+":"+err.code+" "+err.routine, undefined)
+            }
+            callback(err, r.rows)
+        })
+    }
 }

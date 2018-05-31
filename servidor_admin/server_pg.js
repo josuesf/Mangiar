@@ -18,7 +18,6 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true })); // support enc
 app.disable('x-powered-by');
 app.use(session({ secret: '_secret_', cookie: { maxAge: 60 * 60 * 1000 }, saveUninitialized: false, resave: false }));
 // app.use(authChecker);
-
 app.get('/', function (req, res,next) {
   const db = require('../connectionbd')
 	db.query('SELECT * FROM account', [], (err, r) => {
@@ -37,7 +36,11 @@ app.post('/login_', function (req, res) {
 	cuenta.login(params, function (err, cuenta) {
 		if (err) return res.json({err})
 		app.locals.usuario = cuenta.usuario
-		return res.json({cuenta})
+		const perfil = require('./models/perfil')
+		perfil.getModulosPerfil([cuenta.cod_perfil],function(err,modulos){
+			if (err) return res.json({err})
+			return res.json({cuenta,modulos})
+		})
 	})
 })
 
@@ -83,8 +86,10 @@ var server = app.listen(5000, function (err) {
   if (err) return console.log('Hubo un error'), process.exit(1);
   console.log('Escuchando en el puerto 3000');
 })
-
-
+var io = require('socket.io')(server);
+io.sockets.on('connection', function (socket) {
+	console.log(socket.id)
+});
 // var reportingApp = express();
 // app.use('/reporting', reportingApp);
 // var jsreport = require('jsreport')({

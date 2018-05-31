@@ -1,7 +1,7 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
 import { cuentas } from './index'
-function Ver(usuario) {
+function Ver(usuario,perfiles,sucursales) {
     var el = yo`
     <div class="card horizontal">
         <div class="card-stacked">
@@ -53,12 +53,18 @@ function Ver(usuario) {
                             <div class="input-field col s6">
                                 <select id="cod_perfil">
                                     <option value=null disabled selected></option>
+                                    ${perfiles.map(p=>yo`
+                                    <option value="${p.cod_perfil}" ${usuario?(usuario.cod_perfil==p.cod_perfil?'selected':''):''} >${p.nombre}</option>
+                                    `)}
                                 </select>
                                 <label>Perfil</label>
                             </div>
                             <div class="input-field col s6">
                                 <select id="cod_sucursal">
                                     <option value=null disabled selected></option>
+                                    ${sucursales.map(p=>yo`
+                                    <option value="${p.cod_sucursal}" ${usuario?(usuario.cod_sucursal==p.cod_sucursal?'selected':''):''} >${p.nombre}</option>
+                                    `)}
                                 </select>
                                 <label>Sucursal</label>
                             </div>
@@ -67,11 +73,11 @@ function Ver(usuario) {
                             <div class="col s6">
                                 <a onclick=${() => Guardar(usuario)} class="waves-effect waves-light btn">Guardar Usuario</a>
                             </div>
-                            ${usuario?yo`
+                            ${usuario ? yo`
                             <div class="col s6">
                                 <a onclick=${() => Eliminar(usuario)} class="waves-effect waves-light btn red lighten-3">Eliminar Usuario</a>
                             </div>
-                            `:yo``}
+                            `: yo``}
                         </div>
                     </form>
                 </div>
@@ -83,7 +89,7 @@ function Ver(usuario) {
     empty(container).appendChild(el);
     var sub_nav = yo`
     <div class="collection">
-        <a href="#!" onclick="${()=>cuentas()}" class="collection-item">Todos los usuarios</a>
+        <a href="#!" onclick="${() => cuentas()}" class="collection-item">Todos los usuarios</a>
         <a href="#!" class="collection-item active">Nuevo Usuario</a>
     </div>
         `;
@@ -94,11 +100,11 @@ function Ver(usuario) {
 
 function Guardar(u) {
     var props = {
-        'usuario':{},
-        'email':{},
-        'contrasena':{minLen:4}
+        'usuario': {},
+        'email': {},
+        'contrasena': { minLen: 4 }
     }
-    if(!Validar(props))
+    if (!Validar(props))
         return;
     ShowLoader()
     const usuario_id = u ? u.usuario_id : '-1'
@@ -169,10 +175,26 @@ function Eliminar(u) {
     }
 }
 function nuevo(usuario) {
-    console.log(usuario)
     ShowLoader()
-    Ver(usuario)
-    HideLoader()
+    // const usuario_id = u.usuario_id
+    const parametros = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({})
+    }
+    fetch('http://localhost:5000/cuentas_api/get_perfiles_sucursales', parametros)
+        .then(req => req.json())
+        .then(res => {
+            if (res.err) {
+               console.log(res.err)
+            } else {
+                Ver(usuario, res.perfiles, res.sucursales)
+            }
+            HideLoader()
+        })
 }
 
 export { nuevo }

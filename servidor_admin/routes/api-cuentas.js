@@ -45,6 +45,17 @@ router.post('/delete_cuenta', function (req, res) {
 		return res.json({respuesta})
 	})
 });
-
+router.post('/get_perfiles_sucursales', function (req, res) {
+	input = req.body
+	const perfiles = require('../models/perfil')
+	const sucursal=require('../models/sucursal')
+	perfiles.get_perfiles_simple(['ACTIVO'],function(err,perfiles){
+		if (err) return res.json({err})
+		sucursal.get_sucursales_simple(['ACTIVO'],function(err,sucursales){
+			if (err) return res.json({err})
+			return res.json({perfiles,sucursales})
+		})
+	})
+});
 
 module.exports = router;

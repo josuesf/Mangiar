@@ -10,7 +10,7 @@ import {cuentas} from '../eseguridad.cuenta'
 import { modulos } from '../eseguridad.modulo'
 import { perfiles } from '../eseguridad.perfil'
 import { personas } from '../personas'
-function Ver(login) {
+function Ver(login,modulos_cuenta) {
     var el = login ? yo`
         <nav>
             <div class="nav-wrapper" style="background-color:#2c2c54">
@@ -22,26 +22,33 @@ function Ver(login) {
                         <a class="dropdown-button" href="#!" data-activates="Opciones">Configuracion
                             <i class="material-icons right">arrow_drop_down</i>
                         </a>
-                        <ul id="Opciones" class="dropdown-content">
+                        ${login!='ADMIN' ?yo`<ul id="Opciones" class="dropdown-content">
+                            ${modulos_cuenta.map(m=> m.nivel_acceso==1 ? yo`
                             <li>
-                                <a onclick="${() => menu_administracion()}">Administracion</a>
+                                <a onclick="${() => AbrirModulo(m.ruta_modulo)}">${m.nombre}</a>
+                            </li>
+                            `:null)}
+                        </ul>`:
+                        yo`<ul id="Opciones" class="dropdown-content">
+                            <li>
+                                <a onclick="${() => menu_administracion()}">ADMINISTRACION</a>
                             </li>
                             <li>
-                                <a onclick="${() => personas()}">Personas</a>
+                                <a onclick="${() => personas()}">CLIENTES</a>
                             </li>
                             <li>
-                                <a onclick="${() => productos()}">Productos</a>
+                                <a onclick="${() => productos()}">PRODUCTOS</a>
                             </li>
                             <li>
-                                <a onclick="${() => cuentas()}">Usuarios</a>
+                                <a onclick="${() => cuentas()}">USUARIOS</a>
                             </li>
                             <li>
-                                <a onclick="${() => modulos()}">Modulos</a>
+                                <a onclick="${() => modulos()}">MODULOS</a>
                             </li>
                             <li>
-                                <a onclick="${() => perfiles()}">Perfiles</a>
+                                <a onclick="${() => perfiles()}">PERFILES</a>
                             </li>
-                        </ul>
+                        </ul>`}
                     </li>
                     <!-- Dropdown Trigger -->
                     <li>
@@ -52,9 +59,6 @@ function Ver(login) {
                             <li>
                                 <a onclick="${() => CerrarSesion()}">Salir</a>
                             </li>
-                            <li>
-                                <a href="#!">Ver Perfil</a>
-                            </li>
                         </ul>
                     </li>
                 </ul>
@@ -64,15 +68,36 @@ function Ver(login) {
     empty(container).appendChild(el);
     $(".dropdown-button").dropdown();
 }
-
+function AbrirModulo(ruta_modulo){
+    switch(ruta_modulo){
+        case 'personas' : 
+            personas()
+            break;
+        case 'productos': 
+            productos()
+            break;
+        case 'cuentas':
+            cuentas()
+            break;
+        case 'modulos':
+            modulos()
+            break
+        case 'perfiles':
+            perfiles()
+            break
+        case 'menu_administracion':
+            menu_administracion()
+            break
+    }
+}
 function CerrarSesion() {
     Ver()
     sub_navegador()
     login()
 }
 
-function navegador(login) {
-    Ver(login)
+function navegador(login,modulos_cuenta) {
+    Ver(login,modulos_cuenta)
 }
 
 export { navegador }

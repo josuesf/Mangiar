@@ -168,7 +168,7 @@ FUNCTION eproductos.fn_GetPedidoByPunto
 Descripcion: recupera pedido de una mesa
 Parametros: necesarios para un pedido
 Fecha:17052018
-Ejecucion: SELECT * from eproductos.fn_GetPedidoByPunto('P005')
+Ejecucion: SELECT * from eproductos.fn_GetPedidoByPunto('ME1')
 DROP: DROP FUNCTION eproductos.fn_GetPedidoByPunto(
 pcod_mesa varchar(10))
 */
@@ -202,7 +202,7 @@ BEGIN
  d.cod_punto_venta "cod_mesa",d.estado_detalle
  ,(select pro.imagen_url from eproductos.producto pro where pro.producto_id=d.producto_id) 
  FROM ecaja.pedido_detalle d 
- inner join ecaja.pedido p on d.pedido_id=p.pedido_id 
+ inner join ecaja.pedido p on d.pedido_id=p.pedido_id and p.estado_pedido='EN ATENCION'
  where d.cod_punto_venta=pcod_mesa;
  
  EXCEPTION WHEN OTHERS THEN 
@@ -291,7 +291,8 @@ nro_cuentas  = (SELECT count(distinct d.pedido_id) from ecaja.pedido_detalle d i
 IF nro_cuentas = 0 THEN 
 
 	UPDATE punto_venta	
-	SET estado_accion='LIBRE'
+	SET estado_accion='LIBRE',
+	usuario_accion=null
 	WHERE cod_punto_venta = pcod_punto_venta;
 END IF;
 RETURN 'El comprobante fue guardado correctamente';
