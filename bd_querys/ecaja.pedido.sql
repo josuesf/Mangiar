@@ -179,9 +179,9 @@ CREATE OR REPLACE FUNCTION eproductos.fn_GetPedidoByPunto
 RETURNS TABLE(
 pedido_id int,
 numero int,
-id_detalle int,
+id_detalle varchar(20),
 producto_id int,
-id_referencia int,
+id_referencia varchar(20),
 almacen_cod varchar(50),
 cantidad int,
 nombre varchar(256),
