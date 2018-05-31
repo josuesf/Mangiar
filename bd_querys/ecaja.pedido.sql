@@ -168,7 +168,7 @@ FUNCTION eproductos.fn_GetPedidoByPunto
 Descripcion: recupera pedido de una mesa
 Parametros: necesarios para un pedido
 Fecha:17052018
-Ejecucion: SELECT * from eproductos.fn_GetPedidoByPunto('ME15')
+Ejecucion: SELECT * from eproductos.fn_GetPedidoByPunto('P005')
 DROP: DROP FUNCTION eproductos.fn_GetPedidoByPunto(
 pcod_mesa varchar(10))
 */
@@ -179,11 +179,11 @@ CREATE OR REPLACE FUNCTION eproductos.fn_GetPedidoByPunto
 RETURNS TABLE(
 pedido_id int,
 numero int,
-id_detalle varchar(20),
-producto_id integer,
-id_referencia varchar(20),
+id_detalle int,
+producto_id int,
+id_referencia int,
 almacen_cod varchar(50),
-cantidad integer,
+cantidad int,
 nombre varchar(256),
 simbolo unknown,
 valor_precio numeric(18,4),
@@ -198,7 +198,7 @@ BEGIN
  RETURN QUERY
  SELECT d.pedido_id,p.numero,d.id_detalle,d.producto_id,d.id_referencia,
  d.almacen_cod,d.cantidad,d.descripcion_detalle "nombre",
- 'S/.',d.precio "valor_precio",
+ 'S/.' "simbolo",d.precio "valor_precio",
  d.cod_punto_venta "cod_mesa",d.estado_detalle
  ,(select pro.imagen_url from eproductos.producto pro where pro.producto_id=d.producto_id) 
  FROM ecaja.pedido_detalle d 

@@ -4,7 +4,9 @@ var empty = require('empty-element');
 import { Init,onActionLeft,onActionRight } from '../utils'
 
 var contador = 0 
- 
+var $card = null
+var lastCard = null
+
 function Ver(puntos_venta) {
  
     var  el = yo`
@@ -13,7 +15,7 @@ function Ver(puntos_venta) {
                 ${puntos_venta.map(e=>yo` 
                         <div class="col m3"> 
                             <div class="card-container manual-flip">
-                                <div class="card">
+                                <div class="card card-custom">
                                     <div class="front" title="${e.estado_accion}">
                                         <div class="header">
                                             <h5 class="motto">Punto de Venta</h5>
@@ -81,60 +83,30 @@ function Ver(puntos_venta) {
     //$(".dropdown-button").dropdown();
 }
  
-function VerDetalleSeleccion(){
+function VerDetalleSeleccion(productos){
     var el = yo`
     <div class="card">
         <div class="card-content">
             <span class="card-title center">Detalle del pedido 0001</span> 
             <div class="row">
                 <div class="col m8">
-                    <div class="row">
-                        <div class="col s7 m7 offset-m3 persp">
-                            <div class="card first">
-                                <div class="card-image">
-                                <img src="https://materializecss.com/images/sample-1.jpg">
-                                <span class="card-title">Card Title</span>
-                                </div>
-                                <div class="card-content">
-                                <p>I am a very simple card. I am good at containing small bits of information.
-                                I am convenient because I require little markup to use effectively.</p>
-                                </div>
-                                <div class="card-action center">
-                                    <a class="btn-floating btn-large waves-effect waves-light red darken-1"><i class="material-icons">close</i></a>
-                                    <a class="btn-floating btn-large waves-effect waves-light green darken-1" onclick=${()=>Aceptar()}><i class="material-icons">check</i></a>
-                                </div>
-                            </div>
-                            
-                            <div class="card second">
-                                <div class="card-image">
-                                <img src="https://materializecss.com/images/office.jpg">
-                                <span class="card-title">Card Title</span>
-                                </div>
-                                <div class="card-content">
-                                <p>I am a very simple card. I am good at containing small bits of information.
-                                I am convenient because I require little markup to use effectively.</p>
-                                </div>
-                                <div class="card-action center">
-                                    <a class="btn-floating btn-large waves-effect waves-light red darken-1"><i class="material-icons">close</i></a>
-                                    <a class="btn-floating btn-large waves-effect waves-light green darken-1" onclick=${()=>Aceptar()}><i class="material-icons">check</i></a>
-                                </div>
-                            </div>
-                            <div class="card third">
-                                <div class="card-image">
-                                <img src="https://materializecss.com/images/office.jpg">
-                                <span class="card-title">Card Title</span>
-                                </div>
-                                <div class="card-content">
-                                <p>I am a very simple card. I am good at containing small bits of information.
-                                I am convenient because I require little markup to use effectively.</p>
-                                </div>
-                                <div class="card-action center">
-                                    <a class="btn-floating btn-large waves-effect waves-light red darken-1"><i class="material-icons">close</i></a>
-                                    <a class="btn-floating btn-large waves-effect waves-light green darken-1" onclick=${()=>Aceptar()}><i class="material-icons">check</i></a>
-                                </div>
-                            </div>
+                   
+
+                    <div class="container-1">
+                        <div class="card-stack">
+                                <a class="buttons prev" href="javascript:void(0);" onclick=${()=>Previo()}><i class="material-icons">chevron_left</i></a>
+                                <ul class="card-list">
+                                ${productos.map(e=>yo`
+                                    <li class="card" style="background-color: #4CD964;">
+                                    </li>`
+                                )}
+                               
+                            </ul>	
+                            <a class="buttons next" href="javascript:void(0);"  onclick=${()=>Siguiente()} ><i class="material-icons">chevron_right</i></a>
                         </div>
                     </div>
+
+
                 </div>
                 <div class="col m4">
                     <div class="row center">
@@ -142,7 +114,9 @@ function VerDetalleSeleccion(){
                     </div>
                     <div class="row">
                         <div class="collection">
-                            <a href="#!" class="collection-item">Alvin</a>
+                            ${productos.map(e=>yo`
+                            <a href="javascript:void();" class="collection-item" onclick=${()=>SeleccionarProducto(e)}>${e.nombre}</a>`
+                            )}
                         </div>
                     </div>
                 </div>
@@ -151,7 +125,32 @@ function VerDetalleSeleccion(){
     </div>`
     var container = document.getElementById('contenido_principal')
     empty(container).appendChild(el);
+
+    $card = $('.card');
+    lastCard = $(".card-list .card").length - 1;
 }
+
+function Siguiente(){ 
+	var prependList = function() {
+		if( $('li.card').hasClass('activeNow') ) {
+			var $slicedCard = $('li.card').slice(lastCard).removeClass('transformThis activeNow');
+			$('ul.card-list').prepend($slicedCard);
+		}
+    }
+	$('li.card').last().removeClass('transformPrev').addClass('transformThis').prev().addClass('activeNow');
+    prependList();
+};
+
+function Previo(){ 
+	var appendToList = function() {
+    if( $('li.card').hasClass('activeNow') ) {
+        var $slicedCard = $('li.card').slice(0, 1).addClass('transformPrev');
+        $('.card-list').append($slicedCard);
+    }}
+	
+	$('li.card').removeClass('transformPrev').last().addClass('activeNow').prevAll().removeClass('activeNow');
+	setTimeout(function(){appendToList();}, 150);
+};
 
 function VerSeleccionCuentas(cuentas,tipo){
     var el = yo`
@@ -276,8 +275,7 @@ function VerInvoice(pedido_detalle){
                         <thead>
                             <tr>
                                 <th>Producto</th>
-                                <th>Cantidad</th>
-                                <th>Moneda</th>
+                                <th>Cantidad</th> 
                                 <th class="center">Precio</th>
                                 <th class="center">Total</th>
                             </tr>
@@ -287,7 +285,6 @@ function VerInvoice(pedido_detalle){
                                 <tr id="${idFila}-${e.producto_id}">
                                     <td class="Detalle"><p style="display:none" class="pDetalle pValor">${e.descripcion_detalle}</p> <input style="text-transform: uppercase;" type="text" class="validate" value="${e.descripcion_detalle}" disabled></td>
                                     <td class="Cantidad"><p style="display:none" class="pCantidad pValor">${parseFloat(e.cantidad).toFixed(2)}</p><input style="text-transform: uppercase;" type="number" class="validate" value="${parseFloat(e.cantidad).toFixed(2)}" onkeyup="${()=>CambioCelda(pedido_detalle[0].cod_moneda=="PEN"?"S/ ":"USD ",idFila+"-"+e.producto_id)}"></td>
-                                    <td class="Moneda"><p style="display:none" class="pMoneda pValor">${e.cod_moneda=='PEN'?'S/ ':'USD'}</p><input style="text-transform: uppercase;" type="text" class="validate" value="${e.cod_moneda=='PEN'?'S/ ':'USD'}" disabled></td>
                                     <td class="Precio"><p style="display:none" class="pPrecio pValor">${e.precio}</p><input style="text-transform: uppercase;" type="number" class="validate" value="${e.precio}" onkeyup="${()=>CambioCelda(pedido_detalle[0].cod_moneda=="PEN"?"S/ ":"USD ",idFila+"-"+e.producto_id)}"></td>
                                     <td class="Total"><p style="display:none" class="pTotal pValor">${(parseFloat(e.cantidad)*parseFloat(e.precio)).toFixed(2)}</p><input style="text-transform: uppercase;" type="number" class="validate" value="${(parseFloat(e.cantidad)*parseFloat(e.precio)).toFixed(2)}" disabled></td>
                                 </tr>
@@ -384,11 +381,11 @@ function LlenarSeries(series){
 
 function CambioCelda(moneda,idTR){
     var Cantidad = $("#"+idTR).find("td.Cantidad").find("input").val()
-    var Precio = $("#"+idTR).find("td.Precio").find("input").val()
+    var Precio = $("#"+idTR).find("td.Precio").find("input").val().trim().replace("S/","").replace("USD","")
     $("#"+idTR).find("td.Total").find("input").val((parseFloat(Cantidad)*parseFloat(Precio)).toFixed(2))
 
     $("#"+idTR).find("td.Cantidad").find("p.pCantidad").text(Cantidad)
-    $("#"+idTR).find("td.Precio").find("p.pPrecio").text(Precio)
+    $("#"+idTR).find("td.Precio").find("p.pPrecio").text(moneda+" "+Precio)
     $("#"+idTR).find("td.Total").find("p.pTotal").text((parseFloat(Cantidad)*parseFloat(Precio)).toFixed(2))
 
     CalcularSuma(moneda)
@@ -534,6 +531,21 @@ function SeleccionarCuenta(cuenta,tipo){
         })
     }else{
         //$('#modal-details').modal('close');
+        ShowLoader()
+        console.log("cuenta")
+        console.log(cuenta)
+        fetchProductosMesa(cuenta,function(res){
+            if (res.err) {
+                console.log(res.err)
+            } else {
+                console.log(res)
+                if(res.productos_selec.length>0)
+                    VerDetalleSeleccion(res.productos_selec)
+                   // VerInvoice(res.punto_venta)
+            }
+            HideLoader()
+        })
+
     }
 }
 
@@ -559,6 +571,7 @@ function VerDetalles(punto_venta,tipo){
             } 
         })
     }else{
+        
         fetchCuentas(punto_venta,function(res){
             if (res.err) {
                 console.log(res.err)
@@ -569,7 +582,7 @@ function VerDetalles(punto_venta,tipo){
     }
 }
 
-function Aceptar(){
+function Aceptar1(){
     $('.first').addClass('accept');
      
     /*var lastCard = $('<div />', {
@@ -587,6 +600,25 @@ function Aceptar(){
       $('.cube').append(lastCard);
       
     }, 300);*/
+}
+
+
+function fetchProductosMesa(punto_venta,callback){
+    const parametros = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            cod_mesa:punto_venta.cod_punto_venta
+        })
+    }
+    fetch('http://localhost:5000/ws/get_productos_by_mesa', parametros)
+        .then(req => req.json())
+        .then(res => {
+            callback(res)
+        })
 }
 
 
