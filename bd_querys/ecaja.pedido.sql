@@ -218,31 +218,30 @@ Descripcion: Guarda o actualiza Comprobante de un pedido
 Ejecucion: SELECT * from ecaja.fn_savecomprobantepedido('COM',1,1,'S001',2,'-1','CLIENTES VARIOS','NINGUNA','ninguna',12.0000,0.0000,'EMITIDO','jjjjjjj','12-12-2018','ADMIN')
  
 */
-CREATE OR REPLACE FUNCTION ecaja.fn_SaveComprobantePedido
-(
- pcod_documento varchar(5),
- pnro_serie int,
- pnumero int,
- pcod_sucursal varchar(30),
- ppedido_id int,
- pcod_persona varchar(12),
- pnombre_cliente varchar(200),
- pdireccion_cliente varchar(256),
- pconcepto varchar(100),
- ptotal numeric(18,4),
- pimpuesto numeric(18,4),
- pestado varchar(25),
- pobs varchar(256),
- pfecha_emision timestamp,
- pusuario_registro varchar(50)
-)
-RETURNS varchar(100) AS
-$$
+
+CREATE OR REPLACE FUNCTION ecaja.fn_savecomprobantepedido(
+    pcod_documento character varying,
+    pnro_serie integer,
+    pnumero integer,
+    pcod_sucursal character varying,
+    ppedido_id integer,
+    pcod_persona character varying,
+    pnombre_cliente character varying,
+    pdireccion_cliente character varying,
+    pconcepto character varying,
+    ptotal numeric,
+    pimpuesto numeric,
+    pestado character varying,
+    pobs character varying,
+    pfecha_emision timestamp without time zone,
+    pusuario_registro character varying)
+  RETURNS character varying AS
+$BODY$
 DECLARE
    nro_cuentas int;
+   pcod_punto_venta varchar(30);
 BEGIN
 
-IF( (select count(*) from ecaja.comprobante where ecaja.comprobante.comp_cod_documento=pcod_documento and ecaja.comprobante.comp_nro_serie=pnro_serie and ecaja.comprobante.comp_numero=pnumero and ecaja.comprobante.comp_cod_sucursal=pcod_sucursal) = 0) THEN
  
 INSERT INTO ecaja.comprobante(
 	comp_cod_documento,
@@ -284,36 +283,24 @@ VALUES(
 UPDATE ecaja.pedido SET 
  estado_pedido = 'TERMINADO'
 WHERE pedido_id=ppedido_id;
-RETURN 'El comprobante fue guardado correctamente';
-ELSE
+
+pcod_punto_venta = (SELECT DISTINCT (d.cod_punto_venta) FROM ecaja.pedido_detalle d WHERE d.pedido_id=ppedido_id);
+
+nro_cuentas  = (SELECT count(distinct d.pedido_id) from ecaja.pedido_detalle d inner join ecaja.pedido p on d.pedido_id=p.pedido_id WHERE d.cod_punto_venta = pcod_punto_venta AND p.estado_pedido='EN ATENCION');
  
-UPDATE ecaja.comprobante SET
- cod_persona = pcod_persona,
- nombre_cliente=pnombre_cliente,
- direccion_cliente=pdireccion_cliente,
- comp_concepto=pconcepto,
- comp_total=ptotal,
- comp_impuesto=pimpuesto,
- comp_estado=pestado,
- actualizado_en=now(),
- usuario_actualizo=pusuario_registro
- where ecaja.comprobante.comp_cod_documento=pcod_documento and ecaja.comprobante.comp_nro_serie=pnro_serie and ecaja.comprobante.comp_numero=pnumero and ecaja.comprobante.comp_cod_sucursal=pcod_sucursal;
-UPDATE ecaja.pedido SET 
- estado_pedido = 'TERMINADO'
-WHERE pedido_id=ppedido_id;
-RETURN 'El comprobante fue actualizado correctamente';
+IF nro_cuentas = 0 THEN 
+
+	UPDATE punto_venta	
+	SET estado_accion='LIBRE'
+	WHERE cod_punto_venta = pcod_punto_venta;
 END IF;
+RETURN 'El comprobante fue guardado correctamente';
 
-nro_cuentas = (SELECT count(distinct d.pedido_id) from ecaja.pedido_detalle d inner join ecaja.pedido p on d.pedido_id=p.pedido_id inner join punto_venta pv on d.cod_punto_venta=pv.cod_punto_venta AND p.estado_pedido='EN ATENCION');
-
-IF (nro_cuentas==0) THEN 
-
-	UPDATE punto_venta pv	
-	SET pv.estado_accion='LIBRE'
-	WHERE pv.cod_punto_venta = (SELECT distinct(d.cod_punto_venta) FROM ecaja.pedido_detalle d WHERE d.pedido_id=ppedido_id);
-END IF;
  EXCEPTION WHEN OTHERS THEN 
  RAISE;
 END;
-$$
-LANGUAGE plpgsql;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION ecaja.fn_savecomprobantepedido(character varying, integer, integer, character varying, integer, character varying, character varying, character varying, character varying, numeric, numeric, character varying, character varying, timestamp without time zone, character varying)
+  OWNER TO postgres;
