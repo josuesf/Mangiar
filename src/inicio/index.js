@@ -1,7 +1,7 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
 
-import { Init,onActionLeft,onActionRight } from '../utils'
+import { Init,onActionLeft,onActionTop } from '../utils'
 
 var contador = 0 
 var $card = null
@@ -89,26 +89,105 @@ function VerDetalleSeleccion(productos){
         <div class="card-content">
             <span class="card-title center">Detalle del pedido 0001</span> 
             <div class="row">
-                <div class="col m8">
+                <div class="col m6">
                    
+                <div id="stacked-cards-block" class="stackedcards stackedcards--animatable init">
+                    <div class="stackedcards-container">
+                    <div class="card small">
+                        <div class="card-image">
+                            <img src="https://image.ibb.co/gQsq07/Adventure_and_Outdoor.png">
+                            <span class="card-title">Card Title</span>
+                        </div>
+                        <div class="card-content">
 
-                    <div class="container-1">
-                        <div class="card-stack">
-                                <a class="buttons prev" href="javascript:void(0);" onclick=${()=>Previo()}><i class="material-icons">chevron_left</i></a>
-                                <ul class="card-list">
-                                ${productos.map(e=>yo`
-                                    <li class="card" style="background-color: #4CD964;">
-                                    </li>`
-                                )}
-                               
-                            </ul>	
-                            <a class="buttons next" href="javascript:void(0);"  onclick=${()=>Siguiente()} ><i class="material-icons">chevron_right</i></a>
+                            <div class="row center">
+                                <div class="col m4 s4">
+                                    <a href="javascript:void(0);" class="waves-effect waves-light btn white-text red"><i class="material-icons">remove</i></a>
+                                </div>
+                                <div class="input-field col m4 s4">
+                                    <input value="0" id="cantidad" type="number" class="validate">
+                                    <label class="active" for="cantidad">Cantidad</label>
+                                </div>
+                                <div class="col m4 s4">
+                                    <a href="javascript:void(0);" class="waves-effect waves-light btn white-text blue"><i class="material-icons">add</i></a>
+                                </div>
+                            </div>
+                            <div class="row center"> 
+                                <h6>Heading h6</h6>
+                                <h6>Heading h6</h6>
+                            </div>
+
+                        </div> 
+                    </div>
+                    <div class="card small">
+                        <div class="card-image"><img src="https://image.ibb.co/fXPg7n/Beach_and_Chill.png"> 
+                            <span class="card-title">Card Title</span>
+                        </div>
+                        <div class="card-content">
+
+                            <div class="row center">
+                                <div class="col m4 s4">
+                                    <a href="javascript:void(0);" class="waves-effect waves-light btn white-text red"><i class="material-icons">remove</i></a>
+                                </div>
+                                <div class="input-field col m4 s4">
+                                    <input value="0" id="cantidad" type="number" class="validate">
+                                    <label class="active" for="cantidad">Cantidad</label>
+                                </div>
+                                <div class="col m4 s4">
+                                    <a href="javascript:void(0);" class="waves-effect waves-light btn white-text blue"><i class="material-icons">add</i></a>
+                                </div>
+                            </div>
+                            <div class="row center"> 
+                                    <h6>Heading h6</h6>
+                                    <h6>Heading h6</h6>
+                            </div>
+                                    
                         </div>
                     </div>
+                    <div class="card small">
+                        <div class="card-image"><img src="https://image.ibb.co/c9gTnn/Romantic_Gateways.png">
+                            <span class="card-title">Card Title</span>
+                        </div>
+                        <div class="card-content">
 
+                            <div class="row center">
+                                <div class="col m4 s4">
+                                    <a href="javascript:void(0);" class="waves-effect waves-light btn white-text red"><i class="material-icons">remove</i></a>
+                                </div>
+                                <div class="input-field col m4 s4">
+                                    <input value="0" id="cantidad" type="number" class="validate">
+                                    <label class="active" for="cantidad">Cantidad</label>
+                                </div>
+                                <div class="col m4 s4">
+                                    <a href="javascript:void(0);" class="waves-effect waves-light btn white-text blue"><i class="material-icons">add</i></a>
+                                </div>
+                            </div>
+                            <div class="row center"> 
+                                <h6>Heading h6</h6>
+                                <h6>Heading h6</h6>
+                            </div>
+
+                        </div>
+                        
+                    </div>
+                    
+                    </div>
+                    <div class="stackedcards--animatable stackedcards-overlay top"><img src="assets/img/check.png"  width="auto" height="auto"/></div>
+                    
+                    <div class="stackedcards--animatable stackedcards-overlay left"><img src="assets/img/close.png" width="auto" height="auto"/></div>
+                </div>
+                <div class="global-actions">
+                    <div class="col m6 s6 center">
+                        <a class="left-action btn-floating btn-large waves-effect waves-light red" onclick=${()=>onActionLeft()}><i class="material-icons">close</i></a> 
+                    </div>
+                    <div class="col m6 s6 center"> 
+                        <a class="top-action btn-floating btn-large waves-effect waves-light green" onclick=${()=>onActionTop()}><i class="material-icons">check</i></a> 
+                    </div>
+                </div>
+ 
 
                 </div>
-                <div class="col m4">
+                <div class="col m6">
                     <div class="row center">
                         <h5 class="header">Platillos y/o bebidas</h5>
                     </div>
@@ -125,32 +204,11 @@ function VerDetalleSeleccion(productos){
     </div>`
     var container = document.getElementById('contenido_principal')
     empty(container).appendChild(el);
-
-    $card = $('.card');
-    lastCard = $(".card-list .card").length - 1;
+    Init()
+ 
 }
 
-function Siguiente(){ 
-	var prependList = function() {
-		if( $('li.card').hasClass('activeNow') ) {
-			var $slicedCard = $('li.card').slice(lastCard).removeClass('transformThis activeNow');
-			$('ul.card-list').prepend($slicedCard);
-		}
-    }
-	$('li.card').last().removeClass('transformPrev').addClass('transformThis').prev().addClass('activeNow');
-    prependList();
-};
-
-function Previo(){ 
-	var appendToList = function() {
-    if( $('li.card').hasClass('activeNow') ) {
-        var $slicedCard = $('li.card').slice(0, 1).addClass('transformPrev');
-        $('.card-list').append($slicedCard);
-    }}
-	
-	$('li.card').removeClass('transformPrev').last().addClass('activeNow').prevAll().removeClass('activeNow');
-	setTimeout(function(){appendToList();}, 150);
-};
+ 
 
 function VerSeleccionCuentas(cuentas,tipo){
     var el = yo`
@@ -237,8 +295,8 @@ function VerInvoice(pedido_detalle){
                                 <div class="card grey lighten-4">
                                     <div class="card-content">
                                         <div class="row">
-                                            <div class="col s12 m12 center">
-                                                <h5 id="tituloComprobante">COMPROBANTE</h5>
+                                            <div class="col s12 m12">
+                                                <h5 id="tituloComprobante">R.U.C. 1111222234</h5>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -284,16 +342,15 @@ function VerInvoice(pedido_detalle){
                             ${pedido_detalle.map(e=>yo` 
                                 <tr id="${idFila}-${e.producto_id}">
                                     <td class="Detalle"><p style="display:none" class="pDetalle pValor">${e.descripcion_detalle}</p> <input style="text-transform: uppercase;" type="text" class="validate" value="${e.descripcion_detalle}" disabled></td>
-                                    <td class="Cantidad"><p style="display:none" class="pCantidad pValor">${parseFloat(e.cantidad).toFixed(2)}</p><input style="text-transform: uppercase;" type="number" class="validate" value="${parseFloat(e.cantidad).toFixed(2)}" onkeyup="${()=>CambioCelda(pedido_detalle[0].cod_moneda=="PEN"?"S/ ":"USD ",idFila+"-"+e.producto_id)}"></td>
-                                    <td class="Precio"><p style="display:none" class="pPrecio pValor">${e.precio}</p><input style="text-transform: uppercase;" type="number" class="validate" value="${e.precio}" onkeyup="${()=>CambioCelda(pedido_detalle[0].cod_moneda=="PEN"?"S/ ":"USD ",idFila+"-"+e.producto_id)}"></td>
-                                    <td class="Total"><p style="display:none" class="pTotal pValor">${(parseFloat(e.cantidad)*parseFloat(e.precio)).toFixed(2)}</p><input style="text-transform: uppercase;" type="number" class="validate" value="${(parseFloat(e.cantidad)*parseFloat(e.precio)).toFixed(2)}" disabled></td>
+                                    <td class="Cantidad"><p style="display:none" class="pCantidad pValor">${parseFloat(e.cantidad).toFixed(2)}</p><input style="text-transform: uppercase;text-align: right;" type="number" class="validate" value="${parseFloat(e.cantidad).toFixed(2)}" onkeyup="${()=>CambioCelda(pedido_detalle[0].cod_moneda=="PEN"?"S/ ":"USD ",idFila+"-"+e.producto_id)}"></td>
+                                    <td class="Precio"><p style="display:none" class="pPrecio pValor">${e.precio}</p><input style="text-transform: uppercase;text-align: right;" type="number" class="validate" value="${e.precio}" onkeyup="${()=>CambioCelda(pedido_detalle[0].cod_moneda=="PEN"?"S/ ":"USD ",idFila+"-"+e.producto_id)}"></td>
+                                    <td class="Total"><p style="display:none" class="pTotal pValor">${(parseFloat(e.cantidad)*parseFloat(e.precio)).toFixed(2)}</p><input style="text-transform: uppercase;text-align: right;" type="number" class="validate" value="${(parseFloat(e.cantidad)*parseFloat(e.precio)).toFixed(2)}" disabled></td>
                                 </tr>
                             `)}
                         </tbody>
                         <tbody>
                             
                             <tr>
-                                <td>   </td>
                                 <td>   </td>
                                 <td>   </td>
                                 <td class="right">
@@ -316,17 +373,15 @@ function VerInvoice(pedido_detalle){
                             <tr>
                                 <td>   </td>
                                 <td>   </td>
-                                <td>   </td>
                                 <td class="right"><h5><strong>Total: </strong></h5></td>
                                 <td class="center"><h5><strong id="totalGlobal">${pedido_detalle[0].cod_moneda=="PEN"?"S/ ":"USD "}${parseFloat(pedido_detalle[0].total).toFixed(2)}</strong></h5></td>
                             </tr>
                         </tbody>
                     </table>
-                    <a class="waves-effect grey darken-4 btn" onclick=${()=>AceptarPedido(pedido_detalle)}><i class="material-icons left">check</i>Aceptar</a>
+                    <a class="waves-effect grey darken-4 btn" onclick=${()=>AceptarPedido(pedido_detalle)}><i class="material-icons left">print</i>Aceptar</a>
                 </div>
             </div>
-        </div>
-        `
+        </div>`
     var container = document.getElementById('contenido_principal')
     empty(container).appendChild(el) 
     $('select').material_select()
@@ -503,7 +558,7 @@ function AceptarPedido(pedido_detalle){
                             height: 600
                         })
                         PDFWindow.addSupport(winPDF) 
-                        winPDF.loadURL(dir+'/assets/media/recibo.pdf')
+                        winPDF.loadURL(dir+'/assets/media/prueba.html')
                         inicio()
                     }
                 })
@@ -760,8 +815,7 @@ function TraerSeriesNumeros(cod_documento){
 }
 
 function inicio() { 
- 
-
+    
     ShowLoader()
     fetchPuntosVentas(function(res){
         if (res.err) {
