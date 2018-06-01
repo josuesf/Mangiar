@@ -2,10 +2,13 @@ var yo = require('yo-yo')
 var empty = require('empty-element');
 
 import { Init,onActionLeft,onActionTop } from '../utils'
+import { comprobantes } from '../ecaja.comprobante/'
+import { nuevoComprobante } from '../ecaja.comprobante/nuevo'
 
 var contador = 0 
 var $card = null
 var lastCard = null
+var jsonSeries = {}
 
 function Ver(puntos_venta) {
  
@@ -204,6 +207,15 @@ function VerDetalleSeleccion(productos){
     </div>`
     var container = document.getElementById('contenido_principal')
     empty(container).appendChild(el);
+
+    var sub_nav = yo `
+    <div class="collection">
+        <a href="#!" class="collection-item" onclick=${()=>inicio()}>Atras</a>
+        <a href="#!" class="collection-item active">Detalles de la cuenta</a>
+    </div>`;
+    var container = document.getElementById('sub_navegador_content')
+    empty(container).appendChild(sub_nav) 
+
     Init()
  
 }
@@ -301,12 +313,12 @@ function VerInvoice(pedido_detalle){
                                         </div>
                                         <div class="row">
                                             <div class="col s12 m12" id="divTipoComprobante">
-                                                <select id="cod_documento">
+                                                <select id="cod_documento" onchange=${()=>CambioDocumento()}>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col s6 m6" id="divSeries">
+                                            <div class="col s6 m6" id="divSeries" onchange=${()=>CambioSerie()}>
                                                 <select id="nro_serie"> 
                                                 </select>
                                             </div>
@@ -385,7 +397,18 @@ function VerInvoice(pedido_detalle){
     var container = document.getElementById('contenido_principal')
     empty(container).appendChild(el) 
     $('select').material_select()
-    TraerTiposComprobantes(pedido_detalle[0].cod_sucursal)
+
+    var sub_nav = yo `
+    <div class="collection">
+        <a href="#!" class="collection-item" onclick=${()=>inicio()}>Atras</a>
+        <a href="#!" class="collection-item" onclick=${()=>comprobantes()}>Todos los comprobantes</a>
+        <a href="#!" class="collection-item" onclick=${()=>nuevoComprobante()}>Nuevo Comprobante</a>
+    </div>`;
+    var container = document.getElementById('sub_navegador_content')
+    empty(container).appendChild(sub_nav) 
+
+
+    TraerTiposComprobantes(pedido_detalle[0].cod_sucursal)     
 
     $('.datepicker').pickadate({
         container: 'body',
@@ -422,16 +445,30 @@ function LlenarTipoDocumentos(documentos){
 
 
 function LlenarSeries(series){
+    jsonSeries = series
     var el = yo`
         <select id="nro_serie">
         ${series.map(e => yo`
              <option value="${e.nro_serie}">${e.nro_serie}</option>
         `)}
-        </select>`  
-        
+        </select>`   
     var container = document.getElementById('divSeries')
     empty(container).appendChild(el)
     $('select').material_select()
+    $("#numero").val(series[0].nro_inicio)
+}
+
+function CambioSerie(){ 
+    for(var i=0;i<jsonSeries.length;i++){ 
+        if(jsonSeries[i].cod_documento==$("#cod_documento").val() && jsonSeries[i].nro_serie==$("#nro_serie").val()){
+            $("#numero").val(jsonSeries[i].nro_inicio+1)
+        }
+    }
+}
+
+function CambioDocumento(){
+    var cod_documento = $("#cod_documento").val()
+    TraerSeriesNumeros(cod_documento)
 }
 
 function CambioCelda(moneda,idTR){
@@ -558,7 +595,7 @@ function AceptarPedido(pedido_detalle){
                             height: 600
                         })
                         PDFWindow.addSupport(winPDF) 
-                        winPDF.loadURL(dir+'/assets/media/prueba.html')
+                        winPDF.loadURL(dir+'/assets/media/recibo.pdf')
                         inicio()
                     }
                 })
@@ -586,17 +623,16 @@ function SeleccionarCuenta(cuenta,tipo){
         })
     }else{
         //$('#modal-details').modal('close');
-        ShowLoader()
-        console.log("cuenta")
-        console.log(cuenta)
-        fetchProductosMesa(cuenta,function(res){
+        ShowLoader() 
+
+
+        fetchPedidoDetalle(cuenta,function(res){
             if (res.err) {
                 console.log(res.err)
             } else {
                 console.log(res)
-                if(res.productos_selec.length>0)
-                    VerDetalleSeleccion(res.productos_selec)
-                   // VerInvoice(res.punto_venta)
+                if(res.punto_venta.length>0)
+                    VerDetalleSeleccion(res.punto_venta)
             }
             HideLoader()
         })

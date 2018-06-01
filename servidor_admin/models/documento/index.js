@@ -41,7 +41,7 @@ module.exports = {
     saveSerie :(params,callback)=>{
         db.query("SELECT * FROM fn_SaveSerie($1,$2,$3,$4,$5,$6,$7)", params, (err, r) => {
             if (err) {
-                return callback(err, undefined)
+                return callback(err.name+":"+err.code+" "+err.routine, undefined)
             }
             callback(err, r.rows)
         })

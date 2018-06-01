@@ -142,7 +142,6 @@ function Guardar(documento,serie) {
     fetch('http://localhost:5000/documentos_api/save_serie', parametros)
         .then(req => req.json())
         .then(res => {
-            console.log(res)
             if (res.err) {
                 $('#text_error').text(res.err)
                 $('#box_error').show()

@@ -1269,7 +1269,7 @@ $$ LANGUAGE plpgsql;
 FUNCTION fn_SaveSerie
 Descripcion: Guarda o actualiza una serie
 Parametros: necesarios para una serie
-Ejecucion: SELECT * FROM  fn_SaveSerie('D0001',1,1,'IIIII','0','ACTIVO','ADMIN')
+Ejecucion: SELECT * FROM  fn_SaveSerie('BV',1,2,'S00001','0','ACTIVO','ADMIN')
 */
 CREATE OR REPLACE FUNCTION fn_SaveSerie
 (
@@ -1296,7 +1296,7 @@ RETURNS TABLE
 ) AS
 $BODY$
 BEGIN
-IF( not exists (select 1 from documento_serie d where d.cod_documento= _cod_documento and d.nro_serie=_nro_serie and d.nro_inicio=_nro_inicio and d.cod_sucursal=_cod_sucursal))THEN
+IF( not exists (select 1 from documento_serie d where d.cod_documento= _cod_documento and d.nro_serie=_nro_serie and d.cod_sucursal=_cod_sucursal))THEN
 INSERT INTO documento_serie(
 	cod_documento,
 	nro_serie,
@@ -1320,18 +1320,19 @@ VALUES(
 ELSE
 UPDATE documento_serie SET
  cod_documento=_cod_documento,
+ nro_inicio = _nro_inicio,
  esta_afecto=_esta_afecto,
  estado=_estado,
  actualizado_en = now(),
  usuario_actualizo = _usuario
 
-WHERE documento_serie.cod_documento= _cod_documento  and documento_serie.nro_serie=_nro_serie and documento_serie.nro_inicio=_nro_inicio and documento_serie.cod_sucursal=_cod_sucursal;
+WHERE documento_serie.cod_documento= _cod_documento  and documento_serie.nro_serie=_nro_serie and documento_serie.cod_sucursal=_cod_sucursal;
 END IF;
 
  RETURN QUERY
  SELECT *
  FROM documento_serie d
- WHERE d.cod_documento = _cod_documento and d.nro_serie=_nro_serie and d.nro_inicio=_nro_inicio and d.cod_sucursal=_cod_sucursal
+ WHERE d.cod_documento = _cod_documento and d.nro_serie=_nro_serie and d.cod_sucursal=_cod_sucursal
  ORDER BY d.cod_documento;
  
  EXCEPTION WHEN OTHERS THEN 

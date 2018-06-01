@@ -205,9 +205,9 @@ router.post('/save_ecaja_comprobante', function (req, res) {
 		req.app.locals.usuario
 	]
 	console.log(params)
-	const pedido = require('../models/ecaja.pedido')
+	const comprobante = require('../models/ecaja.comprobante')
 	//call Model.login function
-	pedido.save_comprobante(params, function (err, pedido) {
+	comprobante.save(params, function (err, pedido) {
 		if (err) return res.json({err})
 		return res.json({resultado:pedido})
 	})
