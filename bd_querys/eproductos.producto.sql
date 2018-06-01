@@ -77,7 +77,20 @@ Descripcion: Guarda o aactualiza un producto
 Parametros: necesarios para un producto
 Fecha:17052018
 Ejecucion: SELECT * FROM  eproductos.fn_SaveProducto(2,'PR001','COM','','COMIDA 1','COM','','ACTIVO','ADMIN')
-DROP: DROP FUNCTION eproductos.fn_SaveProducto(int,varchar(30),varchar(50),varchar(120),varchar(200),varchar(100),varchar(110),varchar(20),varchar(50))
+DROP: DROP FUNCTION eproductos.fn_SaveProducto
+(
+ pproducto_id int,
+ pcod_producto varchar(30),
+ pcod_categoria varchar(50),
+ pcod_marca varchar(120),
+ palmacen_cod varchar(50),
+ pnombre varchar(200),
+ palias varchar(100),
+ pdescripcion varchar(1024),
+ pimagen_url varchar(110),
+ pestado      varchar(20),
+ pusuario_registro varchar(50)
+)
 */
 CREATE OR REPLACE FUNCTION eproductos.fn_SaveProducto
 (
