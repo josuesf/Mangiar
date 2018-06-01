@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import { navegador } from '../navegador'
 import { inicio } from '../Inicio'
 function Ver() {
@@ -57,7 +58,7 @@ function Ingresar() {
             contrasena: document.getElementById('contrasena').value
         })
     }
-    fetch('http://localhost:5000/login_', parametros)
+    fetch(URL+'/login_', parametros)
         .then(req => req.json())
         .then(res => {
             if (res.err) {

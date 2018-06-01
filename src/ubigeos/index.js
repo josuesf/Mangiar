@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import {nuevoUbigeo} from './nuevo'
 function Ver(ubigeos,paginas,pagina_actual) {
     var el = yo`
@@ -107,7 +108,7 @@ function fetchUbigeos(tamano_pagina,_numero_pagina,ubigeo_busqueda,callback){
             ubigeo_busqueda:ubigeo_busqueda
         })
     }
-    fetch('http://localhost:5000/ubigeos_api/get_ubigeos', parametros)
+    fetch(URL+'/ubigeos_api/get_ubigeos', parametros)
         .then(req => req.json())
         .then(res => {
             callback(res)

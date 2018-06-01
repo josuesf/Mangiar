@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import {nuevoDocumento} from './nuevo'
 function Ver(documentos,paginas,pagina_actual) {
     var el = yo`
@@ -111,7 +112,7 @@ function fetchDocumentos(tamano_pagina,_numero_pagina,documento_busqueda,callbac
             documento_busqueda
         })
     }
-    fetch('http://localhost:5000/documentos_api/get_documentos', parametros)
+    fetch(URL+'/documentos_api/get_documentos', parametros)
         .then(req => req.json())
         .then(res => {
             callback(res)

@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import { productos } from './index'
 import { combinaciones } from './combinaciones'
 var PRECIOS_ = []
@@ -304,7 +305,7 @@ function Guardar(u) {
             precios
         })
     }
-    fetch('http://localhost:5000/eproductos_producto/save_producto', parametros)
+    fetch(URL+'/eproductos_producto/save_producto', parametros)
         .then(req => req.json())
         .then(res => {
             if (res.err) {
@@ -334,7 +335,7 @@ function Eliminar(u) {
                 producto_id,
             })
         }
-        fetch('http://localhost:5000/eproductos_producto/delete_producto', parametros)
+        fetch(URL+'/eproductos_producto/delete_producto', parametros)
             .then(req => req.json())
             .then(res => {
                 if (res.err) {
@@ -363,7 +364,7 @@ function nuevo(u) {
             producto_id,
         })
     }
-    fetch('http://localhost:5000/eproductos_producto/find', parametros)
+    fetch(URL+'/eproductos_producto/find', parametros)
         .then(req => req.json())
         .then(res => {
             if (res.err) {

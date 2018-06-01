@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import { nuevoDocumento } from './nuevo'
 function Ver(documento,serie,sucursales) {
     var el = yo`
@@ -100,7 +101,7 @@ function Eliminar(documento,serie) {
                 cod_sucursal
             })
         }
-        fetch('http://localhost:5000/documentos_api/delete_serie', parametros)
+        fetch(URL+'/documentos_api/delete_serie', parametros)
             .then(req => req.json())
             .then(res => {
                 if (res.err) {
@@ -139,7 +140,7 @@ function Guardar(documento,serie) {
             estado
         })
     }
-    fetch('http://localhost:5000/documentos_api/save_serie', parametros)
+    fetch(URL+'/documentos_api/save_serie', parametros)
         .then(req => req.json())
         .then(res => {
             if (res.err) {
@@ -170,7 +171,7 @@ function nuevaserie(documento,serie) {
             sucursal_busqueda: ''
         })
     }
-    fetch('http://localhost:5000/sucursales_api/get_sucursales', parametros)
+    fetch(URL+'/sucursales_api/get_sucursales', parametros)
         .then(req => req.json())
         .then(res => {
             //Ver(sucursal,res.ubigeos) 

@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import { puntos_ventas } from './index'
 function Ver(punto_venta,sucursales) {
     var el = yo`
@@ -119,7 +120,7 @@ function Guardar(p) {
         })
     }
     console.log(parametros)
-    fetch('http://localhost:5000/puntos_ventas_api/save_punto_venta', parametros)
+    fetch(URL+'/puntos_ventas_api/save_punto_venta', parametros)
         .then(req => req.json())
         .then(res => {
             console.log(res)
@@ -151,7 +152,7 @@ function Eliminar(punto_venta) {
                 cod_punto_venta
             })
         }
-        fetch('http://localhost:5000/puntos_ventas_api/delete_punto_venta', parametros)
+        fetch(URL+'/puntos_ventas_api/delete_punto_venta', parametros)
             .then(req => req.json())
             .then(res => {
                 if (res.err) {
@@ -182,7 +183,7 @@ function nuevo_punto_venta(punto_venta) {
             sucursal_busqueda: ''
         })
     }
-    fetch('http://localhost:5000/sucursales_api/get_sucursales', parametros)
+    fetch(URL+'/sucursales_api/get_sucursales', parametros)
         .then(req => req.json())
         .then(res => {
             console.log(res)

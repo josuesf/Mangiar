@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import { modulos } from './index'
 function Ver(modulo) {
     var el = yo`
@@ -144,7 +145,7 @@ function Guardar(m) {
             estado
         })
     }
-    fetch('http://localhost:5000/modulos_api/save_modulo', parametros)
+    fetch(URL+'/modulos_api/save_modulo', parametros)
         .then(req => req.json())
         .then(res => {
             if (res.err) {
@@ -174,7 +175,7 @@ function Eliminar(m) {
                 cod_modulo,
             })
         }
-        fetch('http://localhost:5000/modulos_api/delete_modulo', parametros)
+        fetch(URL+'/modulos_api/delete_modulo', parametros)
             .then(req => req.json())
             .then(res => {
                 if (res.err) {

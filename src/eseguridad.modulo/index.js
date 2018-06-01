@@ -1,6 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
-
+import { URL } from '../constantes_entorno/constantes'
 import {nuevo} from './nuevo'
 
 function Ver(modulos, paginas, pagina_actual) {
@@ -113,7 +113,7 @@ function fetchModulos(tamano_pagina,_numero_pagina,modulo_busqueda,callback){
             modulo_busqueda:modulo_busqueda
         })
     }
-    fetch('http://localhost:5000/modulos_api/get_modulos', parametros)
+    fetch(URL+'/modulos_api/get_modulos', parametros)
         .then(req => req.json())
         .then(res => {
             callback(res)

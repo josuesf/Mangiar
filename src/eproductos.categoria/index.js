@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import {nuevo} from './nuevo'
 import {productos} from '../eproductos.producto'
 function Ver(_categorias,paginas,pagina_actual) {
@@ -110,7 +111,7 @@ function fetchCategorias(tamano_pagina,_numero_pagina,categoria_busqueda,callbac
             categoria_busqueda
         })
     }
-    fetch('http://localhost:5000/eproductos_categoria/get_categorias', parametros)
+    fetch(URL+'/eproductos_categoria/get_categorias', parametros)
         .then(req => req.json())
         .then(res => {
             callback(res)

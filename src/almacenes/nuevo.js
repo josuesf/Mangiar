@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import { almacenes } from './index'
 function Ver(almacen) {
     var el = yo`
@@ -110,7 +111,7 @@ function Guardar(a) {
         })
     }
 
-    fetch('http://localhost:5000/almacenes_api/save_almacen', parametros)
+    fetch(URL+'/almacenes_api/save_almacen', parametros)
         .then(req => req.json())
         .then(res => {
             console.log(res)
@@ -141,7 +142,7 @@ function Eliminar(a) {
                 almacen_id,
             })
         }
-        fetch('http://localhost:5000/almacenes_api/delete_almacen', parametros)
+        fetch(URL+'/almacenes_api/delete_almacen', parametros)
             .then(req => req.json())
             .then(res => {
                 if (res.err) {

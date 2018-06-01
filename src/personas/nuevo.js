@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import { personas } from './index'
 function Ver(persona) {
     var el = yo`
@@ -254,7 +255,7 @@ function Guardar(p) {
             estado
         })
     }
-    fetch('http://localhost:5000/personas_api/save_persona', parametros)
+    fetch(URL+'/personas_api/save_persona', parametros)
         .then(req => req.json())
         .then(res => {
             console.log(res)
@@ -286,7 +287,7 @@ function Eliminar(persona) {
                 cod_persona
             })
         }
-        fetch('http://localhost:5000/personas_api/delete_persona', parametros)
+        fetch(URL+'/personas_api/delete_persona', parametros)
             .then(req => req.json())
             .then(res => {
                 if (res.err) {

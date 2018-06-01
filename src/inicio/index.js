@@ -1,6 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
-
+import { URL } from '../constantes_entorno/constantes'
 import { Init,onActionLeft,onActionTop } from '../utils'
 import { comprobantes } from '../ecaja.comprobante/'
 import { nuevoComprobante } from '../ecaja.comprobante/nuevo'
@@ -581,7 +581,7 @@ function AceptarPedido(pedido_detalle){
                     data : pdf
                 })
             }
-            fetch('http://localhost:5000/ws/save_pdf', parametros)
+            fetch(URL+'/ws/save_pdf', parametros)
                 .then(req => req.json())
                 .then(res => {
                     console.log(res)
@@ -704,7 +704,7 @@ function fetchNumeroSiguiente(cod_sucursal){
             cod_sucursal
         })
     } 
-    fetch('http://localhost:5000/ws/get_numero_siguiente', parametros)
+    fetch(URL+'/ws/get_numero_siguiente', parametros)
         .then(req => req.json())
         .then(res => { 
             $("#numero").val(res.numero)
@@ -723,7 +723,7 @@ function fetchProductosMesa(punto_venta,callback){
             cod_mesa:punto_venta.cod_punto_venta
         })
     }
-    fetch('http://localhost:5000/ws/get_productos_by_mesa', parametros)
+    fetch(URL+'/ws/get_productos_by_mesa', parametros)
         .then(req => req.json())
         .then(res => {
             callback(res)
@@ -743,7 +743,7 @@ function fetchComprobante(params,callback){
             params
         )
     }
-    fetch('http://localhost:5000/ws/save_ecaja_comprobante', parametros)
+    fetch(URL+'/ws/save_ecaja_comprobante', parametros)
         .then(req => req.json())
         .then(res => {
             callback(res)
@@ -763,7 +763,7 @@ function fetchPedidoDetalle(cuenta,callback){
             cod_punto_venta:cuenta.cod_punto_venta
         })
     }
-    fetch('http://localhost:5000/ws/get_pedido_detalle', parametros)
+    fetch(URL+'/ws/get_pedido_detalle', parametros)
         .then(req => req.json())
         .then(res => {
             callback(res)
@@ -781,7 +781,7 @@ function fetchDocumentos(cod_sucursal,callback){
             cod_sucursal
         })
     }
-    fetch('http://localhost:5000/ws/get_tipo_comprobantes', parametros)
+    fetch(URL+'/ws/get_tipo_comprobantes', parametros)
         .then(req => req.json())
         .then(res => {
             callback(res)
@@ -799,7 +799,7 @@ function fetchSeriesNumeros(cod_documento,callback){
             cod_documento
         })
     }
-    fetch('http://localhost:5000/ws/get_series_by_documento', parametros)
+    fetch(URL+'/ws/get_series_by_documento', parametros)
         .then(req => req.json())
         .then(res => {
             callback(res)
@@ -819,7 +819,7 @@ function fetchCuentas(punto_venta,callback){
             cod_punto_venta:punto_venta.cod_mesa
         })
     }
-    fetch('http://localhost:5000/ws/get_cuentas_by_punto_venta', parametros)
+    fetch(URL+'/ws/get_cuentas_by_punto_venta', parametros)
         .then(req => req.json())
         .then(res => {
             callback(res)
@@ -836,7 +836,7 @@ function fetchPuntosVentas(callback){
         body: JSON.stringify({
         })
     }
-    fetch('http://localhost:5000/ws/get_puntos_venta', parametros)
+    fetch(URL+'/ws/get_puntos_venta', parametros)
         .then(req => req.json())
         .then(res => {
             callback(res)

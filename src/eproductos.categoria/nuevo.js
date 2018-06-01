@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import { categorias } from './index'
 function Ver(categoria) {
     var el = yo`
@@ -109,7 +110,7 @@ function Guardar(u) {
             nombre_categoria, imagen_url,estado,imagen_anterior
         })
     }
-    fetch('http://localhost:5000/eproductos_categoria/save_categoria', parametros)
+    fetch(URL+'/eproductos_categoria/save_categoria', parametros)
         .then(req => req.json())
         .then(res => {
             if (res.err) {
@@ -139,7 +140,7 @@ function Eliminar(u) {
                 cod_categoria,
             })
         }
-        fetch('http://localhost:5000/eproductos_categoria/delete_categoria', parametros)
+        fetch(URL+'/eproductos_categoria/delete_categoria', parametros)
             .then(req => req.json())
             .then(res => {
                 if (res.err) {

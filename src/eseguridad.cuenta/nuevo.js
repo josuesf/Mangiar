@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import { cuentas } from './index'
 function Ver(usuario,perfiles,sucursales) {
     var el = yo`
@@ -129,7 +130,7 @@ function Guardar(u) {
             foto_url, estado
         })
     }
-    fetch('http://localhost:5000/cuentas_api/save_cuenta', parametros)
+    fetch(URL+'/cuentas_api/save_cuenta', parametros)
         .then(req => req.json())
         .then(res => {
             if (res.err) {
@@ -159,7 +160,7 @@ function Eliminar(u) {
                 usuario_id,
             })
         }
-        fetch('http://localhost:5000/cuentas_api/delete_cuenta', parametros)
+        fetch(URL+'/cuentas_api/delete_cuenta', parametros)
             .then(req => req.json())
             .then(res => {
                 if (res.err) {
@@ -185,7 +186,7 @@ function nuevo(usuario) {
         },
         body: JSON.stringify({})
     }
-    fetch('http://localhost:5000/cuentas_api/get_perfiles_sucursales', parametros)
+    fetch(URL+'/cuentas_api/get_perfiles_sucursales', parametros)
         .then(req => req.json())
         .then(res => {
             if (res.err) {

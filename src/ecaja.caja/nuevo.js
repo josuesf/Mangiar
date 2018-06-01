@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import { cajas } from './index'
 function Ver(caja,sucursales) {
     var el = yo`
@@ -125,7 +126,7 @@ function Guardar(u) {
             estado
         })
     }
-    fetch('http://localhost:5000/ecaja_caja/save_caja', parametros)
+    fetch(URL+'/ecaja_caja/save_caja', parametros)
         .then(req => req.json())
         .then(res => {
             if (res.err) {
@@ -155,7 +156,7 @@ function Eliminar(u) {
                 cod_caja
             })
         }
-        fetch('http://localhost:5000/ecaja_caja/delete_caja', parametros)
+        fetch(URL+'/ecaja_caja/delete_caja', parametros)
             .then(req => req.json())
             .then(res => {
                 console.log(res)
@@ -186,7 +187,7 @@ function nuevaCaja(caja) {
             sucursal_busqueda: ''
         })
     }
-    fetch('http://localhost:5000/sucursales_api/get_sucursales', parametros)
+    fetch(URL+'/sucursales_api/get_sucursales', parametros)
         .then(req => req.json())
         .then(res => {
             console.log(res)

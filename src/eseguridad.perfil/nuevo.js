@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import { perfiles } from './index'
 function Ver(perfil, modulos) {
     var el = yo`
@@ -159,7 +160,7 @@ function Guardar(p, modulos) {
             modulosParam
         })
     }
-    fetch('http://localhost:5000/perfiles_api/save_modulos_perfil', parametros)
+    fetch(URL+'/perfiles_api/save_modulos_perfil', parametros)
         .then(req => req.json())
         .then(res => {
             if (res.err) {
@@ -189,7 +190,7 @@ function Eliminar(p) {
                 cod_perfil,
             })
         }
-        fetch('http://localhost:5000/perfiles_api/delete_perfil', parametros)
+        fetch(URL+'/perfiles_api/delete_perfil', parametros)
             .then(req => req.json())
             .then(res => {
                 if (res.err) {
@@ -217,7 +218,7 @@ function nuevo(perfil) {
             })
         }
         ShowLoader()
-        fetch('http://localhost:5000/perfiles_api/get_modulos_perfil', parametros)
+        fetch(URL+'/perfiles_api/get_modulos_perfil', parametros)
             .then(req => req.json())
             .then(res => {
                 if (res.err) {
@@ -239,7 +240,7 @@ function nuevo(perfil) {
             body: JSON.stringify({})
         }
         ShowLoader()
-        fetch('http://localhost:5000/perfiles_api/get_modulos', parametros)
+        fetch(URL+'/perfiles_api/get_modulos', parametros)
             .then(req => req.json())
             .then(res => {
                 console.log(res)

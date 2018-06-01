@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import {nuevaSucursal} from './nuevo'
 function Ver(sucursales,paginas,pagina_actual) {
     var el = yo`
@@ -112,7 +113,7 @@ function fetchSucursales(tamano_pagina,_numero_pagina,sucursal_busqueda,callback
             sucursal_busqueda
         })
     }
-    fetch('http://localhost:5000/sucursales_api/get_sucursales', parametros)
+    fetch(URL+'/sucursales_api/get_sucursales', parametros)
         .then(req => req.json())
         .then(res => {
             callback(res)

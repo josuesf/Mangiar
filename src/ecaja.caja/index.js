@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import {nuevaCaja} from './nuevo'
 function Ver(cajas,paginas,pagina_actual) {
     var el = yo`
@@ -108,7 +109,7 @@ function fetchCajas(tamano_pagina,_numero_pagina,caja_busqueda,callback){
             caja_busqueda
         })
     }
-    fetch('http://localhost:5000/ecaja_caja/get_cajas', parametros)
+    fetch(URL+'/ecaja_caja/get_cajas', parametros)
         .then(req => req.json())
         .then(res => {
             callback(res)

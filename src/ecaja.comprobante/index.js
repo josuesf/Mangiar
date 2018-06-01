@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import {nuevoComprobante} from './nuevo'
 function Ver(comprobantes,paginas,pagina_actual) {
     var el = yo`
@@ -124,7 +125,7 @@ function fetchComprobantes(tamano_pagina,_numero_pagina,comprobante_busqueda,cal
     console.log("parametros comprobante")
     console.log(parametros)
 
-    fetch('http://localhost:5000/ecaja_comprobante/get_comprobantes', parametros)
+    fetch(URL+'/ecaja_comprobante/get_comprobantes', parametros)
         .then(req => req.json())
         .then(res => {
             callback(res)

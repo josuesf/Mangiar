@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import { productos } from './index'
 var COMBINACIONES_PRODUCTO = []
 var ITEMS = []
@@ -115,7 +116,7 @@ function EliminarCombinacion(combinacion){
                 combinacion_id,
             })
         }
-        fetch('http://localhost:5000/eproductos_combinacion/delete_combinacion', parametros)
+        fetch(URL+'/eproductos_combinacion/delete_combinacion', parametros)
             .then(req => req.json())
             .then(res => {
                 if (res.err) {
@@ -144,7 +145,7 @@ function GuardarCombinaciones(producto_id) {
             producto_id
         })
     }
-    fetch('http://localhost:5000/eproductos_producto/save_combinaciones_producto', parametros)
+    fetch(URL+'/eproductos_producto/save_combinaciones_producto', parametros)
         .then(req => req.json())
         .then(res => {
             if (res.err) {
@@ -168,7 +169,7 @@ function VerEditarCombinacion(combinacion){
             combinacion_id
         })
     }
-    fetch('http://localhost:5000/eproductos_combinacion/get_combinacion_detalle', parametros)
+    fetch(URL+'/eproductos_combinacion/get_combinacion_detalle', parametros)
         .then(req => req.json())
         .then(res => {
             if (res.err) {
@@ -307,7 +308,7 @@ function GuardarCombinacion(combinacion){
             ITEMS
         })
     }
-    fetch('http://localhost:5000/eproductos_combinacion/save_combinacion', parametros)
+    fetch(URL+'/eproductos_combinacion/save_combinacion', parametros)
         .then(req => req.json())
         .then(res => {
             if (res.err) {
@@ -343,7 +344,7 @@ function AbrirCombinacion(c, id_seccion) {
             combinacion_id
         })
     }
-    fetch('http://localhost:5000/eproductos_producto/get_combinacion_detalle', parametros)
+    fetch(URL+'/eproductos_producto/get_combinacion_detalle', parametros)
         .then(req => req.json())
         .then(res => {
             if (res.err) {
@@ -395,7 +396,7 @@ function EliminarItem(it, i){
                     detalle_id,
                 })
             }
-            fetch('http://localhost:5000/eproductos_combinacion/delete_combinacion_detalle', parametros)
+            fetch(URL+'/eproductos_combinacion/delete_combinacion_detalle', parametros)
                 .then(req => req.json())
                 .then(res => {
                     if (res.err) {
@@ -491,7 +492,7 @@ function VerAgregarItem(item,i){
         
     }
     
-    fetch('http://localhost:5000/eproductos_producto/get_all_productos', parametros)
+    fetch(URL+'/eproductos_producto/get_all_productos', parametros)
         .then(req => req.json())
         .then(res => {
             var pro = res.productos
@@ -592,7 +593,7 @@ function Guardar(u) {
             precios
         })
     }
-    fetch('http://localhost:5000/eproductos_producto/save_producto', parametros)
+    fetch(URL+'/eproductos_producto/save_producto', parametros)
         .then(req => req.json())
         .then(res => {
             if (res.err) {
@@ -622,7 +623,7 @@ function Eliminar(u) {
                 producto_id,
             })
         }
-        fetch('http://localhost:5000/eproductos_producto/delete_producto', parametros)
+        fetch(URL+'/eproductos_producto/delete_producto', parametros)
             .then(req => req.json())
             .then(res => {
                 if (res.err) {
@@ -649,7 +650,7 @@ function combinaciones(producto_id) {
             producto_id,
         })
     }
-    fetch('http://localhost:5000/eproductos_producto/get_combinaciones', parametros)
+    fetch(URL+'/eproductos_producto/get_combinaciones', parametros)
         .then(req => req.json())
         .then(res => {
             if (res.err) {

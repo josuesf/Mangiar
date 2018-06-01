@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import {nuevo} from './nuevo'
 function Ver(_cuentas,paginas,pagina_actual) {
     var el = yo`
@@ -108,7 +109,7 @@ function fetchCuentas(tamano_pagina,_numero_pagina,usuario_busqueda,callback){
             usuario_busqueda:usuario_busqueda
         })
     }
-    fetch('http://localhost:5000/cuentas_api/get_cuentas', parametros)
+    fetch(URL+'/cuentas_api/get_cuentas', parametros)
         .then(req => req.json())
         .then(res => {
             callback(res)

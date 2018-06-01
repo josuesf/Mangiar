@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import { nuevaserie } from './nueva_serie'
 import { documentos } from './index'
 function Ver(documento,series,paginas,pagina_actual) {
@@ -196,7 +197,7 @@ function fetchSeries(documento,tamano_pagina,_numero_pagina,serie_busqueda,callb
                 cod_documento_cod:documento?documento.cod_documento:''
             })
         }
-        fetch('http://localhost:5000/documentos_api/get_series', parametros)
+        fetch(URL+'/documentos_api/get_series', parametros)
             .then(req => req.json())
             .then(res => {
                 callback(res)
@@ -249,7 +250,7 @@ function Guardar(d) {
             estado
         })
     }
-    fetch('http://localhost:5000/documentos_api/save_documento', parametros)
+    fetch(URL+'/documentos_api/save_documento', parametros)
         .then(req => req.json())
         .then(res => {
             HideLoader()
@@ -281,7 +282,7 @@ function Eliminar(documento) {
                 cod_documento
             })
         }
-        fetch('http://localhost:5000/documentos_api/delete_documento', parametros)
+        fetch(URL+'/documentos_api/delete_documento', parametros)
             .then(req => req.json())
             .then(res => {
                 if (res.err) {

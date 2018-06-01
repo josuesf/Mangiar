@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import {nuevoAlmacen} from './nuevo'
 function Ver(almacenes,paginas,pagina_actual) {
     var el = yo`
@@ -111,7 +112,7 @@ function fetchAlmacenes(tamano_pagina,_numero_pagina,almacen_busqueda,callback){
             almacen_busqueda
         })
     }
-    fetch('http://localhost:5000/almacenes_api/get_almacenes', parametros)
+    fetch(URL+'/almacenes_api/get_almacenes', parametros)
         .then(req => req.json())
         .then(res => {
             callback(res)

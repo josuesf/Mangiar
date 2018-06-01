@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import { ubigeos } from './index'
 function Ver(ubigeo) {
     var el = yo`
@@ -103,7 +104,7 @@ function Guardar(u) {
             distrito
         })
     }
-    fetch('http://localhost:5000/ubigeos_api/save_ubigeo', parametros)
+    fetch(URL+'/ubigeos_api/save_ubigeo', parametros)
         .then(req => req.json())
         .then(res => {
             console.log(res)
@@ -140,7 +141,7 @@ function Eliminar(ubigeo) {
                 cod_distrito
             })
         }
-        fetch('http://localhost:5000/ubigeos_api/delete_ubigeo', parametros)
+        fetch(URL+'/ubigeos_api/delete_ubigeo', parametros)
             .then(req => req.json())
             .then(res => {
                 if (res.err) {

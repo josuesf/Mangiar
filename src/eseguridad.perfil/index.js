@@ -1,6 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
-
+import { URL } from '../constantes_entorno/constantes'
 import {nuevo} from './nuevo'
 
 function Ver(perfiles, paginas, pagina_actual) {
@@ -113,7 +113,7 @@ function fetchPerfiles(tamano_pagina, _numero_pagina, perfil_busqueda, callback)
             perfil_busqueda:perfil_busqueda
         })
     }
-    fetch('http://localhost:5000/perfiles_api/get_perfiles', parametros)
+    fetch(URL+'/perfiles_api/get_perfiles', parametros)
         .then(req => req.json())
         .then(res => {
             callback(res)

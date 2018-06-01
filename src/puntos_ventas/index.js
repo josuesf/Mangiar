@@ -1,5 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
+import { URL } from '../constantes_entorno/constantes'
 import {nuevo_punto_venta} from './nuevo'
 function Ver(puntos_ventas,paginas,pagina_actual) {
     var el = yo`
@@ -109,7 +110,7 @@ function fetchPuntosVentas(tamano_pagina,_numero_pagina,punto_venta_busqueda,cal
             punto_venta_busqueda
         })
     }
-    fetch('http://localhost:5000/puntos_ventas_api/get_puntos_ventas', parametros)
+    fetch(URL+'/puntos_ventas_api/get_puntos_ventas', parametros)
         .then(req => req.json())
         .then(res => {
             callback(res)
