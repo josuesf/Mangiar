@@ -5,6 +5,7 @@ module.exports = {
     login: (params, callback) => {
         db.query('SELECT * FROM eseguridad.cuenta where usuario = $1 and estado = $2', [params.usuario.toUpperCase(),'ACTIVO'], (err, r) => {
             if (err) {
+                console.log(err)
                 return callback(err.name+":"+err.code+" "+err.routine, undefined)
             }
             var cuenta = r.rowCount > 0 ? r.rows[0] : undefined
@@ -12,6 +13,7 @@ module.exports = {
                 if (cuenta.contrasena == md5(params.contrasena+'_08')) {
                     db.query('UPDATE eseguridad.cuenta SET ultimo_ingreso = now() where usuario_id=$1;',[cuenta.usuario_id],(err,respuesta)=>{
                         if (err) {
+                            console.log(err)
                             return callback(err.name+":"+err.code+" "+err.routine, undefined)
                         }
                         cuenta["contrasena"] = ''

@@ -20,6 +20,7 @@ CREATE TABLE eproductos.producto --Josue
  almacen_cod varchar(50) NOT NULL,
  nombre varchar(200) NOT NULL ,
  alias varchar(100)  NULL,
+ descripcion varchar(1024) NULL,
  imagen_url varchar(110)  NULL ,
  porcentaje_utilidad numeric(5,2) NULL,
  cuenta_contable varchar(20),

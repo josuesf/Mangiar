@@ -74,6 +74,12 @@ function Ver(categorias,almacenes,p) {
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="input-field col s12">
+                                    <textarea id="descripcion" class="materialize-textarea">${p?p.descripcion:''}</textarea>
+                                    <label class="active">Descripcion larga</label>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="input-field col s6">
                                     <select id="cod_categoria">
                                         <option value="" disabled selected></option>
@@ -277,6 +283,7 @@ function Guardar(u) {
     const nombre = document.getElementById('nombre').value.toUpperCase()
     const cod_producto = document.getElementById('cod_producto').value.toUpperCase()
     const alias = document.getElementById('nombre').value.substring(0,25).toUpperCase()
+    const descripcion = document.getElementById('descripcion').value
     const cod_marca = document.getElementById('cod_marca').value.toUpperCase()
     const cod_categoria = document.getElementById('cod_categoria').value
     const almacen_cod = document.getElementById('almacen_cod').value
@@ -292,7 +299,7 @@ function Guardar(u) {
         },
         body: JSON.stringify({
             producto_id,nombre,cod_producto,
-            alias,cod_marca,almacen_cod,cod_categoria, 
+            alias,descripcion,cod_marca,almacen_cod,cod_categoria, 
             imagen_url, estado, imagen_anterior,
             precios
         })

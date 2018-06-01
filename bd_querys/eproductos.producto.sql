@@ -19,6 +19,12 @@ FUNCTION eproductos.fn_GetProductos
 Descripcion: Recupera todos los productos 
 Parametros: - tamano_pagina integer,numero_pagina integer
 Ejecucion: SELECT * from eproductos.fn_GetProductos(5,1,'')
+DROP: DROP FUNCTION eproductos.fn_GetProductos
+(
+ tamano_pagina INTEGER
+ ,numero_pagina INTEGER
+ ,nombre_busqueda varchar(50)
+)
 */
 CREATE OR REPLACE FUNCTION eproductos.fn_GetProductos
 (
@@ -35,6 +41,7 @@ RETURNS TABLE
  cod_marca varchar(120),
  nombre varchar(200),
  alias varchar(100),
+ descripcion varchar(1024),
  imagen_url varchar(110),
  estado      varchar(20)
 ) AS
@@ -54,7 +61,7 @@ BEGIN
  ************************************************ */
  RETURN QUERY
  SELECT p.producto_id,p.cod_producto,p.cod_categoria,c.nombre_categoria,
-	p.cod_marca,p.nombre,p.alias,p.imagen_url,p.estado
+	p.cod_marca,p.nombre,p.alias,p.descripcion,p.imagen_url,p.estado
  FROM eproductos.producto p inner join eproductos.categoria c on p.cod_categoria = c.cod_categoria
  WHERE p.nombre like ('%' || nombre_busqueda || '%')
  ORDER BY cod_categoria
@@ -81,6 +88,7 @@ CREATE OR REPLACE FUNCTION eproductos.fn_SaveProducto
  palmacen_cod varchar(50),
  pnombre varchar(200),
  palias varchar(100),
+ pdescripcion varchar(1024),
  pimagen_url varchar(110),
  pestado      varchar(20),
  pusuario_registro varchar(50)
@@ -106,6 +114,7 @@ INSERT INTO eproductos.producto(
 	almacen_cod,
 	nombre,
 	alias,
+	descripcion,
 	imagen_url,
 	estado,
 	creado_en,
@@ -119,6 +128,7 @@ VALUES(
 	palmacen_cod,
 	pnombre,
 	palias,
+	pdescripcion,
 	pimagen_url,
 	pestado,
 	now(),
@@ -135,6 +145,7 @@ UPDATE eproductos.producto SET
  almacen_cod=palmacen_cod,
  nombre=pnombre,
  alias=palias,
+ descripcion=pdescripcion,
  imagen_url=pimagen_url,
  estado=pestado ,
  actualizado_en=now(),
