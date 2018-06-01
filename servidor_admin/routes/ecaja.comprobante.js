@@ -15,17 +15,6 @@ router.post('/get_comprobantes', function (req, res) {
 	})
 });
 
-router.post('/get_details_comprobante', function (req, res) {
-    input = req.body
-	//set params
-	const params = [input.tamano_pagina]
-	//call Model.login function
-	comprobante.getDetailsComprobante(params, function (err, comprobante) {
-		if (err) return res.json({err})
-		return res.json({comprobante})
-	})
-});
-
 router.post('/save_caja', function (req, res) {
     const input = req.body
 	//call Model account

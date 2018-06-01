@@ -318,7 +318,7 @@ function VerInvoice(pedido_detalle){
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col s6 m6" id="divSeries" onchange=${()=>CambioSerie()}>
+                                            <div class="col s6 m6" id="divSeries" onchange=${()=>CambioSerie(pedido_detalle[0].cod_sucursal)}>
                                                 <select id="nro_serie"> 
                                                 </select>
                                             </div>
@@ -444,7 +444,7 @@ function LlenarTipoDocumentos(documentos){
 }
 
 
-function LlenarSeries(series){
+function LlenarSeries(series,cod_sucursal){
     jsonSeries = series
     var el = yo`
         <select id="nro_serie">
@@ -455,15 +455,11 @@ function LlenarSeries(series){
     var container = document.getElementById('divSeries')
     empty(container).appendChild(el)
     $('select').material_select()
-    $("#numero").val(series[0].nro_inicio)
+    CambioSerie(cod_sucursal)
 }
 
-function CambioSerie(){ 
-    for(var i=0;i<jsonSeries.length;i++){ 
-        if(jsonSeries[i].cod_documento==$("#cod_documento").val() && jsonSeries[i].nro_serie==$("#nro_serie").val()){
-            $("#numero").val(jsonSeries[i].nro_inicio+1)
-        }
-    }
+function CambioSerie(cod_sucursal){ 
+    fetchNumeroSiguiente(cod_sucursal)
 }
 
 function CambioDocumento(){
@@ -693,6 +689,28 @@ function Aceptar1(){
     }, 300);*/
 }
 
+function fetchNumeroSiguiente(cod_sucursal){
+    var cod_documento = $("#cod_documento").val()
+    var nro_serie = $("#nro_serie").val()
+    const parametros = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            cod_documento,
+            nro_serie,
+            cod_sucursal
+        })
+    } 
+    fetch('http://localhost:5000/ws/get_numero_siguiente', parametros)
+        .then(req => req.json())
+        .then(res => { 
+            $("#numero").val(res.numero)
+        })
+}
+
 
 function fetchProductosMesa(punto_venta,callback){
     const parametros = {
@@ -832,19 +850,19 @@ function TraerTiposComprobantes(cod_sucursal){
         } else {
             if(res.documentos.length>0){
                 LlenarTipoDocumentos(res.documentos)
-                TraerSeriesNumeros(res.documentos[0].cod_documento)
+                TraerSeriesNumeros(res.documentos[0].cod_documento,cod_sucursal)
             }
         }
     })
 }
 
-function TraerSeriesNumeros(cod_documento){
+function TraerSeriesNumeros(cod_documento,cod_sucursal){
     fetchSeriesNumeros(cod_documento,function(res){
         if (res.err) {
             console.log(res.err)
         } else {
             if(res.series.length>0){
-                LlenarSeries(res.series)
+                LlenarSeries(res.series,cod_sucursal)
             }
         }
     })

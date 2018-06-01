@@ -170,18 +170,20 @@ router.post('/save_pdf', function (req, res) {
 			console.log("File saved successfully!");
 		}
 	});
-	/*const data = input.data
-
-	var fs = require('fs');
-	fs.writeFile("assets/media/recibo.pdf", data , function(err) {
-		if(err) {
-			return res.json({respuesta:err});
-		}else{
-			return res.json({respuesta:'ok'})
-			console.log("File saved successfully!");
-		}
-	});*/
 	 
+});
+
+
+router.post('/get_numero_siguiente', function (req, res) {
+    const input = req.body
+	//call Model account
+	const params = [input.cod_documento,input.nro_serie,input.cod_sucursal]
+	const comprobante = require('../models/ecaja.comprobante')
+	//call Model.login function
+	comprobante.getNumeroSiguiente(params, function (err, numero) {
+		if (err) return res.json({err})
+		return res.json({numero})
+	})
 });
 
 router.post('/save_ecaja_comprobante', function (req, res) {

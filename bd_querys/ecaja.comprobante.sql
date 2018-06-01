@@ -233,6 +233,30 @@ ALTER FUNCTION ecaja.fn_savecomprobantepedido(character varying, integer, intege
 
 
 
+/*
+FUNCTION ecaja.fn_GetNumeroSiguiente
+Descripcion: Genera el numero siguiente para un comprobante
+Parametros: - cod_documento, nro_serie
+Ejecucion: SELECT * from ecaja.fn_GetNumeroSiguiente('BV',2,'S00001')
+DROP FUNCTION ecaja.fn_getnumerosiguiente(character varying,integer,character varying)
+*/
 
+CREATE OR REPLACE FUNCTION ecaja.fn_GetNumeroSiguiente
+(
+ _cod_documento varchar(5)= ''
+ ,_nro_serie integer = -1
+ ,_cod_sucursal varchar(30)=''
+)
+RETURNS integer AS
+$BODY$
+BEGIN
+  IF ((SELECT COUNT(*) FROM ecaja.comprobante c WHERE c.comp_cod_documento = _cod_documento AND c.comp_nro_serie = _nro_serie AND c.comp_cod_sucursal = _cod_sucursal)<=0 ) THEN
+	RETURN (SELECT d.nro_inicio FROM documento_serie d WHERE d.cod_documento = _cod_documento AND d.nro_serie = _nro_serie AND d.cod_sucursal = _cod_sucursal);
+  ELSE
+	RETURN (SELECT c.comp_numero FROM ecaja.comprobante c WHERE c.comp_cod_documento = _cod_documento AND c.comp_nro_serie = _nro_serie AND c.comp_cod_sucursal = _cod_sucursal ORDER BY c.comp_numero DESC LIMIT 1)+1; 
+  END IF; 
+END;
+$BODY$
+LANGUAGE plpgsql;
 
-
+ 
