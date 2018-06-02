@@ -19,13 +19,7 @@ app.disable('x-powered-by');
 app.use(session({ secret: '_secret_', cookie: { maxAge: 60 * 60 * 1000 }, saveUninitialized: false, resave: false }));
 // app.use(authChecker);
 app.get('/', function (req, res,next) {
-  const db = require('../connectionbd')
-	db.query('SELECT * FROM account', [], (err, r) => {
-		if (err) {
-			return next(err)
-		}
-		res.send(r.rows)
-	})
+  res.render('index.ejs')
 })
 app.post('/login_', function (req, res) {
 	//call Model account

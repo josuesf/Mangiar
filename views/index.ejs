@@ -1,0 +1,370 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>Mangiar</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!----------------------- materialize style ------------------>
+    <link href="assets/css/materialize.css" rel="stylesheet" />
+    <link href="assets/css/fakeLoader.css" rel="stylesheet" />
+    <link href="assets/css/style.css" rel="stylesheet" />
+
+</head>
+<style>
+.button_nav:hover {
+    opacity: 0.5;
+    filter: alpha(opacity=50); /* For IE8 and earlier */
+}
+.button_close:hover{
+    background-color: #e53935 ;
+}
+.button_nav{
+    -webkit-app-region: no-drag;
+}
+.button_close{
+    -webkit-app-region: no-drag;
+}
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #2c2c54; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}
+ 
+</style>
+ 
+<body style="background-color: #f1f1f1">
+    <div class="fakeloader" style="z-index: 100000000;">
+    </div>
+
+
+    <div class="navbar-fixed" id="navegador_content">
+        
+    </div>
+ 
+
+    <div class="row">
+        <div class="col s3" >
+            <div class="col s3 toc-wrapper pinned" id="sub_navegador_content">
+
+            </div>
+        </div>
+
+        <div class="col s9" id="contenido_principal">
+            <!-- 
+            <div class="row">
+                <h5 class="header">Nuevo Pedido</h5>
+                <div class="col s12 m8">
+                    <ul class="collapsible" data-collapsible="accordion">
+                        <li>
+                            <div class="collapsible-header">
+                                <i class="material-icons">filter_drama</i>Comidas</div>
+                            <div class="collapsible-body">
+                                <table class="">
+                                    <tbody>
+                                        <tr>
+                                            <td>Eclair asdasdsa</td>
+                                            <td>$0.87</td>
+                                            <td>
+                                                <a href="#">
+                                                    <i class="material-icons">remove_circle</i>
+                                                </a>
+                                            </td>
+                                            <td>1</td>
+                                            <td>
+                                                <a href="#">
+                                                    <i class="material-icons">add_circle</i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Eclair asdasdsa</td>
+                                            <td>$0.87</td>
+                                            <td>
+                                                <a href="#">
+                                                    <i class="material-icons">remove_circle</i>
+                                                </a>
+                                            </td>
+                                            <td>10</td>
+                                            <td>
+                                                <a href="#">
+                                                    <i class="material-icons">add_circle</i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Eclair asdasdsa</td>
+                                            <td>$0.87</td>
+                                            <td>
+                                                <a href="#">
+                                                    <i class="material-icons">remove_circle</i>
+                                                </a>
+                                            </td>
+                                            <td>1</td>
+                                            <td>
+                                                <a href="#">
+                                                    <i class="material-icons">add_circle</i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header">
+                                <i class="material-icons">place</i>Bebidas Frias</div>
+                            <div class="collapsible-body">
+                                <span>Lorem ipsum dolor sit amet.</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header">
+                                <i class="material-icons">whatshot</i>Bebidas Calientes</div>
+                            <div class="collapsible-body">
+                                <span>Lorem ipsum dolor sit amet.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col s12 m4">
+                    <div class="card indigo lighten-1">
+                        <div class="card-content white-text">
+                            <span class="card-title">Pedido</span>
+                            <table class="">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Descripcion</th>
+                                        <th>SubT.</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Eclair asdasdsa</td>
+                                        <td>$0.87</td>
+                                        <td>
+                                            <a href="">
+                                                <i class="material-icons white-text">more_vert</i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Jellybean Jellybean Jellybean</td>
+                                        <td>$3.76</td>
+                                        <td>
+                                            <a href="">
+                                                <i class="material-icons white-text">more_vert</i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>13</td>
+                                        <td>Lollipop</td>
+                                        <td>$7.00</td>
+                                        <td>
+                                            <a href="">
+                                                <i class="material-icons white-text">more_vert</i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>20</td>
+                                        <td>KitKat</td>
+                                        <td>$9.99</td>
+                                        <td>
+                                            <a href="">
+                                                <i class="material-icons white-text">more_vert</i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-action">
+                            <a href="#">Cancelar</a>
+                            <a href="#">Confirmar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             -->
+
+        </div>
+    </div>
+
+    <div id="modal" class="modal bottom-sheet">
+         
+    </div>
+
+    <div id="modal-details" class="modal">
+         
+    </div>
+
+    <script>window.$ = window.jQuery = require('./assets/js/jquery.min.js');</script>
+    <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
+    <script src="assets/js/materialize.min.js"></script>
+    <script src="assets/js/fakeLoader.js"></script>
+    <script  src="assets/js/jspdf.min.js"></script> 
+    <script  src="assets/js/jspdf.plugin.autotable.js"></script>
+    <script  src="assets/js/jsPdf_Plugins.js"></script>
+    <script type="text/javascript">
+
+      const electron = require('electron')
+      const PDFWindow = require('./node_modules/electron-pdf-window')
+      const { BrowserWindow } = electron.remote
+      
+
+        $('.collection a').click(function() {
+            alet("click");
+            $('.collection').removeClass('active');  
+            $(this).parents('.collection').addClass('active');
+        });
+
+        $(document).ready(function() {
+            $('input').characterCounter(); 
+        });
+        
+        const remote = require('electron').remote;
+        const window_cu = remote.getCurrentWindow();
+        document.getElementById("min-btn").addEventListener("click", function (e) {
+            window_cu.minimize();
+        });
+
+        document.getElementById("max-btn").addEventListener("click", function (e) {
+            if (!window_cu.isMaximized()) {
+                window_cu.maximize();
+            } else {
+                window_cu.unmaximize();
+            }
+        });
+        document.getElementById("close-btn").addEventListener("click", function (e) {
+            window_cu.close();
+        });
+        //FakeLoader
+        ShowLoader()
+        HideLoader()
+        function HideLoader(){
+            
+            setTimeout(function(){
+                $('.fakeloader').html('')
+            $('.fakeloader').css({
+                'backgroundColor': '',
+                'zIndex': '',
+                'width': '',
+                'height': '',
+                'position': '',
+                'top': '',
+                'left': '',
+                'display':''
+            });
+           }, 500);
+        }
+       
+        function ShowLoader() {
+            $('.fakeloader').html('<div class="fl spinner1"><div class="double-bounce1"></div><div class="double-bounce2"></div></div>')
+            $('.fakeloader').css({
+                'backgroundColor': '#2c2c54',
+                'zIndex': '999',
+                'width': '100%',
+                'height': '100%',
+                'position': 'fixed',
+                'top': '0px',
+                'left': '0px'
+            });
+            centerLoader()
+            function centerLoader() {
+
+                var winW = $(window).width();
+                var winH = $(window).height();
+
+                var spinnerW = $('.fl').outerWidth();
+                var spinnerH = $('.fl').outerHeight();
+
+                $('.fl').css({
+                    'position': 'absolute',
+                    'left': (winW / 2) - (spinnerW / 2),
+                    'top': (winH / 2) - (spinnerH / 2)
+                });
+
+            }
+
+            $(window).load(function () {
+                centerLoader();
+                $(window).resize(function () {
+                    centerLoader();
+                });
+            });
+        }
+        //Funcion para validar campos 
+        function Validar(props) {
+                for (var id in props) {
+                    var el = document.getElementById(id)
+                    if (el == null) continue
+                    var error_mesage = document.getElementById('l' + id)
+                    var value = el.value
+                    var condiciones = props[id]
+                    if (value.length == 0) {
+                        if(el.nodeName=='SELECT'){
+                            error_mesage.className = 'red-text'
+                        }else{
+                            el.classList = "invalid"
+                            error_mesage.classList = "active"
+                            error_mesage.setAttribute("data-error", "requerido");
+                            el.focus()
+                        }
+                        return false
+                    }
+                    if (condiciones.minLen && condiciones.minLen > value.length) {
+                        el.classList = "invalid"
+                        error_mesage.classList = "active"
+                        error_mesage.setAttribute("data-error", condiciones.minLen + " caracteres minimo");
+                        el.focus()
+                        return false
+                    }
+                    if (condiciones.maxLen && condiciones.maxLen < value.length) {
+                        el.classList = "invalid"
+                        error_mesage.classList = "active"
+                        error_mesage.setAttribute("data-error", condiciones.maxLen + " caracteres maximo");
+                        el.focus()
+                        return false
+                    }
+                    if (condiciones.number_msg && (isNaN(value) || parseFloat(value)<1 ) ) {
+                        el.classList = "invalid"
+                        error_mesage.classList = "active"
+                        error_mesage.setAttribute("data-error",condiciones.number_msg);
+                        el.focus()
+                        return false
+                    }
+                    if (condiciones.evaluador && !condiciones.evaluador(value)) {
+                        el.classList = "invalid"
+                        error_mesage.classList = "active"
+                        el.focus()
+                        return false
+                    }
+                    el.classList = "valid"
+                    error_mesage.className = el.nodeName!='SELECT'?'active':''
+                }
+                return true
+            }
+    </script>
+    <script src="public/app.js"></script>
+</body>
+
+</html>
