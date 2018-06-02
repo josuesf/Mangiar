@@ -33,7 +33,7 @@ function Ver(documento,series,paginas,pagina_actual) {
                                     <div class="switch">
                                         <label>
                                         Inactivo
-                                        <input id="estado" checked="${documento ? (documento.estado=='ACTIVO' ? '1' : '0') : '0'}" type="checkbox">
+                                        <input id="estado" ${documento ? (documento.estado=='ACTIVO' ? 'checked' : '') : 'checked'} type="checkbox">
                                         <span class="lever"></span>
                                         Activo
                                         </label>

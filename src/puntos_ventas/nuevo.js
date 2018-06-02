@@ -23,7 +23,7 @@ function Ver(punto_venta,sucursales) {
                                 <div class="switch">
                                     <label>
                                     Inactivo
-                                    <input id="estado" checked="${punto_venta ? (punto_venta.estado=='ACTIVO' ? '1' : '0') : '0'}" type="checkbox">
+                                    <input id="estado" ${punto_venta ? (punto_venta.estado=='ACTIVO' ? 'checked' : '') : 'checked'} type="checkbox">
                                     <span class="lever"></span>
                                     Activo
                                     </label>

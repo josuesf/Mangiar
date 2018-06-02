@@ -23,7 +23,7 @@ function Ver(usuario,perfiles,sucursales) {
                                 <div class="switch">
                                     <label>
                                     Inactivo
-                                    <input id="estado" checked="${usuario ? (usuario.estado ? '1' : '0') : '0'}" type="checkbox">
+                                    <input id="estado" ${usuario ? (usuario.estado ? 'checked' : '') : 'checked'} type="checkbox">
                                     <span class="lever"></span>
                                     Activo
                                     </label>

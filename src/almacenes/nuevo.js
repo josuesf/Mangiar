@@ -23,7 +23,7 @@ function Ver(almacen) {
                                 <div class="switch">
                                     <label>
                                     Inactivo
-                                    <input id="estado" checked="${almacen ? (almacen.estado=='ACTIVO' ? '1' : '0') : '0'}" type="checkbox">
+                                    <input id="estado" ${almacen ? (almacen.estado=='ACTIVO' ? 'checked' : '') : 'checked'} type="checkbox">
                                     <span class="lever"></span>
                                     Activo
                                     </label>

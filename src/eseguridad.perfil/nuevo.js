@@ -23,7 +23,7 @@ function Ver(perfil, modulos) {
                                 <div class="switch">
                                     <label>
                                     Inactivo
-                                    <input id="estado" checked="${perfil ?   (perfil.estado == 'ACTIVO' ? 'true' : 'false') : 'true'}" type="checkbox">
+                                    <input id="estado" ${perfil ?   (perfil.estado == 'ACTIVO' ? 'checked' : '') : 'checked'} type="checkbox">
                                     <span class="lever"></span>
                                     Activo
                                     </label>
