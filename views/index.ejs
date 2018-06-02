@@ -4,11 +4,12 @@
 <head>
     <title>Mangiar</title>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1" /> -->
+    <meta name="viewport" content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'/>
     <!----------------------- materialize style ------------------>
-    <link href="assets/css/materialize.css" rel="stylesheet" />
-    <link href="assets/css/fakeLoader.css" rel="stylesheet" />
-    <link href="assets/css/style.css" rel="stylesheet" />
+    <link href="/css/materialize.css" rel="stylesheet" />
+    <link href="/css/fakeLoader.css" rel="stylesheet" />
+    <link href="/css/style.css" rel="stylesheet" />
 
 </head>
 <style>
@@ -217,45 +218,18 @@
          
     </div>
 
-    <script>window.$ = window.jQuery = require('./assets/js/jquery.min.js');</script>
-    <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
-    <script src="assets/js/materialize.min.js"></script>
-    <script src="assets/js/fakeLoader.js"></script>
-    <script  src="assets/js/jspdf.min.js"></script> 
-    <script  src="assets/js/jspdf.plugin.autotable.js"></script>
-    <script  src="assets/js/jsPdf_Plugins.js"></script>
+    <script src='/js/jquery.min.js'></script>
+    <script src="/js/materialize.min.js"></script>
+    <script src="/js/fakeLoader.js"></script>
+    <script  src="/js/jspdf.min.js"></script> 
+    <script  src="/js/jspdf.plugin.autotable.js"></script>
+    <script  src="/js/jsPdf_Plugins.js"></script>
     <script type="text/javascript">
-
-      const electron = require('electron')
-      const PDFWindow = require('./node_modules/electron-pdf-window')
-      const { BrowserWindow } = electron.remote
-      
 
         $('.collection a').click(function() {
             alet("click");
             $('.collection').removeClass('active');  
             $(this).parents('.collection').addClass('active');
-        });
-
-        $(document).ready(function() {
-            $('input').characterCounter(); 
-        });
-        
-        const remote = require('electron').remote;
-        const window_cu = remote.getCurrentWindow();
-        document.getElementById("min-btn").addEventListener("click", function (e) {
-            window_cu.minimize();
-        });
-
-        document.getElementById("max-btn").addEventListener("click", function (e) {
-            if (!window_cu.isMaximized()) {
-                window_cu.maximize();
-            } else {
-                window_cu.unmaximize();
-            }
-        });
-        document.getElementById("close-btn").addEventListener("click", function (e) {
-            window_cu.close();
         });
         //FakeLoader
         ShowLoader()
@@ -364,7 +338,7 @@
                 return true
             }
     </script>
-    <script src="public/app.js"></script>
+    <script src="./app.js"></script>
 </body>
 
 </html>
