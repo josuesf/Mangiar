@@ -58,9 +58,7 @@ function VerTabla(personas,paginas,pagina_actual){
             <thead>
                 <tr>
                     <th>Opc.</th>
-                    <th>Nombres</th>
-                    <th>A. Paterno</th>
-                    <th>A. Materno</th>
+                    <th>Cliente</th>
                     <th>Doc.</th>
                     <th>Estado</th>
                 </tr>
@@ -73,9 +71,7 @@ function VerTabla(personas,paginas,pagina_actual){
                         <i class="material-icons">edit</i>
                         </a>
                     </td>
-                    <td>${p.nombres}</td>
-                    <td>${p.a_paterno}</td>
-                    <td>${p.a_materno}</td>
+                    <td>${p.nombres && p.nombres!=null && p.nombres!=""?p.nombres+" "+p.a_paterno+" "+p.a_materno:p.razon_social}</td>
                     <td>${p.tipo_doc_ident}</td>
                     <td>${p.doc_ident}</td>
                     <td>

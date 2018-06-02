@@ -143,14 +143,14 @@ function Ver(persona) {
     </div>`;
     var container = document.getElementById('contenido_principal')
     empty(container).appendChild(el);
-    /*var sub_nav = yo`
+    var sub_nav = yo`
     <div class="collection">
         <a href="#!" onclick="${()=>personas()}" class="collection-item">Todas las Personas</a>
         <a href="#!" class="collection-item active">Nueva Persona</a>
     </div>
         `;
     var container = document.getElementById('sub_navegador_content')
-    empty(container).appendChild(sub_nav)*/
+    empty(container).appendChild(sub_nav)
     $('select').material_select();
 
     $('.datepicker').pickadate({
