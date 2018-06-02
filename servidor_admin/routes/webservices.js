@@ -148,7 +148,6 @@ router.post('/confirmar_ecaja_pedido', function (req, res) {
 		input.cod_mesa,
 		input.usuario_registro
 	]
-	console.log(params)
 	const pedido = require('../models/ecaja.pedido')
 	//call Model.login function
 	pedido.confirmar_pedido(params,input.productos,input.usuario_registro, function (err, pedido) {

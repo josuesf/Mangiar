@@ -3,7 +3,7 @@ FUNCTION eproductos.fn_SavePedido
 Descripcion: Guarda o aactualiza un pedido
 Parametros: necesarios para un pedido
 Fecha:17052018 
-Ejecucion: SELECT * from eproductos.fn_SaveComanda(-1,'CLIENTES VARIOS','PEN',26.50,'OCUPADO','ME1','ADMIN')
+Ejecucion: SELECT * from eproductos.fn_SaveComanda(-1,'CLIENTES VARIOS','PEN',68,'OCUPADO','ME1','ADMIN')
 DROP: DROP FUNCTION eproductos.fn_SaveComanda(
 pnumero int,
  pnombre_cliente varchar(12),
