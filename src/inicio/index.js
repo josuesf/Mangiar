@@ -87,94 +87,66 @@ function Ver(puntos_venta) {
     //$(".dropdown-button").dropdown();
 }
  
-function VerDetalleSeleccion(productos){
+function VerDetalleSeleccion(productos,cuenta,i,punto_venta){
     var el = yo`
     <div class="card">
         <div class="card-content">
-            <span class="card-title center">Detalle del pedido 0001</span> 
+            <span class="card-title center">Detalle de la cuenta ${i} - mesa ${punto_venta.nombre_mesa}</span> 
             <div class="row">
                 <div class="col m6">
                    
                 <div id="stacked-cards-block" class="stackedcards stackedcards--animatable init">
                     <div class="stackedcards-container">
-                    <div class="card small">
-                        <div class="card-image">
-                            <img src="https://image.ibb.co/gQsq07/Adventure_and_Outdoor.png">
-                            <span class="card-title">Card Title</span>
+                        <div class="card horizontal">
+                            <div class="card-image">
+                                <img src="https://image.ibb.co/gQsq07/Adventure_and_Outdoor.png">
+                            </div>
+                            <div class="card-stacked">
+                                <div class="card-content">
+                                    <div class="row center">
+                                        <div class="col m4 s4">
+                                            <a href="javascript:void(0);" class="waves-effect waves-light btn white-text red"><i class="material-icons">remove</i></a>
+                                        </div>
+                                        <div class="input-field col m4 s4">
+                                            <input value="0" id="cantidad" type="number" class="validate">
+                                            <label class="active" for="cantidad">Cantidad</label>
+                                        </div>
+                                        <div class="col m4 s4">
+                                            <a href="javascript:void(0);" class="waves-effect waves-light btn white-text blue"><i class="material-icons">add</i></a>
+                                        </div>
+                                    </div>
+                                    <div class="row center"> 
+                                        <h6>Heading h6</h6>
+                                        <h6>Heading h6</h6>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-content">
-
-                            <div class="row center">
-                                <div class="col m4 s4">
-                                    <a href="javascript:void(0);" class="waves-effect waves-light btn white-text red"><i class="material-icons">remove</i></a>
-                                </div>
-                                <div class="input-field col m4 s4">
-                                    <input value="0" id="cantidad" type="number" class="validate">
-                                    <label class="active" for="cantidad">Cantidad</label>
-                                </div>
-                                <div class="col m4 s4">
-                                    <a href="javascript:void(0);" class="waves-effect waves-light btn white-text blue"><i class="material-icons">add</i></a>
+                        <div class="card horizontal">
+                            <div class="card-image">
+                                <img src="https://image.ibb.co/c9gTnn/Romantic_Gateways.png">
+                            </div>
+                            <div class="card-stacked">
+                                <div class="card-content">
+                                    <div class="row center">
+                                        <div class="col m4 s4">
+                                            <a href="javascript:void(0);" class="waves-effect waves-light btn white-text red"><i class="material-icons">remove</i></a>
+                                        </div>
+                                        <div class="input-field col m4 s4">
+                                            <input value="0" id="cantidad" type="number" class="validate">
+                                            <label class="active" for="cantidad">Cantidad</label>
+                                        </div>
+                                        <div class="col m4 s4">
+                                            <a href="javascript:void(0);" class="waves-effect waves-light btn white-text blue"><i class="material-icons">add</i></a>
+                                        </div>
+                                    </div>
+                                    <div class="row center"> 
+                                        <h6>Heading h6</h6>
+                                        <h6>Heading h6</h6>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row center"> 
-                                <h6>Heading h6</h6>
-                                <h6>Heading h6</h6>
-                            </div>
-
-                        </div> 
-                    </div>
-                    <div class="card small">
-                        <div class="card-image"><img src="https://image.ibb.co/fXPg7n/Beach_and_Chill.png"> 
-                            <span class="card-title">Card Title</span>
                         </div>
-                        <div class="card-content">
-
-                            <div class="row center">
-                                <div class="col m4 s4">
-                                    <a href="javascript:void(0);" class="waves-effect waves-light btn white-text red"><i class="material-icons">remove</i></a>
-                                </div>
-                                <div class="input-field col m4 s4">
-                                    <input value="0" id="cantidad" type="number" class="validate">
-                                    <label class="active" for="cantidad">Cantidad</label>
-                                </div>
-                                <div class="col m4 s4">
-                                    <a href="javascript:void(0);" class="waves-effect waves-light btn white-text blue"><i class="material-icons">add</i></a>
-                                </div>
-                            </div>
-                            <div class="row center"> 
-                                    <h6>Heading h6</h6>
-                                    <h6>Heading h6</h6>
-                            </div>
-                                    
-                        </div>
-                    </div>
-                    <div class="card small">
-                        <div class="card-image"><img src="https://image.ibb.co/c9gTnn/Romantic_Gateways.png">
-                            <span class="card-title">Card Title</span>
-                        </div>
-                        <div class="card-content">
-
-                            <div class="row center">
-                                <div class="col m4 s4">
-                                    <a href="javascript:void(0);" class="waves-effect waves-light btn white-text red"><i class="material-icons">remove</i></a>
-                                </div>
-                                <div class="input-field col m4 s4">
-                                    <input value="0" id="cantidad" type="number" class="validate">
-                                    <label class="active" for="cantidad">Cantidad</label>
-                                </div>
-                                <div class="col m4 s4">
-                                    <a href="javascript:void(0);" class="waves-effect waves-light btn white-text blue"><i class="material-icons">add</i></a>
-                                </div>
-                            </div>
-                            <div class="row center"> 
-                                <h6>Heading h6</h6>
-                                <h6>Heading h6</h6>
-                            </div>
-
-                        </div>
-                        
-                    </div>
-                    
                     </div>
                     <div class="stackedcards--animatable stackedcards-overlay top"><img src="assets/img/check.png"  width="auto" height="auto"/></div>
                     
@@ -223,7 +195,7 @@ function VerDetalleSeleccion(productos){
 
  
 
-function VerSeleccionCuentas(cuentas,tipo){
+function VerSeleccionCuentas(cuentas,tipo,punto_venta){
     var el = yo`
         <div>
             <div class="modal-content">
@@ -233,7 +205,7 @@ function VerSeleccionCuentas(cuentas,tipo){
                 <div class="row">
                     <div class="collection">
                         ${cuentas.map((e,i)=>yo` 
-                            <a href="javascript:void(0);" class="collection-item" onclick=${()=>SeleccionarCuenta(e,tipo)}><i class="material-icons left">label_outline</i> CUENTA : ${i+1}</a>
+                            <a href="javascript:void(0);" class="collection-item" onclick=${()=>SeleccionarCuenta(e,tipo,i+1,punto_venta)}><i class="material-icons left">label_outline</i> CUENTA : ${i+1}</a>
                         `)}
                     </div>
                 </div>
@@ -600,7 +572,7 @@ function AceptarPedido(pedido_detalle){
     })
 }
 
-function SeleccionarCuenta(cuenta,tipo){
+function SeleccionarCuenta(cuenta,tipo,i,punto_venta){
     contador=0
     try{
         $('#modal-details').modal('close');
@@ -621,15 +593,13 @@ function SeleccionarCuenta(cuenta,tipo){
     }else{
         //$('#modal-details').modal('close');
         ShowLoader() 
-
-
         fetchPedidoDetalle(cuenta,function(res){
             if (res.err) {
                 console.log(res.err)
             } else {
                 console.log(res)
                 if(res.punto_venta.length>0)
-                    VerDetalleSeleccion(res.punto_venta)
+                    VerDetalleSeleccion(res.punto_venta,cuenta,i,punto_venta)
             }
             HideLoader()
         })
@@ -655,7 +625,7 @@ function VerDetalles(punto_venta,tipo){
             if (res.err) {
                 console.log(res.err)
             } else {
-                SeleccionarCuenta(res.punto_venta[0],tipo)
+                SeleccionarCuenta(res.punto_venta[0],tipo,punto_venta)
             } 
         })
     }else{
@@ -664,7 +634,7 @@ function VerDetalles(punto_venta,tipo){
             if (res.err) {
                 console.log(res.err)
             } else {
-                VerSeleccionCuentas(res.punto_venta,tipo)
+                VerSeleccionCuentas(res.punto_venta,tipo,punto_venta)
             } 
         })
     }

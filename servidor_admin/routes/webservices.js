@@ -162,7 +162,7 @@ router.post('/save_pdf', function (req, res) {
 	const input = req.body
 	var b64string = input.data
 	var buf = Buffer.from(b64string, 'base64');
-	fs.writeFile("assets/media/recibo.pdf", buf , function(err) {
+	fs.writeFile(__dirname + '/../../assets/media/recibo.pdf', buf , function(err) {
 		if(err) {
 			return res.json({respuesta:err});
 		}else{

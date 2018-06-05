@@ -48,7 +48,7 @@ module.exports = {
         })
     },
     getPedidoDetalle:(params,callback)=>{
-        db.query('SELECT d.*, p.*,pers.*,pr.* FROM ecaja.pedido_detalle d inner join ecaja.pedido p on d.pedido_id=p.pedido_id left join eproductos.producto pr on d.producto_id=pr.producto_id left join persona pers on p.cod_persona=pers.cod_persona where d.pedido_id=$1 and d.cod_punto_venta=$2', params, (err, r) => {
+        db.query('SELECT d.*, p.*,pers.*,pr.*,cd.* FROM ecaja.pedido_detalle d inner join ecaja.pedido p on d.pedido_id=p.pedido_id left join eproductos.producto pr on d.producto_id=pr.producto_id left join persona pers on p.cod_persona=pers.cod_persona left join eproductos.combinacion_detalle cd on cd.combinacion_id=(d.id_referencia)::int and (d.id_referencia)::int <> 0 where d.pedido_id=$1 and d.cod_punto_venta=$2', params, (err, r) => {
             if (err) {
                 return callback(err.name+":"+err.code+" "+err.routine, undefined)
             } 
