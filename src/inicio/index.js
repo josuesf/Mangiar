@@ -4,6 +4,7 @@ import { URL } from '../constantes_entorno/constantes'
 import { Init,onActionLeft,onActionTop } from '../utils'
 import { comprobantes } from '../ecaja.comprobante/'
 import { nuevoComprobante } from '../ecaja.comprobante/nuevo'
+import { Socket } from 'net';
 
 var contador = 0 
 var $card = null
@@ -1004,7 +1005,15 @@ function generateInvoice() {
  
     return doc.output();
 }
-
+socket.on('NUEVA_COMANDA',function(data){
+    fetchPuntosVentas(function(res){
+        if (res.err) {
+            console.log(res.err)
+        } else {
+            Ver(res.puntos_venta)
+        }
+    })
+})
 export {
     inicio
 }

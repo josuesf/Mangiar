@@ -152,6 +152,7 @@ router.post('/confirmar_ecaja_pedido', function (req, res) {
 	//call Model.login function
 	pedido.confirmar_pedido(params,input.productos,input.usuario_registro, function (err, pedido) {
 		if (err) return res.json({err})
+		req.io.sockets.emit('NUEVA_COMANDA', { cod_mesa: input.cod_mesa,usuario_registro:input.usuario_registro })
 		return res.json({numero:pedido[0].numero,pedido_id:pedido[0].pedido_id})
 	})
 });

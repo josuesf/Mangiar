@@ -14,7 +14,7 @@
   "license": "ISC",
   "build": {
     "appId": "com.josuesf.mangiar",
-    "productName": "Mangiar"
+    "productName": "Mangiar 1.0.0"
   },
   "repository": {
     "type": "git",

@@ -77,7 +77,7 @@ function VerTabla(_productos,paginas,pagina_actual){
                     <td>${c.cod_producto}</td>
                     <td>${c.nombre}</td>
                     <td>${c.nombre_categoria}</td>
-                    <td> <img class="materialboxed" style="display: block;max-height:50px;max-width:50px;width: auto;height: auto;" src="/images/${c.imagen_url}"></td>
+                    <td> <img class="materialboxed" style="display: block;max-height:50px;max-width:50px;width: auto;height: auto;" src="public/images/${c.imagen_url}"></td>
                     <td>${c.estado}</td>
                 </tr>
                 `)}

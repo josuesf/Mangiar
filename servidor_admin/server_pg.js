@@ -62,6 +62,21 @@ var webservices =require('./routes/webservices')
 //       res.render('login.ejs', { title: 'iFacturacion - Usuarios' });
 //   }
 // }
+
+//Listen Server
+var server = app.listen(5000, function (err) {
+  if (err) return console.log('Hubo un error'), process.exit(1);
+  console.log('Escuchando en el puerto 3000');
+})
+var io = require('socket.io')(server);
+io.sockets.on('connection', function (socket) {
+	console.log(socket.id)
+});
+app.use(function(req,res,next){
+	req.io = io;
+	next();
+})
+
 app.use('/cuentas_api',cuentas_api);
 app.use('/modulos_api', modulos_api);
 app.use('/perfiles_api', perfiles_api)
@@ -78,15 +93,7 @@ app.use('/eproductos_combinacion',eproductos_combinacion);
 app.use('/ecaja_caja',ecaja_caja);
 app.use('/ecaja_comprobante',ecaja_comprobante);
 app.use('/ws',webservices);
-//Listen Server
-var server = app.listen(5000, function (err) {
-  if (err) return console.log('Hubo un error'), process.exit(1);
-  console.log('Escuchando en el puerto 3000');
-})
-var io = require('socket.io')(server);
-io.sockets.on('connection', function (socket) {
-	console.log(socket.id)
-});
+
 // var reportingApp = express();
 // app.use('/reporting', reportingApp);
 // var jsreport = require('jsreport')({
