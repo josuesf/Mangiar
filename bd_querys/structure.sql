@@ -1,5 +1,7 @@
 ﻿-- Esquema Publico
-CREATE TABLE conf_sistema(
+CREATE TABLE conf_sistema --DROP TABLE conf_sistema
+(
+conf_id serial primary key,
 nombre_variable varchar(40) NOT NULL,
 valor_variable varchar(30) NULL,
 obs_variable varchar(140) NULL

@@ -46,5 +46,23 @@ module.exports = {
             callback(err, r.rows)
         })
     },
+    getPedidobyNumero:(params,callback)=>{
+        db.query('select pedido_id,numero,nombre_cliente,cod_moneda,total,usuario_creacion from ecaja.pedido where numero=$1', params, (err, r) => {
+            if (err) {
+                console.log(err)
+                return callback(err.name+":"+err.code+" "+err.routine, undefined)
+            }
+            callback(err, r.rows[0])
+        })
+    },
+    getPedidoDetallebyId:(params,callback)=>{
+        db.query('select pedido_id,id_detalle,producto_id,id_referencia,almacen_cod,cantidad,descripcion_detalle nombre,precio precio_valor,cod_punto_venta cod_mesa from ecaja.pedido_detalle where pedido_id=$1', params, (err, r) => {
+            if (err) {
+                console.log(err)
+                return callback(err.name+":"+err.code+" "+err.routine, undefined)
+            }
+            callback(err, r.rows)
+        })
+    },
     //...More functions
 }

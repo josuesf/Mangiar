@@ -4,7 +4,6 @@ function Ver() {
     var el = yo`
     <div class="collection">
         <a href="#!" class="collection-item active">Inicio de Sesion</a>
-        <a href="#!" class="collection-item">Contáctanos</a>
     </div>
         `;
     return el
