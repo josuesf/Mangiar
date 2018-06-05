@@ -12,8 +12,8 @@ var storage = multer.diskStorage({
 })
 var upload = multer({ storage: storage }).single('picture');
 var app = express();
-app.use(express.static('public'));
-app.use(express.static('assets'));
+app.use(express.static(__dirname+'/../public'));
+app.use(express.static(__dirname+'/../assets'));
 app.use(bodyParser.json({limit: '50mb'})); // support json encoded bodies
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true })); // support encoded bodies
 app.disable('x-powered-by');

@@ -4,6 +4,26 @@ nombre_variable varchar(40) NOT NULL,
 valor_variable varchar(30) NULL,
 obs_variable varchar(140) NULL
 );
+CREATE TABLE empresa--Omar
+( 
+cod_empresa     varchar(30)  NOT NULL ,
+nombre_corto    varchar(100)  NULL ,
+razon_social	varchar(256) NULL,
+descripcion varchar(256) NULL, 
+direccion varchar(120)  NULL ,
+telefono1 varchar(12)  NULL ,
+telefono2 varchar(12)  NULL ,
+correo varchar(100)  NULL ,
+pagina_web varchar(100)  NULL ,
+url_imagen varchar(355),
+url_imagen_impresion varchar(355),
+estado      varchar(20) default 'ACTIVO',
+creado_en TIMESTAMP NOT NULL,
+usuario_creacion varchar(50),
+actualizado_en TIMESTAMP,
+usuario_actualizo varchar(50),
+ PRIMARY KEY (cod_empresa)
+);
 CREATE TABLE sucursal--Omar
 ( 
 cod_sucursal         varchar(30)  NOT NULL ,
