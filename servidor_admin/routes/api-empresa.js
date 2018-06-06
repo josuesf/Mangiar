@@ -20,7 +20,8 @@ router.post('/save_empresa', function (req, res) {
 	//set params
 	const params = [
 		input.cod_empresa,
-        input.nombre_corto, 
+		input.nombre_corto,
+		input.ruc, 
         input.razon_social,
         input.descripcion,
         input.direccion, 

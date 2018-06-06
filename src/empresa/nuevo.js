@@ -53,6 +53,13 @@ function Ver(empresa,sucursales,paginas,pagina_actual) {
                                 </div>
                                 
                             </div>
+                            <div class="row">
+                                
+                                <div class="input-field col s12">
+                                    <input value="${empresa ? empresa.ruc : ''}" id="ruc" type="text" class="validate">
+                                    <label for="ruc" class="active" id="lruc" data-error="" data-success="">R.U.C.</label>
+                                </div>
+                            </div>
                             
                             <div class="row">
                                 
@@ -358,15 +365,21 @@ function Guardar(e) {
     var props = {
         'cod_empresa':{},
         'nombre_corto':{},
-        'razon_social':{}
+        'razon_social':{},
+        'ruc':{
+            maxLength:11,
+            minLength:11
+        }
     }
  
     ValidarDimensionesImagen(function(variable){
-        if(variable!="RECHAZADO" && !Validar(props)){
+        if(variable!="RECHAZADO" && Validar(props)){
             Guardar_(e,variable)
         }else{
-            alert("El tamaño de la imagen de impresion no es permitido debe tener las dimensiones de 192 X 192. Se procedera a guardar la informacion sin la imagen de impresion","Mensaje Informacion")
-            Guardar_(e,variable)
+            if(variable=="RECHAZADO")
+                alert("El tamaño de la imagen de impresion no es permitido debe tener las dimensiones de 192 X 192. Se procedera a guardar la informacion sin la imagen de impresion","Mensaje Informacion")
+            if(Validar(props))
+                Guardar_(e,variable)
         }
          
     })
@@ -378,6 +391,7 @@ function Guardar_(e,flag_dimension){
  
     const cod_empresa = e?e.cod_empresa:$("#cod_empresa").val().toUpperCase()
     const nombre_corto = $("#nombre_corto").val().toUpperCase()
+    const ruc  = $("#ruc").val()
     const razon_social = $("#razon_social").val().toUpperCase()
     const descripcion = $("#descripcion").val().toUpperCase()
     const direccion = $("#direccion").val().toUpperCase()
@@ -399,6 +413,7 @@ function Guardar_(e,flag_dimension){
         },
         body: JSON.stringify({
             cod_empresa,
+            ruc,
             nombre_corto, 
             razon_social,
             descripcion,

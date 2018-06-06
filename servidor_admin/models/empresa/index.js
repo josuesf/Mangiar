@@ -28,7 +28,7 @@ module.exports = {
         })
     },
     save :(params, images,callback)=>{
-        db.query("SELECT * FROM fn_SaveEmpresa($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)", params, (err, r) => {
+        db.query("SELECT * FROM fn_SaveEmpresa($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)", params, (err, r) => {
             if (err) {
                 return callback(err.name+":"+err.code+" "+err.routine, undefined)
             }

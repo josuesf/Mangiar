@@ -1447,18 +1447,20 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-
+  
  
 /*
 FUNCTION fn_SaveEmpresa
 Descripcion: Guarda o actualiza una empresa
 Parametros: necesarios para una empresa
-Ejecucion: SELECT * FROM  fn_SaveEmpresa('E001','SL','EMPRESA DE TODOS S.A.C','NINGUNA','NINGUNA',NULL,NULL,NULL,NULL,NULL,NULL,'ACTIVO','ADMIN')
+Ejecucion: SELECT * FROM  fn_SaveEmpresa('E001','SL','123333333','EMPRESA DE TODOS S.A.C','NINGUNA','NINGUNA',NULL,NULL,NULL,NULL,NULL,NULL,'ACTIVO','ADMIN')
+DROP FUNCTION fn_saveempresa(character varying,character varying,character varying,character varying,character varying,character varying,character varying,character varying,character varying,character varying,character varying,character varying,character varying,character varying)
 */
 CREATE OR REPLACE FUNCTION fn_SaveEmpresa
 (
  _cod_empresa     	varchar(30),
  _nombre_corto    	varchar(100),
+ _ruc 			varchar(20),
  _razon_social	   	varchar(256),
  _descripcion 		varchar(256),
  _direccion 		varchar(120),
@@ -1475,6 +1477,7 @@ RETURNS TABLE
 ( 
  cod_empresa     varchar(30),
  nombre_corto    varchar(100),
+ ruc 		varchar(20),
  razon_social	varchar(256),
  descripcion varchar(256),
  direccion varchar(120),
@@ -1496,6 +1499,7 @@ IF( not exists (select 1 from empresa e where e.cod_empresa= _cod_empresa))THEN
 INSERT INTO empresa(
 	cod_empresa,
 	nombre_corto,
+	ruc,
 	razon_social,
 	descripcion,
 	direccion,
@@ -1512,6 +1516,7 @@ INSERT INTO empresa(
 VALUES(
 	_cod_empresa,
 	_nombre_corto,
+	_ruc,
 	_razon_social,
 	_descripcion,
 	_direccion,
@@ -1528,6 +1533,7 @@ VALUES(
 ELSE
 UPDATE empresa SET 
  nombre_corto = _nombre_corto,
+ ruc = _ruc,
  razon_social = _razon_social,
  descripcion = _descripcion,
  direccion = _direccion,
@@ -1562,10 +1568,7 @@ FUNCTION fn_GetEmpresas
 Descripcion: Recupera todas las empresas
 Parametros: - tamano_pagina integer,numero_pagina integer
 Ejecucion: SELECT * FROM  fn_GetEmpresas(20,1,'')
-DROP: DROP FUNCTION fn_GetEmpresas
-(
- tamano_pagina INTEGER,numero_pagina INTEGER,empresa_busqueda varchar(50)
-)
+DROP FUNCTION fn_getempresas(integer,integer,character varying)
 */
 
  
@@ -1579,6 +1582,7 @@ RETURNS TABLE
 ( 
  cod_empresa     varchar(30),
  nombre_corto    varchar(100),
+ ruc 		 varchar(20),
  razon_social	varchar(256),
  descripcion varchar(256),
  direccion varchar(120),
@@ -1611,6 +1615,7 @@ BEGIN
  RETURN QUERY
  SELECT  e.cod_empresa,
 	 e.nombre_corto,
+	 e.ruc,
 	 e.razon_social,
 	 e.descripcion,
 	 e.direccion,
@@ -1739,7 +1744,7 @@ BEGIN
  ************************************************ */
  /*RETURN QUERY
  SELECT s.*
- FROM empresa e left join empresasucursal es on e.cod_empresa = es.cod_empresa and es.estado='ACTIVO' left join sucursal s on es.cod_sucursal = s.cod_sucursal 
+ FROM empresa e left join empresa_sucursal es on e.cod_empresa = es.cod_empresa and es.estado='ACTIVO' left join sucursal s on es.cod_sucursal = s.cod_sucursal 
  WHERE s.nombre like ('%' || sucursal_busqueda || '%') or s.cod_sucursal like ('%' || sucursal_busqueda || '%')
  ORDER BY s.cod_sucursal
  LIMIT tamano_pagina
@@ -1747,7 +1752,7 @@ BEGIN
 
  RETURN QUERY
  SELECT s.*, CASE WHEN es.cod_sucursal IS NULL OR es.estado!='ACTIVO' THEN -1 ELSE 0 END AS flagEmpresaSucursal
- FROM sucursal s left join empresasucursal es on s.cod_sucursal = es.cod_sucursal and es.estado='ACTIVO' left join empresa e on e.cod_empresa = es.cod_empresa 
+ FROM sucursal s left join empresa_sucursal es on s.cod_sucursal = es.cod_sucursal and es.estado='ACTIVO' left join empresa e on e.cod_empresa = es.cod_empresa 
  WHERE s.nombre like ('%' || sucursal_busqueda || '%') or s.cod_sucursal like ('%' || sucursal_busqueda || '%')
  ORDER BY s.cod_sucursal
  LIMIT tamano_pagina
@@ -1771,7 +1776,7 @@ CREATE OR REPLACE FUNCTION fn_getRowsSucursalesByEmpresa(_cod_empresa varchar(30
 RETURNS bigint AS $$
 DECLARE _respuesta bigint;
 BEGIN
- RETURN (select count(*) from empresa e inner join empresasucursal es on e.cod_empresa = es.cod_empresa and es.estado='ACTIVO' inner join sucursal s on es.cod_sucursal = s.cod_sucursal 
+ RETURN (select count(*) from empresa e inner join empresa_sucursal es on e.cod_empresa = es.cod_empresa and es.estado='ACTIVO' inner join sucursal s on es.cod_sucursal = s.cod_sucursal 
  WHERE s.nombre like ('%' || sucursal_busqueda || '%') or s.cod_sucursal like ('%' || sucursal_busqueda || '%'));
  EXCEPTION WHEN OTHERS THEN 
  RAISE;
