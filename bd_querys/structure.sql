@@ -6,10 +6,10 @@ nombre_variable varchar(40) NOT NULL,
 valor_variable varchar(30) NULL,
 obs_variable varchar(140) NULL
 );
-CREATE TABLE empresa--Omar
+CREATE TABLE empresa--Omar --DROP table empresa
 ( 
 cod_empresa     varchar(30)  NOT NULL ,
-RUC 			varchar(20) NOT NULL,
+ruc 			varchar(20) NOT NULL,
 nombre_corto    varchar(100)  NULL ,
 razon_social	varchar(256) NULL,
 descripcion varchar(256) NULL, 
@@ -27,7 +27,7 @@ actualizado_en TIMESTAMP,
 usuario_actualizo varchar(50),
  PRIMARY KEY (cod_empresa)
 );
-CREATE TABLE EmpresaSucursal--Omar
+CREATE TABLE EmpresaSucursal--Omar drop table empresasucursal
 ( 
  cod_empresa     varchar(30)  NOT NULL ,
  cod_sucursal    varchar(30)  NOT NULL ,

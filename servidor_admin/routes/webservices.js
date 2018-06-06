@@ -160,7 +160,7 @@ router.post('/confirmar_ecaja_pedido', function (req, res) {
 			productos:input.productos
 		}
 		//req.app.locals.impresoras_rutas
-		ImpresionComanda(param,pedido[0].numero,0,[])
+		ImpresionComanda(param,pedido[0].numero,0,req.app.locals.impresoras_rutas)
 		return res.json({numero:pedido[0].numero,pedido_id:pedido[0].pedido_id})
 	})
 });
@@ -262,17 +262,8 @@ router.post('/impresion_nota_venta', function (req, res) {
 				cod_mesa:detalle_pedido[0].cod_mesa,
 				usuario_registro:pedido_encontrado.usuario_creacion
 			}
-			const datos_empresa = {
-				razon_social:'LAST SUPPER RESTAURANT SAC',
-				ruc:'20602642136',
-				direccion:'Calle Procuradores 341 2do Piso',
-				imagen_url:'ninguno.png',
-				correo:'reservas@lastsupper.restaurant',
-				telefono:'084500851',
-				pagina_web:'www.lastsupper.restaurant',
-				agradecimiento:'GRACIAS POR SU PREFERENCIA'
-			}
-			ImpresionNotaVenta(param,pedido_encontrado.numero,datos_empresa,'//192.168.1.3/EPSONT20II')
+			const datos_empresa = req.app.locals.datos_empresa
+			ImpresionNotaVenta(param,pedido_encontrado.numero,datos_empresa,req.app.locals.impresora_principal)
 			return;
 		})
 		return res.json({respuesta:'OK'})
@@ -280,15 +271,15 @@ router.post('/impresion_nota_venta', function (req, res) {
 });
 function ImpresionComanda(param, numero, posicion_impresora,IMPRESORAS_RUTAS) {
 	if (IMPRESORAS_RUTAS.length > 0) {
-		const productos = (param.productos.filter(p => p.almacen_cod == IMPRESORAS_RUTAS[posicion_impresora].almacen_cod)).filter(p => parseInt(p.producto_id) != 0)
-		var productos_detalles = (param.productos.filter(p => p.almacen_cod == IMPRESORAS_RUTAS[posicion_impresora].almacen_cod)).filter(p => parseInt(p.producto_id) == 0)
+		const productos = (param.productos.filter(p => p.almacen_cod == IMPRESORAS_RUTAS[posicion_impresora].nombre_variable)).filter(p => parseInt(p.producto_id) != 0)
+		var productos_detalles = (param.productos.filter(p => p.almacen_cod == IMPRESORAS_RUTAS[posicion_impresora].nombre_variable)).filter(p => parseInt(p.producto_id) == 0)
 
 		if (productos.length > 0) {
 			//Impresion de Comanda
 			var printer = require("node-thermal-printer");
 			printer.init({
 				type: 'epson',
-				interface: IMPRESORAS_RUTAS[posicion_impresora].nombre_impresora,//'tcp://192.168.1.188',
+				interface: IMPRESORAS_RUTAS[posicion_impresora].valor_variable,//'tcp://192.168.1.188',
 				// removeSpecialCharacters: true,
 			});
 			//printer.setTypeFontB(); 

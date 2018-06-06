@@ -73,5 +73,16 @@ module.exports = {
             callback(err, r.rows)
         })
     },
-   
+    getEmpresa:(params,callback)=>{
+        db.query("SELECT * FROM empresa limit 1", params, (err, r) => {
+            if (err) {
+                return callback(err.name+":"+err.code+" "+err.routine, undefined)
+            }
+            if(rows.length>0){
+                callback(err, r.rows[0])
+            }else
+                callback(err, undefined)
+            
+        })
+    },
 }
