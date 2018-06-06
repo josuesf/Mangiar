@@ -38,7 +38,13 @@ app.post('/login_', function (req, res) {
 		})
 	})
 })
-
+app.post('/get_variables_sistema',function(req,res){
+	const conf_sistema = require('./models/conf_sistema')
+	conf_sistema.getVariales([req.body.obs_variable],function(err,variables){
+		if (err) return res.json({err})
+		return res.json({variables})
+	})
+})
 //Routes
 var empresa_api = require('./routes/api-empresa')
 var cuentas_api = require('./routes/api-cuentas')

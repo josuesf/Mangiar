@@ -243,7 +243,24 @@
       const PDFWindow = require('electron-pdf-window')
       const { BrowserWindow } = electron.remote
       const SocketIOClient = require('socket.io-client');
-      const socket = SocketIOClient('http://192.168.1.6:5000')
+    //   var socket = SocketIOClient('http://192.168.1.6:5000')
+      function GET_VARIABLES_SISTEMA(obs_variable,callback) {
+            const parametros = {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    obs_variable
+                })
+            }
+            fetch(URL + '/get_variables_sistema', parametros)
+                .then(req => req.json())
+                .then(res => {
+                    callback(res.err,res.variables)
+                })
+        }
         $('.collection a').click(function() {
             alet("click");
             $('.collection').removeClass('active');  
