@@ -47,11 +47,11 @@ app.post('/get_variables_sistema', function (req, res) {
 })
 //CARGAR DATOS DE EMPRESA
 const empresa = require('./models/empresa')
-empresa.get([], function (err, empresa) {
+empresa.getEmpresa([], function (err, empresa) {
 	if (empresa) {
 		app.locals.datos_empresa = {
 			razon_social: empresa.nombre_corto,
-			ruc: '',
+			ruc: empresa.ruc,
 			direccion: empresa.direccion,
 			imagen_url: empresa.url_imagen_impresion,
 			correo: empresa.correo,
@@ -60,6 +60,7 @@ empresa.get([], function (err, empresa) {
 			agradecimiento: 'GRACIAS POR SU PREFERENCIA'
 		}
 	}
+	
 })
 const conf_sistema = require('./models/conf_sistema')
 conf_sistema.getVariales(['IMPRESION_ALMACEN'], function (err, variables) {

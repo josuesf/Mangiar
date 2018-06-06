@@ -78,7 +78,7 @@ module.exports = {
             if (err) {
                 return callback(err.name+":"+err.code+" "+err.routine, undefined)
             }
-            if(rows.length>0){
+            if(r.rows.length>0){
                 callback(err, r.rows[0])
             }else
                 callback(err, undefined)
