@@ -9,6 +9,7 @@ obs_variable varchar(140) NULL
 CREATE TABLE empresa--Omar
 ( 
 cod_empresa     varchar(30)  NOT NULL ,
+RUC 			varchar(20) NOT NULL,
 nombre_corto    varchar(100)  NULL ,
 razon_social	varchar(256) NULL,
 descripcion varchar(256) NULL, 
