@@ -165,6 +165,7 @@ function Ver(empresa,sucursales,paginas,pagina_actual) {
 
 
 function VerTablaSucursales(empresa,sucursales,paginas,pagina_actual){
+    console.log(sucursales)
     return yo`
     <div>
         <table class="striped">
@@ -181,7 +182,10 @@ function VerTablaSucursales(empresa,sucursales,paginas,pagina_actual){
                 ${sucursales.map(s=> yo`
                 <tr>
                     <td> 
-                        <input id="${s.cod_sucursal}" type="checkbox" onclick="${()=>InsertarRelacion(empresa,s)}" class="filled-in" id="filled-in-box" ${s.flagEmpresaSucursal!=-1?'checked':''}/>
+                        <select id="${s.cod_sucursal}" onchange="${()=>InsertarRelacion(empresa,s)}">
+                            <option value="ACTIVO" ${parseInt(s.flagEmpresaSucursal) != -1 || s.flagEmpresaSucursal != '-1'? 'selected': ''}>RELACIONADO</option>
+                            <option value="INACTIVO" ${parseInt(s.flagEmpresaSucursal) == -1 || s.flagEmpresaSucursal == '-1'? 'selected': ''}>NO RELACIONADO</option>
+                        </select>
                     </td>
                     <td>${s.nombre}</td>
                     <td>${s.direccion}</td>
@@ -242,6 +246,7 @@ function CargarTabSucursales(empresa,sucursales,paginas,pagina_actual){
         </div>`
     var container = document.getElementById('tab_sucursales')
     empty(container).appendChild(el);
+    $('select').material_select();
 }
 
 
@@ -299,13 +304,12 @@ function CambiarImagenImpresion(){
 
 
 function InsertarRelacion(empresa,sucursal){
-    var estado = 'ACTIVO'
-    estado = $("#"+sucursal.cod_sucursal).is(":checked")?'ACTIVO':'INACTIVO'
+    var estado = $("#"+sucursal.cod_sucursal).val()
     fetchRelacionarSucursal(empresa,sucursal,estado,function(res){
         if (res.err) {
             console.log(res.err)
         } else {
-            nuevaEmpresa()
+            empresas()
         }
     }) 
 
@@ -329,6 +333,26 @@ function Buscar(empresa,pagina_actual){
     })
 }
 
+function ValidarDimensionesImagen(callback){
+    var image = null 
+    var file = null
+    var _URL = window.URL || window.webkitURL
+
+    if ((file = document.getElementById('url_imagen_impresion').files[0])) {
+        image = new Image();
+        image.onload = function() {
+            if(this.width==192 && this.height==192){
+                callback('ACEPTADO') 
+            }else{
+                callback('RECHAZADO')
+            }            
+        };
+        image.src = _URL.createObjectURL(file);
+    }else{
+        callback('VACIO')
+    }
+}
+
 function Guardar(e) {
 
     var props = {
@@ -336,9 +360,20 @@ function Guardar(e) {
         'nombre_corto':{},
         'razon_social':{}
     }
-    if(!Validar(props))
-        return;
+ 
+    ValidarDimensionesImagen(function(variable){
+        if(variable!="RECHAZADO" && !Validar(props)){
+            Guardar_(e,variable)
+        }else{
+            alert("El tamaño de la imagen de impresion no es permitido debe tener las dimensiones de 192 X 192. Se procedera a guardar la informacion sin la imagen de impresion","Mensaje Informacion")
+            Guardar_(e,variable)
+        }
+         
+    })
+}
 
+
+function Guardar_(e,flag_dimension){
     ShowLoader()
  
     const cod_empresa = e?e.cod_empresa:$("#cod_empresa").val().toUpperCase()
@@ -352,7 +387,7 @@ function Guardar(e) {
     const pagina_actual = $("#pagina_web").val().toUpperCase()
     const url_imagen = document.getElementById('url_imagen').files.length > 0 ? document.getElementById('url_imagen').files[0].path : ''
     const imagen_anterior = e ? e.url_imagen : ''
-    const url_imagen_impresion = document.getElementById('url_imagen_impresion').files.length > 0 ? document.getElementById('url_imagen_impresion').files[0].path : ''
+    const url_imagen_impresion = flag_dimension!="ACEPTADO"?"":document.getElementById('url_imagen_impresion').files.length > 0 ? document.getElementById('url_imagen_impresion').files[0].path : ''
     const imagen_anterior_impresion = e ? e.url_imagen_impresion : ''
     const estado = $("#estado").is(':checked')? 'ACTIVO' : 'INACTIVO'
     

@@ -1790,7 +1790,7 @@ CREATE OR REPLACE FUNCTION fn_SaveEmpresaSucursal(varchar(30),varchar(30),varcha
 RETURNS varchar(100) AS $$
 DECLARE _respuesta varchar(100);
 BEGIN
-IF((select count(*) from empresasucursal where empresasucursal.cod_empresa= $1 and empresasucursal.cod_sucursal = $2) = 1) THEN
+IF((select count(*) from empresasucursal where empresasucursal.cod_empresa= $1 and empresasucursal.cod_sucursal = $2) = 0) THEN
   INSERT INTO empresasucursal(cod_empresa,cod_sucursal,estado,creado_en,usuario_creacion)
 			     VALUES($1,$2,$3,now(),$4);		    
 ELSE
