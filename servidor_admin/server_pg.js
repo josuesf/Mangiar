@@ -40,6 +40,7 @@ app.post('/login_', function (req, res) {
 })
 
 //Routes
+var empresa_api = require('./routes/api-empresa')
 var cuentas_api = require('./routes/api-cuentas')
 var modulos_api = require('./routes/api-modelos')
 var perfiles_api = require('./routes/api-perfiles')
@@ -77,6 +78,7 @@ app.use(function(req,res,next){
 	next();
 })
 
+app.use('/empresa_api',empresa_api);
 app.use('/cuentas_api',cuentas_api);
 app.use('/modulos_api', modulos_api);
 app.use('/perfiles_api', perfiles_api)

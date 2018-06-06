@@ -211,3 +211,49 @@ END;
 $$
 LANGUAGE plpgsql;
 
+
+
+
+/*
+FUNCTION ecaja.fn_FinishPedido
+Descripcion: Finaliza un pedido
+Ejecucion: SELECT * from ecaja.fn_FinishPedido(2,'ADMIN')
+ 
+*/
+
+CREATE OR REPLACE FUNCTION ecaja.fn_FinishPedido( 
+    ppedido_id integer,
+    pusuario_registro character varying)
+RETURNS character varying AS
+$BODY$ 
+DECLARE
+   nro_cuentas int;
+   pcod_punto_venta varchar(30);
+BEGIN
+ 
+UPDATE ecaja.pedido SET 
+ estado_pedido = 'TERMINADO',
+ usuario_actualizo = pusuario_registro,
+ actualizado_en = now()
+
+WHERE pedido_id=ppedido_id and estado_pedido <> 'TERMINADO';
+
+pcod_punto_venta = (SELECT DISTINCT (d.cod_punto_venta) FROM ecaja.pedido_detalle d WHERE d.pedido_id=ppedido_id);
+
+nro_cuentas  = (SELECT count(distinct d.pedido_id) from ecaja.pedido_detalle d inner join ecaja.pedido p on d.pedido_id=p.pedido_id WHERE d.cod_punto_venta = pcod_punto_venta AND p.estado_pedido='EN ATENCION');
+ 
+IF nro_cuentas = 0 THEN 
+
+	UPDATE punto_venta SET 
+	estado_accion='LIBRE',
+	usuario_actualizo = pusuario_registro,
+	actualizado_en = now()
+	WHERE cod_punto_venta = pcod_punto_venta;
+END IF;
+RETURN 'El pedido fue actualizado correctamente';
+
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE

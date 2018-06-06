@@ -49,14 +49,24 @@ function Ver(puntos_venta) {
                                         </div>
                                         <div class="content">
                                             <div class="main">
+                                                <div class="row" style="display:none">
+                                                    <div class="col m12">
+                                                        <a class="waves-effect yellow black-text btn btn-small btn-block" style="font-size: 12px;width: 100%;padding: 0 0.5rem;" onclick=${()=>VerDetalles(e,"C")}><i class="material-icons left">receipt</i> Comprobante</a>
+                                                    </div>
+                                                </div>
                                                 <div class="row">
                                                     <div class="col m12">
-                                                        <a class="waves-effect yellow black-text btn btn-small btn-block" style="font-size: 12px;width: 100%;padding: 0 0.5rem;" onclick=${()=>VerDetalles(e,"R")}><i class="material-icons left">receipt</i> Comprobante</a>
+                                                        <a class="waves-effect yellow black-text btn btn-small btn-block" style="font-size: 12px;width: 100%;padding: 0 0.5rem;" onclick=${()=>VerDetalles(e,"I")}><i class="material-icons left">print</i> Imprimir voucher</a>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col m12">
                                                         <a class="waves-effect  yellow black-text btn btn-small btn-block" style="font-size: 12px;width: 100%;padding: 0 0.5rem;" onclick=${()=>VerDetalles(e,"D")}><i class="material-icons left">format_list_bulleted</i> Detalles</a>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col m12">
+                                                        <a class="waves-effect yellow black-text btn btn-small btn-block" style="font-size: 12px;width: 100%;padding: 0 0.5rem;" onclick=${()=>VerDetalles(e,"T")}><i class="material-icons left">check_circle</i> Terminar cuenta</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -578,33 +588,52 @@ function SeleccionarCuenta(cuenta,tipo,i,punto_venta){
         $('#modal-details').modal('close');
     }catch(e){}
 
-    if(tipo=="R"){
-        ShowLoader()
-        fetchPedidoDetalle(cuenta,function(res){
-            if (res.err) {
-                console.log(res.err)
-            } else {
-                console.log(res)
-                if(res.punto_venta.length>0)
-                    VerInvoice(res.punto_venta)
-            }
-            HideLoader()
-        })
-    }else{
-        //$('#modal-details').modal('close');
-        ShowLoader() 
-        fetchPedidoDetalle(cuenta,function(res){
-            if (res.err) {
-                console.log(res.err)
-            } else {
-                console.log(res)
-                if(res.punto_venta.length>0)
-                    VerDetalleSeleccion(res.punto_venta,cuenta,i,punto_venta)
-            }
-            HideLoader()
-        })
+    switch(tipo){
+        case "C":
+            ShowLoader()
+            fetchPedidoDetalle(cuenta,function(res){
+                if (res.err) {
+                    console.log(res.err)
+                } else {
+                    console.log(res)
+                    if(res.punto_venta.length>0)
+                        VerInvoice(res.punto_venta)
+                }
+                HideLoader()
+            })
+            break
+        case "I":
+            break        
+        case "D":
+            ShowLoader() 
+            fetchPedidoDetalle(cuenta,function(res){
+                if (res.err) {
+                    console.log(res.err)
+                } else {
+                    console.log(res)
+                    if(res.punto_venta.length>0)
+                        VerDetalleSeleccion(res.punto_venta,cuenta,i,punto_venta)
+                }
+                HideLoader()
+            })
+            break            
+        case "T":
+            if(confirm('Desea finalizar la cuenta '+i+'?')){
+                ShowLoader() 
+                fetchFinalizarPedido(cuenta,function(res){
+                    if (res.err) {
+                        console.log(res.err)
+                    } else {
+                        console.log(res)
+                        inicio()
+                    }
+                    HideLoader()
+                })
 
+            }
+            break         
     }
+ 
 }
 
 function RotarCard(nro_cuentas,idBtn){
@@ -625,7 +654,7 @@ function VerDetalles(punto_venta,tipo){
             if (res.err) {
                 console.log(res.err)
             } else {
-                SeleccionarCuenta(res.punto_venta[0],tipo,punto_venta)
+                SeleccionarCuenta(res.punto_venta[0],tipo,1,punto_venta)
             } 
         })
     }else{
@@ -659,6 +688,25 @@ function Aceptar1(){
       
     }, 300);*/
 }
+
+function fetchFinalizarPedido(cuenta,callback){
+    const parametros = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            pedido_id : cuenta.pedido_id,
+        })
+    } 
+    fetch(URL+'/ws/finish_pedido', parametros)
+        .then(req => req.json())
+        .then(res => { 
+            callback(res)
+        })
+}
+
 
 function fetchNumeroSiguiente(cod_sucursal){
     var cod_documento = $("#cod_documento").val()

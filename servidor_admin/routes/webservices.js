@@ -186,6 +186,30 @@ router.post('/get_numero_siguiente', function (req, res) {
 	})
 });
 
+
+router.post('/finish_pedido', function (req, res) {
+    const input = req.body
+	//call Model account
+	const params = [input.pedido_id,req.app.locals.usuario]
+
+	const pedido = require('../models/ecaja.pedido')
+	//call Model.login function
+	pedido.finalizar_pedido(params, function (err, mensaje) {
+		if (err) return res.json({err})
+		return res.json({mensaje})
+	})
+
+	/*const comprobante = require('../models/ecaja.comprobante')
+	//call Model.login function
+
+
+
+	comprobante.getNumeroSiguiente(params, function (err, numero) {
+		if (err) return res.json({err})
+		return res.json({numero})
+	})*/
+});
+
 router.post('/save_ecaja_comprobante', function (req, res) {
     const input = req.body
 	//call Model account

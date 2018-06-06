@@ -1445,3 +1445,361 @@ END IF;
  RAISE;
 END;
 $$ LANGUAGE plpgsql;
+
+
+
+ 
+/*
+FUNCTION fn_SaveEmpresa
+Descripcion: Guarda o actualiza una empresa
+Parametros: necesarios para una empresa
+Ejecucion: SELECT * FROM  fn_SaveEmpresa('E001','SL','EMPRESA DE TODOS S.A.C','NINGUNA','NINGUNA',NULL,NULL,NULL,NULL,NULL,NULL,'ACTIVO','ADMIN')
+*/
+CREATE OR REPLACE FUNCTION fn_SaveEmpresa
+(
+ _cod_empresa     	varchar(30),
+ _nombre_corto    	varchar(100),
+ _razon_social	   	varchar(256),
+ _descripcion 		varchar(256),
+ _direccion 		varchar(120),
+ _telefono1 		varchar(12),
+ _telefono2 		varchar(12),
+ _correo 		varchar(100),
+ _pagina_web 		varchar(100),
+ _url_imagen 		varchar(355),
+ _url_imagen_impresion 	varchar(355),
+ _estado      		varchar(20),
+ _usuario 		varchar(50)
+)
+RETURNS TABLE 
+( 
+ cod_empresa     varchar(30),
+ nombre_corto    varchar(100),
+ razon_social	varchar(256),
+ descripcion varchar(256),
+ direccion varchar(120),
+ telefono1 varchar(12),
+ telefono2 varchar(12),
+ correo varchar(100),
+ pagina_web varchar(100),
+ url_imagen varchar(355),
+ url_imagen_impresion varchar(355),
+ estado      varchar(20),
+ creado_en TIMESTAMP,
+ usuario_creacion varchar(50),
+ actualizado_en TIMESTAMP,
+ usuario_actualizo varchar(50)
+) AS
+$BODY$
+BEGIN
+IF( not exists (select 1 from empresa e where e.cod_empresa= _cod_empresa))THEN
+INSERT INTO empresa(
+	cod_empresa,
+	nombre_corto,
+	razon_social,
+	descripcion,
+	direccion,
+	telefono1,
+	telefono2,
+	correo,
+	pagina_web,
+	url_imagen,
+	url_imagen_impresion,
+	estado,
+	creado_en,
+	usuario_creacion) 
+	
+VALUES(
+	_cod_empresa,
+	_nombre_corto,
+	_razon_social,
+	_descripcion,
+	_direccion,
+	_telefono1,
+	_telefono2,
+	_correo,
+	_pagina_web,
+	_url_imagen,
+	_url_imagen_impresion,
+	_estado,
+	now(),
+	_usuario);
+
+ELSE
+UPDATE empresa SET 
+ nombre_corto = _nombre_corto,
+ razon_social = _razon_social,
+ descripcion = _descripcion,
+ direccion = _direccion,
+ telefono1 = _telefono1,
+ telefono2 = _telefono2,
+ correo	= _correo,
+ pagina_web = _pagina_web,
+ url_imagen = _url_imagen,
+ url_imagen_impresion = _url_imagen_impresion,
+ estado	= _estado,
+ actualizado_en = now(),
+ usuario_actualizo = _usuario
+
+WHERE empresa.cod_empresa= _cod_empresa;
+END IF;
+
+ RETURN QUERY
+ SELECT *
+ FROM empresa e
+ WHERE e.cod_empresa= _cod_empresa
+ ORDER BY e.cod_empresa;
+ 
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$BODY$
+LANGUAGE 'plpgsql';
+
+
+/*
+FUNCTION fn_GetEmpresas
+Descripcion: Recupera todas las empresas
+Parametros: - tamano_pagina integer,numero_pagina integer
+Ejecucion: SELECT * FROM  fn_GetEmpresas(20,1,'')
+DROP: DROP FUNCTION fn_GetEmpresas
+(
+ tamano_pagina INTEGER,numero_pagina INTEGER,empresa_busqueda varchar(50)
+)
+*/
+
+ 
+CREATE OR REPLACE FUNCTION fn_GetEmpresas
+(
+ tamano_pagina INTEGER = NULL
+ ,numero_pagina INTEGER = NULL
+ ,empresa_busqueda varchar(50)=''
+)
+RETURNS TABLE 
+( 
+ cod_empresa     varchar(30),
+ nombre_corto    varchar(100),
+ razon_social	varchar(256),
+ descripcion varchar(256),
+ direccion varchar(120),
+ telefono1 varchar(12),
+ telefono2 varchar(12),
+ correo varchar(100),
+ pagina_web varchar(100),
+ url_imagen varchar(355),
+ url_imagen_impresion varchar(355),
+ estado      varchar(20),
+ creado_en TIMESTAMP,
+ usuario_creacion varchar(50),
+ actualizado_en TIMESTAMP,
+ usuario_actualizo varchar(50)
+) AS
+$BODY$
+DECLARE PageNumber BIGINT;
+ 
+BEGIN
+ /* ***************************************************************
+ Construct Custom paging parameter...
+ **************************************************************** */
+ IF (tamano_pagina IS NOT NULL AND numero_pagina IS NOT NULL) THEN
+  PageNumber := (tamano_pagina * (numero_pagina-1)); 
+ END IF; 
+  
+ /* ************************************************
+ Custome paging SQL Query construction.......
+ ************************************************ */
+ RETURN QUERY
+ SELECT  e.cod_empresa,
+	 e.nombre_corto,
+	 e.razon_social,
+	 e.descripcion,
+	 e.direccion,
+	 e.telefono1,
+	 e.telefono2,
+	 e.correo,
+	 e.pagina_web,
+	 e.url_imagen,
+	 e.url_imagen_impresion,
+	 e.estado,
+	 e.creado_en,
+	 e.usuario_creacion,
+	 e.actualizado_en,
+	 e.usuario_actualizo
+ FROM empresa e
+ WHERE e.nombre_corto like ('%' || empresa_busqueda || '%') or e.razon_social like ('%' || empresa_busqueda || '%')
+ ORDER BY e.cod_empresa
+ LIMIT tamano_pagina
+ OFFSET PageNumber; 
+ 
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$BODY$
+LANGUAGE 'plpgsql';
+
+
+/*
+FUNCTION fn_getRowsEmpresa
+Descripcion: Cantidad de filas que existen en la tabla
+Parametros:
+Ejecucion: SELECT fn_getRowsEmpresa('') AS Filas
+DROP: DROP FUNCTION IF EXISTS fn_getRowsEmpresa(varchar(50))
+*/
+CREATE OR REPLACE FUNCTION fn_getRowsEmpresa(empresa_busqueda varchar(50)='')
+RETURNS bigint AS $$
+DECLARE _respuesta bigint;
+BEGIN
+ RETURN (select count(*) from empresa e WHERE e.nombre_corto like ('%' || empresa_busqueda || '%') or e.razon_social like ('%' || empresa_busqueda || '%'));
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
+
+
+/*
+FUNCTION fn_DeleteEmpresa
+Descripcion: Eliminar empresa
+Parametros: cod_empresa
+Ejecucion: SELECT fn_DeleteEmpresa('E001') "RESPUESTA"
+DROP: DROP FUNCTION IF EXISTS fn_DeleteEmpresa(varchar(10))
+*/
+CREATE OR REPLACE FUNCTION fn_DeleteEmpresa(varchar(10))
+RETURNS varchar(100) AS $$
+DECLARE _respuesta varchar(100);
+BEGIN
+IF((select count(*) from empresa where empresa.cod_empresa= $1) = 1) THEN
+  delete from empresa
+	where empresa.cod_empresa= $1;
+	_respuesta='Se elimino correctamente';
+ELSE
+  _respuesta='No existe la empresa';
+END IF;
+
+ RETURN _respuesta;
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+
+
+/*
+FUNCTION fn_GetSucursales
+Descripcion: Recupera todas las sucursales de una empresa
+Parametros: - tamano_pagina integer,numero_pagina integer, cod_empresa varchar(30),sucursal_busqueda varchar(50)
+Ejecucion: SELECT * FROM  fn_GetSucursales(20,1,'','')
+Use DROP FUNCTION fn_getsucursales(integer,integer,character varying,character varying)
+*/
+
+CREATE OR REPLACE FUNCTION fn_GetSucursales
+(
+ tamano_pagina INTEGER = NULL
+ ,numero_pagina INTEGER = NULL
+ ,_cod_empresa varchar(30) = ''
+ ,sucursal_busqueda varchar(50)=''
+)
+RETURNS TABLE 
+( 
+	cod_sucursal         varchar(30),
+	nombre               varchar(100),
+	direccion            varchar(120),
+	telefono             varchar(12),
+	fax                  varchar(12),
+	correo               varchar(40),
+	tipo_sistema         varchar(10),
+	fecha_inicio         TIMESTAMP,
+	latitud              numeric(18,2),
+	longitud             numeric(18,2),
+	departamento         char(4),
+	provincia            char(4),
+	distrito             char(4),
+	estado               varchar(20),
+	creado_en 	     TIMESTAMP,
+	usuario_creacion     varchar(50),
+	actualizado_en       TIMESTAMP,
+	usuario_actualizo    varchar(50),
+	flagEmpresaSucursal  int
+) AS
+$BODY$
+DECLARE PageNumber BIGINT;
+ 
+BEGIN
+ /* ***************************************************************
+ Construct Custom paging parameter...
+ **************************************************************** */
+ IF (tamano_pagina IS NOT NULL AND numero_pagina IS NOT NULL) THEN
+  PageNumber := (tamano_pagina * (numero_pagina-1)); 
+ END IF; 
+  
+ /* ************************************************
+ Custome paging SQL Query construction.......
+ ************************************************ */
+ /*RETURN QUERY
+ SELECT s.*
+ FROM empresa e left join empresasucursal es on e.cod_empresa = es.cod_empresa and es.estado='ACTIVO' left join sucursal s on es.cod_sucursal = s.cod_sucursal 
+ WHERE s.nombre like ('%' || sucursal_busqueda || '%') or s.cod_sucursal like ('%' || sucursal_busqueda || '%')
+ ORDER BY s.cod_sucursal
+ LIMIT tamano_pagina
+ OFFSET PageNumber; */
+
+ RETURN QUERY
+ SELECT s.*, CASE WHEN es.cod_sucursal IS NULL OR es.estado!='ACTIVO' THEN -1 ELSE 0 END AS flagEmpresaSucursal
+ FROM sucursal s left join empresasucursal es on s.cod_sucursal = es.cod_sucursal and es.estado='ACTIVO' left join empresa e on e.cod_empresa = es.cod_empresa 
+ WHERE s.nombre like ('%' || sucursal_busqueda || '%') or s.cod_sucursal like ('%' || sucursal_busqueda || '%')
+ ORDER BY s.cod_sucursal
+ LIMIT tamano_pagina
+ OFFSET PageNumber;
+ 
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$BODY$
+LANGUAGE 'plpgsql';
+
+
+/*
+FUNCTION fn_getRowsSucursalesByEmpresa
+Descripcion: Cantidad de filas que existen en la tabla
+Parametros:
+Ejecucion: SELECT fn_getRowsSucursalesByEmpresa('','') AS Filas
+DROP: DROP FUNCTION IF EXISTS fn_getRowsSucursalesByEmpresa(varchar(30),varchar(50))
+*/
+CREATE OR REPLACE FUNCTION fn_getRowsSucursalesByEmpresa(_cod_empresa varchar(30)='',sucursal_busqueda varchar(50)='')
+RETURNS bigint AS $$
+DECLARE _respuesta bigint;
+BEGIN
+ RETURN (select count(*) from empresa e inner join empresasucursal es on e.cod_empresa = es.cod_empresa and es.estado='ACTIVO' inner join sucursal s on es.cod_sucursal = s.cod_sucursal 
+ WHERE s.nombre like ('%' || sucursal_busqueda || '%') or s.cod_sucursal like ('%' || sucursal_busqueda || '%'));
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+/*
+FUNCTION fn_SaveEmpresaSucursal
+Descripcion: Guarda la relacion empresa sucursal
+Parametros: cod_empresa, cod_sucursal
+Ejecucion: SELECT fn_SaveEmpresaSucursal('E001','LAST1','ACTIVO','ADMIN') "RESPUESTA"
+*/
+CREATE OR REPLACE FUNCTION fn_SaveEmpresaSucursal(varchar(30),varchar(30),varchar(20),varchar(50))
+RETURNS varchar(100) AS $$
+DECLARE _respuesta varchar(100);
+BEGIN
+IF((select count(*) from empresasucursal where empresasucursal.cod_empresa= $1 and empresasucursal.cod_sucursal = $2) = 1) THEN
+  INSERT INTO empresasucursal(cod_empresa,cod_sucursal,estado,creado_en,usuario_creacion)
+			     VALUES($1,$2,$3,now(),$4);		    
+ELSE
+  UPDATE empresasucursal SET estado=$3 WHERE empresasucursal.cod_empresa= $1 and empresasucursal.cod_sucursal = $2;
+END IF;
+ _respuesta='Se relaciono correctamente la sucursal con la empresa';
+
+ RETURN _respuesta;
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$ LANGUAGE plpgsql;

@@ -46,5 +46,13 @@ module.exports = {
             callback(err, r.rows)
         })
     },
+    finalizar_pedido: (params, callback) => {
+        db.query('SELECT * FROM ecaja.fn_FinishPedido($1,$2) AS Mensaje', params, (err, r) => {
+            if (err) {
+                return callback(err, undefined)
+            }
+            callback(err, r.rows[0].mensaje) 
+        })
+    }, 
     //...More functions
 }

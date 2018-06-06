@@ -24,6 +24,19 @@ actualizado_en TIMESTAMP,
 usuario_actualizo varchar(50),
  PRIMARY KEY (cod_empresa)
 );
+CREATE TABLE EmpresaSucursal--Omar
+( 
+ cod_empresa     varchar(30)  NOT NULL ,
+ cod_sucursal    varchar(30)  NOT NULL ,
+ estado      varchar(20) default 'ACTIVO',
+ creado_en TIMESTAMP NOT NULL,
+ usuario_creacion varchar(50),
+ actualizado_en TIMESTAMP,
+ usuario_actualizo varchar(50),
+ PRIMARY KEY (cod_empresa,cod_sucursal),
+ foreign key(cod_empresa) references empresa(cod_empresa),
+ foreign key(cod_sucursal) references sucursal(cod_sucursal)
+);
 CREATE TABLE sucursal--Omar
 ( 
 cod_sucursal         varchar(30)  NOT NULL ,
