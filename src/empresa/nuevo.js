@@ -44,7 +44,7 @@ function Ver(empresa,sucursales,paginas,pagina_actual) {
                             </div>
                             <div class="row">
                                 <div class="input-field col s6" style="display:${empresa ? "none":"display"}">
-                                    <input style="text-transform: uppercase;" id="cod_empresa" type="text" class="validate">
+                                    <input style="text-transform: uppercase;" id="cod_empresa" type="text" class="validate" value="${empresa ? empresa.cod_empresa: ''}">
                                     <label class="active" for="cod_empresa" id="lcod_empresa" data-error="" data-success="">Codigo Empresa</label>
                                 </div>
                                 <div class="input-field col s6">
@@ -380,6 +380,8 @@ function Guardar(e) {
                 alert("El tamaño de la imagen de impresion no es permitido debe tener las dimensiones de 192 X 192. Se procedera a guardar la informacion sin la imagen de impresion","Mensaje Informacion")
             if(Validar(props))
                 Guardar_(e,variable)
+            else   
+                return
         }
          
     })
@@ -398,7 +400,7 @@ function Guardar_(e,flag_dimension){
     const telefono1 = $("#telefono1").val().toUpperCase()
     const telefono2 = $("#telefono2").val().toUpperCase()
     const correo = $("#correo").val()
-    const pagina_actual = $("#pagina_web").val().toUpperCase()
+    const pagina_web = $("#pagina_web").val().toUpperCase()
     const url_imagen = document.getElementById('url_imagen').files.length > 0 ? document.getElementById('url_imagen').files[0].path : ''
     const imagen_anterior = e ? e.url_imagen : ''
     const url_imagen_impresion = flag_dimension!="ACEPTADO"?"":document.getElementById('url_imagen_impresion').files.length > 0 ? document.getElementById('url_imagen_impresion').files[0].path : ''
@@ -421,7 +423,7 @@ function Guardar_(e,flag_dimension){
             telefono1,
             telefono2,
             correo,
-            pagina_actual,
+            pagina_web,
             url_imagen,
             imagen_anterior,
             url_imagen_impresion,
