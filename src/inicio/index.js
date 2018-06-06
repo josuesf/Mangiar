@@ -603,6 +603,15 @@ function SeleccionarCuenta(cuenta,tipo,i,punto_venta){
             })
             break
         case "I":
+            ShowLoader()
+            fetchImprimirVoucher(cuenta,function(res){
+                if (res.err) {
+                    console.log(res.err)
+                } else {
+                    console.log(res) 
+                }
+                HideLoader()
+            }) 
             break        
         case "D":
             ShowLoader() 
@@ -688,6 +697,25 @@ function Aceptar1(){
       
     }, 300);*/
 }
+
+function fetchImprimirVoucher(cuenta,callback){
+    const parametros = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            numero : cuenta.numero,
+        })
+    } 
+    fetch(URL+'/ws/impresion_nota_venta', parametros)
+        .then(req => req.json())
+        .then(res => { 
+            callback(res)
+        })
+}
+
 
 function fetchFinalizarPedido(cuenta,callback){
     const parametros = {
