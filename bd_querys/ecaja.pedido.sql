@@ -203,8 +203,8 @@ BEGIN
  ,(select pro.imagen_url from eproductos.producto pro where pro.producto_id=d.producto_id) 
  FROM ecaja.pedido_detalle d 
  inner join ecaja.pedido p on d.pedido_id=p.pedido_id and p.estado_pedido='EN ATENCION'
- where d.cod_punto_venta=pcod_mesa;
- 
+ where d.cod_punto_venta=pcod_mesa
+ order by p.numero;
  EXCEPTION WHEN OTHERS THEN 
  RAISE;
 END;
