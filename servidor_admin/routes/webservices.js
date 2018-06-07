@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var md5 = require('md5')
+var printer = require("node-thermal-printer");
 //call Model account
 const producto = require('../models/eproductos.producto')
 // define the home page route
@@ -157,7 +158,8 @@ router.post('/confirmar_ecaja_pedido', function (req, res) {
 		const param = {
 			cod_mesa:input.cod_mesa,
 			usuario_registro:input.usuario_registro,
-			productos:input.productos
+			productos:input.productos,
+			razon_social:req.app.locals.datos_empresa.razon_social
 		}
 		//req.app.locals.impresoras_rutas
 		ImpresionComanda(param,pedido[0].numero,0,req.app.locals.impresoras_rutas)
@@ -276,17 +278,17 @@ function ImpresionComanda(param, numero, posicion_impresora,IMPRESORAS_RUTAS) {
 
 		if (productos.length > 0) {
 			//Impresion de Comanda
-			var printer = require("node-thermal-printer");
+			
 			printer.init({
 				type: 'epson',
 				interface: IMPRESORAS_RUTAS[posicion_impresora].valor_variable,//'tcp://192.168.1.188',
-				// removeSpecialCharacters: true,
+				removeSpecialCharacters: true,
 			});
 			//printer.setTypeFontB(); 
 			printer.alignCenter()
 			printer.bold(true);
-			printer.setTextQuadArea();
-			printer.println("LAST SUPPER RESTAURANT SAC")
+			printer.setTextDoubleHeight();
+			printer.println(param.razon_social)
 			printer.bold(false);
 			printer.setTextNormal();
 			printer.drawLine();
@@ -310,13 +312,13 @@ function ImpresionComanda(param, numero, posicion_impresora,IMPRESORAS_RUTAS) {
 				if (found) {
 					printer.tableCustom([
 						{ text: "(" + productos[i].cantidad + ")", align: "LEFT", width: 0.15 },
-						{ text: productos[i].nombre, align: "LEFT", width: 0.75 }
+						{ text: productos[i].nombre.substring(0, 30), align: "LEFT", width: 0.75 }
 					]);
 					productos_detalles = productos_detalles.filter(p => {
 						if (parseInt(p.id_referencia) == parseInt(productos[i].id_detalle)) {
 							printer.tableCustom([
 								{ text: "", align: "LEFT", width: 0.15 },
-								{ text: p.cantidad + " " + p.nombre, align: "LEFT", width: 0.75 }
+								{ text: p.cantidad + " " + p.nombre.substring(0, 30), align: "LEFT", width: 0.75 }
 							]);
 							return null
 						} else {
@@ -326,7 +328,7 @@ function ImpresionComanda(param, numero, posicion_impresora,IMPRESORAS_RUTAS) {
 				} else {
 					printer.tableCustom([
 						{ text: "(" + productos[i].cantidad + ")", align: "LEFT", width: 0.15 },
-						{ text: productos[i].nombre, align: "LEFT", width: 0.75 }
+						{ text: productos[i].nombre.substring(0, 30), align: "LEFT", width: 0.75 }
 					]);
 				}
 
@@ -337,14 +339,14 @@ function ImpresionComanda(param, numero, posicion_impresora,IMPRESORAS_RUTAS) {
 					console.error("Print failed", err);
 				} else {
 					if (IMPRESORAS_RUTAS.length > posicion_impresora + 1) {
-						ImpresionComanda(param, numero, posicion_impresora + 1)
+						ImpresionComanda(param, numero, posicion_impresora + 1,IMPRESORAS_RUTAS)
 					}
 					console.log("Print done");
 				}
 			});
 		} else {
 			if (IMPRESORAS_RUTAS.length > posicion_impresora + 1) {
-				ImpresionComanda(param, numero, posicion_impresora + 1)
+				ImpresionComanda(param, numero, posicion_impresora + 1,IMPRESORAS_RUTAS)
 			}
 		}
 	}
@@ -353,7 +355,6 @@ function ImpresionNotaVenta(param, numero,datos_empresa,impresora_principal) {
 	const productos = param.productos.filter(p => (parseInt(p.id_referencia) == 0 || !p.id_referencia))
 	var producto_detalles = param.productos.filter(p => parseInt(p.id_referencia) != 0)
 	//Impresion de Comanda
-	var printer = require("node-thermal-printer");
 	printer.init({
 		type: 'epson',
 		interface: impresora_principal,//'tcp://192.168.1.189',
@@ -387,20 +388,19 @@ function ImpresionNotaVenta(param, numero,datos_empresa,impresora_principal) {
 
 		printer.drawLine();
 		printer.bold(false);
-
 		for (i = 0; i < productos.length; i++) {
 			//Impresion de Nota de Venta
 			var found = producto_detalles.filter(p => parseInt(p.id_referencia) == parseInt(productos[i].id_detalle));
 			if (found) {
-				total_sub_productos = found.reduce((a, b) => a + (parseFloat(b.valor_precio) * b.cantidad), 0)
+				total_sub_productos = found.reduce((a, b) => a + (parseFloat(b.precio_valor) * b.cantidad), 0)
 				printer.tableCustom([
 					{ text: "(" + productos[i].cantidad + ")", align: "LEFT", width: 0.12 },
 					{ text: productos[i].nombre.substring(0, 25), align: "LEFT", width: 0.60 },
 					{
-						text: (parseFloat(productos[i].valor_precio) - total_sub_productos).toFixed(2),
+						text: (parseFloat(productos[i].precio_valor) - total_sub_productos).toFixed(2),
 						align: "LEFT", width: 0.12
 					},
-					{ text: (parseFloat(productos[i].valor_precio - total_sub_productos) * parseFloat(productos[i].cantidad)).toFixed(2), align: "RIGHT", width: 0.13 }
+					{ text: (parseFloat(productos[i].precio_valor - total_sub_productos) * parseFloat(productos[i].cantidad)).toFixed(2), align: "RIGHT", width: 0.13 }
 				]);
 				producto_detalles = producto_detalles.filter(p => {
 					if (parseInt(p.id_referencia) == parseInt(productos[i].id_detalle)) {
@@ -408,10 +408,10 @@ function ImpresionNotaVenta(param, numero,datos_empresa,impresora_principal) {
 							{ text: "", align: "LEFT", width: 0.12 },
 							{ text: p.cantidad + " " + p.nombre.substring(0, 25), align: "LEFT", width: 0.60 },
 							{
-								text: (parseFloat(p.valor_precio)).toFixed(2),
+								text: (parseFloat(p.precio_valor)).toFixed(2),
 								align: "LEFT", width: 0.12
 							},
-							{ text: (parseFloat(p.valor_precio) * parseFloat(p.cantidad)).toFixed(2), align: "RIGHT", width: 0.13 }
+							{ text: (parseFloat(p.precio_valor) * parseFloat(p.cantidad)).toFixed(2), align: "RIGHT", width: 0.13 }
 						]);
 						return null
 					} else {
@@ -423,25 +423,25 @@ function ImpresionNotaVenta(param, numero,datos_empresa,impresora_principal) {
 					{ text: "(" + productos[i].cantidad + ")", align: "LEFT", width: 0.12 },
 					{ text: productos[i].nombre.substring(0, 25), align: "LEFT", width: 0.60 },
 					{
-						text: (parseFloat(productos[i].valor_precio)).toFixed(2),
+						text: (parseFloat(productos[i].precio_valor)).toFixed(2),
 						align: "LEFT", width: 0.12
 					},
-					{ text: (parseFloat(productos[i].valor_precio) * parseFloat(productos[i].cantidad)).toFixed(2), align: "RIGHT", width: 0.13 }
+					{ text: (parseFloat(productos[i].precio_valor) * parseFloat(productos[i].cantidad)).toFixed(2), align: "RIGHT", width: 0.13 }
 				]);
 			}
 
 		}
 		printer.drawLine();
 		printer.alignRight();
-		printer.println("Total: " + (param.total).toFixed(2));
+		printer.println("Total: " + (parseFloat(param.total)).toFixed(2));
 		printer.newLine();
 		printer.drawLine();
 		printer.println("Mesa:" + param.cod_mesa + " - Atencion:" + param.usuario_registro)
 		printer.drawLine();
 		printer.println(datos_empresa.agradecimiento)
-		printer.println(datos_empresa.pagina_web)
-		printer.println(datos_empresa.correo)
-		printer.println(datos_empresa.telefono)
+		printer.println('Web: ' +datos_empresa.pagina_web)
+		printer.println('Correo: '+datos_empresa.correo)
+		printer.println('Telf: ' + datos_empresa.telefono)
 		printer.cut();
 		printer.execute(function (err) {
 			if (err) {
