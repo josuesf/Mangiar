@@ -98,89 +98,60 @@ function Ver(puntos_venta) {
 }
  
 function VerDetalleSeleccion(productos,cuenta,i,punto_venta){
+    console.log("productos relacionados")
+    console.log(productos)
     var el = yo`
     <div class="card">
         <div class="card-content">
-            <span class="card-title center">Detalle de la cuenta ${i} - mesa ${punto_venta.nombre_mesa}</span> 
+            <span class="card-title center">Detalle de la cuenta ${i} - ${punto_venta.nombre_mesa}</span> 
             <div class="row">
                 <div class="col m6">
-                   
-                <div id="stacked-cards-block" class="stackedcards stackedcards--animatable init">
-                    <div class="stackedcards-container">
-                        <div class="card horizontal">
-                            <div class="card-image">
-                                <img src="https://image.ibb.co/gQsq07/Adventure_and_Outdoor.png">
-                            </div>
-                            <div class="card-stacked">
-                                <div class="card-content">
-                                    <div class="row center">
-                                        <div class="col m4 s4">
-                                            <a href="javascript:void(0);" class="waves-effect waves-light btn white-text red"><i class="material-icons">remove</i></a>
-                                        </div>
-                                        <div class="input-field col m4 s4">
-                                            <input value="0" id="cantidad" type="number" class="validate">
-                                            <label class="active" for="cantidad">Cantidad</label>
-                                        </div>
-                                        <div class="col m4 s4">
-                                            <a href="javascript:void(0);" class="waves-effect waves-light btn white-text blue"><i class="material-icons">add</i></a>
-                                        </div>
-                                    </div>
-                                    <div class="row center"> 
-                                        <h6>Heading h6</h6>
-                                        <h6>Heading h6</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card horizontal">
-                            <div class="card-image">
-                                <img src="https://image.ibb.co/c9gTnn/Romantic_Gateways.png">
-                            </div>
-                            <div class="card-stacked">
-                                <div class="card-content">
-                                    <div class="row center">
-                                        <div class="col m4 s4">
-                                            <a href="javascript:void(0);" class="waves-effect waves-light btn white-text red"><i class="material-icons">remove</i></a>
-                                        </div>
-                                        <div class="input-field col m4 s4">
-                                            <input value="0" id="cantidad" type="number" class="validate">
-                                            <label class="active" for="cantidad">Cantidad</label>
-                                        </div>
-                                        <div class="col m4 s4">
-                                            <a href="javascript:void(0);" class="waves-effect waves-light btn white-text blue"><i class="material-icons">add</i></a>
-                                        </div>
-                                    </div>
-                                    <div class="row center"> 
-                                        <h6>Heading h6</h6>
-                                        <h6>Heading h6</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="stackedcards--animatable stackedcards-overlay top"><img src="assets/img/check.png"  width="auto" height="auto"/></div>
-                    
-                    <div class="stackedcards--animatable stackedcards-overlay left"><img src="assets/img/close.png" width="auto" height="auto"/></div>
-                </div>
-                <div class="global-actions">
-                    <div class="col m6 s6 center">
-                        <a class="left-action btn-floating btn-large waves-effect waves-light red" onclick=${()=>onActionLeft()}><i class="material-icons">close</i></a> 
-                    </div>
-                    <div class="col m6 s6 center"> 
-                        <a class="top-action btn-floating btn-large waves-effect waves-light green" onclick=${()=>onActionTop()}><i class="material-icons">check</i></a> 
-                    </div>
-                </div>
- 
+                    <div id="stacked-cards-block" class="stackedcards stackedcards--animatable init">
+                        <div class="stackedcards-container">
 
+                        ${productos.map(e=>yo`
+                            <div class="card">
+                                <div class="card-image">
+                                    <img  src="public/images/${e.imagen_url}" style="background-color: rgba(0, 0, 0, 0.45);">
+                                    <span class="card-title">${e.nombre}</span>
+                                    <a class="btn-floating halfway-fab waves-effect waves-light red" style="left: 24px;" onclick=${()=>onActionLeft()}><i class="material-icons">close</i></a>
+                                    <a class="btn-floating halfway-fab waves-effect waves-light green" onclick=${()=>onActionTop()}><i class="material-icons">check</i></a>
+                                </div> 
+                                <div class="card-content">
+                                    <br>
+                                    <div class="row center">
+                                        <div class="col m4 s4">
+                                            <a href="javascript:void(0);" class="waves-effect waves-light red-text"><i class="material-icons">remove</i></a>
+                                        </div>
+                                        <div class="col m4 s4">
+                                            <input value="${e.cantidad}" id="cantidad" type="number" class="validate" style="text-align: -webkit-center;text-align: center;" > 
+                                        </div>
+                                        <div class="col m4 s4">
+                                            <a href="javascript:void(0);" class="waves-effect waves-light blue-text"><i class="material-icons">add</i></a>
+                                        </div>
+                                    </div>
+                                    <div class="row center"> 
+                                        <h6 id="precioTotal">Precio Unitario : ${parseFloat(e.precio).toFixed(2)}</h6>
+                                    </div>
+                                </div> 
+                            </div>`
+                        )}
+        
+                        </div>
+                        <div class="stackedcards--animatable stackedcards-overlay top"><img src="assets/img/check.png"  width="auto" height="auto"/></div>
+                        
+                        <div class="stackedcards--animatable stackedcards-overlay left"><img src="assets/img/close.png" width="auto" height="auto"/></div>
+                    </div>
+                
                 </div>
                 <div class="col m6">
                     <div class="row center">
-                        <h5 class="header">Platillos y/o bebidas</h5>
+                        <strong><h5 class="header">Total : ${productos[0].cod_moneda=="PEN"?"S/ ":"USD"} ${productos[0].total} </h5></strong>
                     </div>
                     <div class="row">
                         <div class="collection">
                             ${productos.map(e=>yo`
-                            <a href="javascript:void();" class="collection-item" onclick=${()=>SeleccionarProducto(e)}>${e.nombre}</a>`
+                                <a href="javascript:void();" class="collection-item" onclick=${()=>SeleccionarProducto(e)}>${e.nombre}</a>`
                             )}
                         </div>
                     </div>
