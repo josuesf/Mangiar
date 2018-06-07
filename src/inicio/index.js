@@ -98,8 +98,6 @@ function Ver(puntos_venta) {
 }
  
 function VerDetalleSeleccion(productos,cuenta,i,punto_venta){
-    console.log("productos relacionados")
-    console.log(productos)
     var el = yo`
     <div class="card">
         <div class="card-content">
@@ -109,29 +107,26 @@ function VerDetalleSeleccion(productos,cuenta,i,punto_venta){
                     <div id="stacked-cards-block" class="stackedcards stackedcards--animatable init">
                         <div class="stackedcards-container">
 
-                        ${productos.map(e=>yo`
+                        ${productos.map((e,index)=>yo`
                             <div class="card">
                                 <div class="card-image">
                                     <img  src="public/images/${e.imagen_url}" style="background-color: rgba(0, 0, 0, 0.45);">
                                     <span class="card-title">${e.nombre}</span>
-                                    <a class="btn-floating halfway-fab waves-effect waves-light red" style="left: 24px;" onclick=${()=>onActionLeft()}><i class="material-icons">close</i></a>
-                                    <a class="btn-floating halfway-fab waves-effect waves-light green" onclick=${()=>onActionTop()}><i class="material-icons">check</i></a>
+                                    <a class="btn-floating btn-large halfway-fab waves-effect waves-light red" style="left: 24px;" onclick=${()=>RechazarProducto()}><i class="material-icons">close</i></a>
+                                    <a class="btn-floating btn-large halfway-fab waves-effect waves-light green"  onclick=${()=>AceptarProducto()}><i class="material-icons">check</i></a>
                                 </div> 
                                 <div class="card-content">
                                     <br>
                                     <div class="row center">
                                         <div class="col m4 s4">
-                                            <a href="javascript:void(0);" class="waves-effect waves-light red-text"><i class="material-icons">remove</i></a>
+                                            <a href="javascript:void(0);" class="waves-effect waves-light red-text" onclick="${()=>DisminuirCantidad(index)}"><i class="material-icons">remove</i></a>
                                         </div>
                                         <div class="col m4 s4">
-                                            <input value="${e.cantidad}" id="cantidad" type="number" class="validate" style="text-align: -webkit-center;text-align: center;" > 
+                                            <input value="${e.cantidad}" id="${index}" type="number" class="validate" style="text-align: -webkit-center;text-align: center;font-size: 45px;font-style: oblique;font-weight: bold;" > 
                                         </div>
                                         <div class="col m4 s4">
-                                            <a href="javascript:void(0);" class="waves-effect waves-light blue-text"><i class="material-icons">add</i></a>
+                                            <a href="javascript:void(0);" class="waves-effect waves-light blue-text" onclick="${()=>AumentarCantidad(index)}"><i class="material-icons">add</i></a>
                                         </div>
-                                    </div>
-                                    <div class="row center"> 
-                                        <h6 id="precioTotal">Precio Unitario : ${parseFloat(e.precio).toFixed(2)}</h6>
                                     </div>
                                 </div> 
                             </div>`
@@ -146,14 +141,41 @@ function VerDetalleSeleccion(productos,cuenta,i,punto_venta){
                 </div>
                 <div class="col m6">
                     <div class="row center">
-                        <strong><h5 class="header">Total : ${productos[0].cod_moneda=="PEN"?"S/ ":"USD"} ${productos[0].total} </h5></strong>
+                        <strong><h5 class="header">Platillos y/o bedidas</h5></strong>
                     </div>
-                    <div class="row">
-                        <div class="collection">
-                            ${productos.map(e=>yo`
-                                <a href="javascript:void();" class="collection-item" onclick=${()=>SeleccionarProducto(e)}>${e.nombre}</a>`
+                    <div class="row" id="listaDetalles">
+                        <ul class="collapsible" data-collapsible="expandable">
+                            ${productos.map((p,index,array)=>
+                                (p.id_referencia=='0' && array[index+1].id_referencia=='0')?
+                                yo`
+                                <li>  
+                                    <div class="collapsible-header" style="display: table;width: 100%;"> 
+                                        <a href="javascript:void();" class="collection-item right-align right" onclick=${()=>SeleccionarProducto(p)}>${p.nombre} <span class="new badge green right-align" data-badge-caption="${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
+                                    </div>
+                                </li>`:
+                                ((p.id_referencia=='0' && array[index+1].id_referencia!='0')?
+                                yo`
+                                <li>
+                                    <div class="collapsible-header" style="display: table;width: 100%;"> 
+                                        <a href="javascript:void();" class="collection-item right-align right" onclick=${()=>SeleccionarProducto(p)}>${p.nombre} <span class="new badge green right-align" data-badge-caption="${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
+                                    </div>
+                                    <div class="collapsible-body" style="display: table;width: 100%;">
+                                        <div class="collection right-align">
+                                            <a href="javascript:void();" class="collection-item">${array[index+1].nombre} <span class="new badge orange right-align" data-badge-caption="${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
+                                        </div>
+                                    </div>
+                                </li>
+                                `:
+                                yo``)
+                               
                             )}
-                        </div>
+
+                            <li>
+                                <div class="collapsible-header" style="display: table;width: 100%;"> 
+                                    <a href="javascript:void();" class="collection-item right-align right"><span class="new badge green right-align" data-badge-caption="Total : ${productos[0].cod_moneda=="PEN"?'S/ ':'USD'} ${parseFloat(productos[0].total).toFixed(2)}"></span></a>  
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>              
@@ -169,11 +191,11 @@ function VerDetalleSeleccion(productos,cuenta,i,punto_venta){
     </div>`;
     var container = document.getElementById('sub_navegador_content')
     empty(container).appendChild(sub_nav) 
-
-    Init()
- 
+    $(".collapsible-header").addClass("active");
+    $(".collapsible").collapsible({accordion: false});
+    Init() 
 }
-
+ 
  
 
 function VerSeleccionCuentas(cuentas,tipo,punto_venta){
@@ -443,6 +465,26 @@ function CambioTipoDoc(){
         $("#divApellidos").hide()
         $("#divRazonSocial").show()
     }
+}
+
+function AceptarProducto(){
+    onActionTop()
+}
+
+function RechazarProducto(){
+    onActionLeft()
+}
+
+function DisminuirCantidad(idCantidad){
+    var valor_inicial = parseInt($("input#"+idCantidad).val())
+    valor_inicial = valor_inicial - 1 
+    $("input#"+idCantidad).val(valor_inicial)
+}
+
+function AumentarCantidad(idCantidad){
+    var valor_inicial = parseInt($("input#"+idCantidad).val())
+    valor_inicial = valor_inicial + 1
+    $("input#"+idCantidad).val(valor_inicial)
 }
 
 function CambioDescuento(moneda){
