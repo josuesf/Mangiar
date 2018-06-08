@@ -264,7 +264,7 @@ $BODY$
 /*
 FUNCTION ecaja.fn_EliminarPedidoDetalle
 Descripcion: eliminar detalle de un pedido
-Ejecucion: SELECT * from ecaja.fn_EliminarPedidoDetalle(20,'ME11528402728720','ADMIN')
+Ejecucion: SELECT * from ecaja.fn_EliminarPedidoDetalle(26,'ME11528501881205','ADMIN')
  
 */
 
@@ -280,6 +280,8 @@ DECLARE
    _total decimal;
 BEGIN
 
+pcod_punto_venta = (SELECT DISTINCT (d.cod_punto_venta) FROM ecaja.pedido_detalle d WHERE d.pedido_id=ppedido_id);
+
 DELETE FROM ecaja.pedido_detalle WHERE (pedido_id=ppedido_id AND id_detalle=pid_detalle) OR (id_referencia=pid_detalle);
 
 _total = (SELECT SUM(d.cantidad*d.precio) FROM ecaja.pedido_detalle d WHERE d.pedido_id=ppedido_id);
@@ -288,7 +290,6 @@ _total = CASE WHEN _total IS NULL THEN 0 ELSE _total END;
 
 UPDATE  ecaja.pedido SET total = _total,usuario_actualizo=pusuario_registro,actualizado_en=now() WHERE pedido_id=ppedido_id;
 
-pcod_punto_venta = (SELECT DISTINCT (d.cod_punto_venta) FROM ecaja.pedido_detalle d WHERE d.pedido_id=ppedido_id);
 
 nro_cuentas  = (SELECT count(distinct d.pedido_id) from ecaja.pedido_detalle d inner join ecaja.pedido p on d.pedido_id=p.pedido_id WHERE d.cod_punto_venta = pcod_punto_venta AND p.estado_pedido='EN ATENCION');
  
