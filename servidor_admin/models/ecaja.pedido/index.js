@@ -54,6 +54,14 @@ module.exports = {
             callback(err, r.rows[0].mensaje) 
         })
     }, 
+    eliminar_pedido_detalle: (params, callback) => {
+        db.query('SELECT * FROM ecaja.fn_EliminarPedidoDetalle($1,$2,$3) AS Mensaje', params, (err, r) => {
+            if (err) {
+                return callback(err, undefined)
+            }
+            callback(err, r.rows[0].mensaje) 
+        })
+    }, 
     getPedidobyNumero:(params,callback)=>{
         db.query('select pedido_id,numero,nombre_cliente,cod_moneda,total,usuario_creacion from ecaja.pedido where numero=$1', params, (err, r) => {
             if (err) {

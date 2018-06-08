@@ -112,8 +112,8 @@ function VerDetalleSeleccion(productos,cuenta,i,punto_venta){
                                 <div class="card-image">
                                     <img  src="public/images/${e.imagen_url}" style="background-color: rgba(0, 0, 0, 0.45);">
                                     <span class="card-title">${e.nombre}</span>
-                                    <a class="btn-floating btn-large halfway-fab waves-effect waves-light red" style="left: 24px;" onclick=${()=>RechazarProducto()}><i class="material-icons">close</i></a>
-                                    <a class="btn-floating btn-large halfway-fab waves-effect waves-light green"  onclick=${()=>AceptarProducto()}><i class="material-icons">check</i></a>
+                                    <a class="btn-floating btn-large halfway-fab waves-effect waves-light red" style="left: 24px;" onclick=${()=>RechazarProducto(e,cuenta)}><i class="material-icons">close</i></a>
+                                    <a class="btn-floating btn-large halfway-fab waves-effect waves-light green"  onclick=${()=>AceptarProducto(e,cuenta)}><i class="material-icons">check</i></a>
                                 </div> 
                                 <div class="card-content">
                                     <br>
@@ -141,38 +141,47 @@ function VerDetalleSeleccion(productos,cuenta,i,punto_venta){
                 </div>
                 <div class="col m6">
                     <div class="row center">
-                        <strong><h5 class="header">Platillos y/o bedidas</h5></strong>
+                        <strong><h5 class="header">Platillos y/o bebidas</h5></strong>
                     </div>
                     <div class="row" id="listaDetalles">
                         <ul class="collapsible" data-collapsible="expandable">
                             ${productos.map((p,index,array)=>
-                                (p.id_referencia=='0' && array[index+1].id_referencia=='0')?
-                                yo`
-                                <li>  
-                                    <div class="collapsible-header" style="display: table;width: 100%;"> 
-                                        <a href="javascript:void();" class="collection-item right-align right" onclick=${()=>SeleccionarProducto(p)}>${p.nombre} <span class="new badge green right-align" data-badge-caption="${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
-                                    </div>
-                                </li>`:
-                                ((p.id_referencia=='0' && array[index+1].id_referencia!='0')?
-                                yo`
-                                <li>
-                                    <div class="collapsible-header" style="display: table;width: 100%;"> 
-                                        <a href="javascript:void();" class="collection-item right-align right" onclick=${()=>SeleccionarProducto(p)}>${p.nombre} <span class="new badge green right-align" data-badge-caption="${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
-                                    </div>
-                                    <div class="collapsible-body" style="display: table;width: 100%;">
-                                        <div class="collection right-align">
-                                            <a href="javascript:void();" class="collection-item">${array[index+1].nombre} <span class="new badge orange right-align" data-badge-caption="${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
+                                array[index+1]!=undefined?
+                                    ((p.id_referencia=='0' && array[index+1].id_referencia=='0')?
+                                    yo`
+                                    <li>  
+                                        <div class="collapsible-header" style="display: table;width: 100%;"> 
+                                            <a href="javascript:void();" class="collection-item right-align right col s12 col m12" onclick=${()=>SeleccionarProducto(p)}><span class="left">${p.nombre}</span> <span class="new badge green right-align" data-badge-caption="${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
                                         </div>
-                                    </div>
-                                </li>
-                                `:
-                                yo``)
+                                    </li>`:
+                                    ((p.id_referencia=='0' && array[index+1].id_referencia!='0')?
+                                    yo`
+                                    <li>
+                                        <div class="collapsible-header" style="display: table;width: 100%;"> 
+                                            <a href="javascript:void();" class="collection-item right-align right col s12 col m12" onclick=${()=>SeleccionarProducto(p)}><span class="left">${p.nombre}</span> <span class="new badge green right-align" data-badge-caption="${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
+                                        </div>
+                                        <div class="collapsible-body" style="display: table;width: 100%;">
+                                            <div class="collection right-align">
+                                                <a href="javascript:void();" class="collection-item">${array[index+1].nombre} <span class="new badge orange right-align" data-badge-caption="${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    `:
+                                    yo``)):
+                                    yo`
+                                    <li>  
+                                        <div class="collapsible-header" style="display: table;width: 100%;"> 
+                                            <a href="javascript:void();" class="collection-item right-align right col s12 col m12" onclick=${()=>SeleccionarProducto(p)}><span class="left">${p.nombre}</span> <span class="new badge green right-align" data-badge-caption="${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
+                                        </div>
+                                    </li>`
                                
                             )}
 
                             <li>
                                 <div class="collapsible-header" style="display: table;width: 100%;"> 
-                                    <a href="javascript:void();" class="collection-item right-align right"><span class="new badge green right-align" data-badge-caption="Total : ${productos[0].cod_moneda=="PEN"?'S/ ':'USD'} ${parseFloat(productos[0].total).toFixed(2)}"></span></a>  
+                                    <a href="javascript:void();" class="collection-item right-align right">
+                                        Total : ${productos[0].cod_moneda=="PEN"?'S/ ':'USD'} ${parseFloat(productos[0].total).toFixed(2)}
+                                    </a>  
                                 </div>
                             </li>
                         </ul>
@@ -196,7 +205,51 @@ function VerDetalleSeleccion(productos,cuenta,i,punto_venta){
     Init() 
 }
  
- 
+function ActualizarDetallePedido(productos){
+    var el =yo`<ul class="collapsible" data-collapsible="expandable">
+            ${productos.map((p,index,array)=>
+                array[index+1]!=undefined?
+                    ((p.id_referencia=='0' && array[index+1].id_referencia=='0')?
+                    yo`
+                    <li>  
+                        <div class="collapsible-header" style="display: table;width: 100%;"> 
+                            <a href="javascript:void();" class="collection-item right-align right col s12 col m12" onclick=${()=>SeleccionarProducto(p)}><span class="left">${p.nombre}</span> <span class="new badge green right-align" data-badge-caption="${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
+                        </div>
+                    </li>`:
+                    ((p.id_referencia=='0' && array[index+1].id_referencia!='0')?
+                    yo`
+                    <li>
+                        <div class="collapsible-header" style="display: table;width: 100%;"> 
+                            <a href="javascript:void();" class="collection-item right-align right col s12 col m12" onclick=${()=>SeleccionarProducto(p)}><span class="left">${p.nombre}</span> <span class="new badge green right-align" data-badge-caption="${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
+                        </div>
+                        <div class="collapsible-body" style="display: table;width: 100%;">
+                            <div class="collection right-align">
+                                <a href="javascript:void();" class="collection-item">${array[index+1].nombre} <span class="new badge orange right-align" data-badge-caption="${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
+                            </div>
+                        </div>
+                    </li>
+                    `:
+                    yo``)):
+                    yo`
+                    <li>  
+                        <div class="collapsible-header" style="display: table;width: 100%;"> 
+                            <a href="javascript:void();" class="collection-item right-align right col s12 col m12" onclick=${()=>SeleccionarProducto(p)}><span class="left">${p.nombre}</span> <span class="new badge green right-align" data-badge-caption="${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
+                        </div>
+                    </li>`
+            
+            )}
+
+            <li>
+                <div class="collapsible-header" style="display: table;width: 100%;"> 
+                    <a href="javascript:void();" class="collection-item right-align right">
+                        Total : ${productos[0].cod_moneda=="PEN"?'S/ ':'USD'} ${parseFloat(productos[0].total).toFixed(2)}
+                    </a>  
+                </div>
+            </li>
+        </ul>`
+    var container = document.getElementById('listaDetalles')
+    empty(container).appendChild(el);
+}
 
 function VerSeleccionCuentas(cuentas,tipo,punto_venta){
     var el = yo`
@@ -471,8 +524,26 @@ function AceptarProducto(){
     onActionTop()
 }
 
-function RechazarProducto(){
-    onActionLeft()
+function RechazarProducto(e,cuenta){
+
+    fetchEliminarDetallePedido(e.pedido_id,e.id_detalle,function(res){
+        if (res.err) {
+            console.log(res.err)
+        } else {
+            onActionLeft()
+            fetchPedidoDetalle(cuenta,function(res){
+                if (res.err) {
+                    console.log(res.err)
+                } else {
+                    console.log(res)
+                    if(res.punto_venta.length>0)
+                        ActualizarDetallePedido(res.punto_venta)
+                    else
+                        inicio()
+                }
+            })
+        }
+    }) 
 }
 
 function DisminuirCantidad(idCantidad){
@@ -709,6 +780,25 @@ function Aceptar1(){
       $('.cube').append(lastCard);
       
     }, 300);*/
+}
+
+function fetchEliminarDetallePedido(pedido_id,id_detalle,callback){
+    const parametros = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            id_detalle,
+            pedido_id
+        })
+    } 
+    fetch(URL+'/ws/eliminar_pedido_detalle', parametros)
+        .then(req => req.json())
+        .then(res => { 
+            callback(res)
+        })
 }
 
 function fetchImprimirVoucher(cuenta,callback){
