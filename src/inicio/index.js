@@ -125,7 +125,7 @@ function VerDetalleSeleccion(productos,cuenta,i,punto_venta){
                                                 <a href="javascript:void(0);" class="waves-effect waves-light red-text" onclick="${()=>DisminuirCantidad(index)}"><i class="material-icons">remove</i></a>
                                             </div>
                                             <div class="col m4 s4">
-                                                <input value="${p.cantidad}" id="${index}" type="number" class="validate" style="text-align: -webkit-center;text-align: center;font-size: 45px;font-style: oblique;font-weight: bold;" > 
+                                                <input value="${p.cantidad}" id="${index}" type="number" class="validate" style="text-align: -webkit-center;text-align: center;font-size: 45px;font-style: oblique;font-weight: bold;" onkeyup=${()=>CambioCantidad(index)}  onchange=${()=>CambioCantidad(index)}> 
                                             </div>
                                             <div class="col m4 s4">
                                                 <a href="javascript:void(0);" class="waves-effect waves-light blue-text" onclick="${()=>AumentarCantidad(index)}"><i class="material-icons">add</i></a>
@@ -156,7 +156,7 @@ function VerDetalleSeleccion(productos,cuenta,i,punto_venta){
                                                 <a href="javascript:void(0);" class="waves-effect waves-light red-text" onclick="${()=>DisminuirCantidad(index)}"><i class="material-icons">remove</i></a>
                                             </div>
                                             <div class="col m4 s4">
-                                                <input value="${p.cantidad}" id="${index}" type="number" class="validate" style="text-align: -webkit-center;text-align: center;font-size: 45px;font-style: oblique;font-weight: bold;" > 
+                                                <input value="${p.cantidad}" id="${index}" type="number" class="validate" style="text-align: -webkit-center;text-align: center;font-size: 45px;font-style: oblique;font-weight: bold;"  onkeyup=${()=>CambioCantidad(index)} onchange=${()=>CambioCantidad(index)}> 
                                             </div>
                                             <div class="col m4 s4">
                                                 <a href="javascript:void(0);" class="waves-effect waves-light blue-text" onclick="${()=>AumentarCantidad(index)}"><i class="material-icons">add</i></a>
@@ -187,7 +187,7 @@ function VerDetalleSeleccion(productos,cuenta,i,punto_venta){
                                                     <a href="javascript:void(0);" class="waves-effect waves-light red-text" onclick="${()=>DisminuirCantidad(index)}"><i class="material-icons">remove</i></a>
                                                 </div>
                                                 <div class="col m4 s4">
-                                                    <input value="${p.cantidad}" id="${index}" type="number" class="validate" style="text-align: -webkit-center;text-align: center;font-size: 45px;font-style: oblique;font-weight: bold;" > 
+                                                    <input value="${p.cantidad}" id="${index}" type="number" class="validate" style="text-align: -webkit-center;text-align: center;font-size: 45px;font-style: oblique;font-weight: bold;"  onkeyup=${()=>CambioCantidad(index)} onchange=${()=>CambioCantidad(index)}> 
                                                 </div>
                                                 <div class="col m4 s4">
                                                     <a href="javascript:void(0);" class="waves-effect waves-light blue-text" onclick="${()=>AumentarCantidad(index)}"><i class="material-icons">add</i></a>
@@ -630,6 +630,13 @@ function SeleccionarProducto(idCard,productos){
 
 }
 
+function CambioCantidad(idCantidad){
+    var valor_inicial = parseInt($("#"+idCantidad).val())
+    if(valor_inicial<=0){
+        $("#"+idCantidad).val(1)
+    }
+}
+
 function CambioSerie(cod_sucursal){ 
     fetchNumeroSiguiente(cod_sucursal)
 }
@@ -716,8 +723,10 @@ function ConfirmarCantidad(e,cuenta,idCantidad){
 
 function DisminuirCantidad(idCantidad){
     var valor_inicial = parseInt($("input#"+idCantidad).val())
-    valor_inicial = valor_inicial - 1 
-    $("input#"+idCantidad).val(valor_inicial)
+    if(valor_inicial>1){
+        valor_inicial = valor_inicial - 1 
+        $("input#"+idCantidad).val(valor_inicial)
+    } 
 }
 
 function AumentarCantidad(idCantidad){

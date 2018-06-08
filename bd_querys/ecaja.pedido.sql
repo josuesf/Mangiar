@@ -315,7 +315,7 @@ RETURN 'El detalle fue eliminado correctamente';
  RAISE;
 END;
 $BODY$
-  LANGUAGE plpgsql VOLATILE
+  LANGUAGE plpgsql VOLATILE;
 
 
 
