@@ -256,13 +256,15 @@ function resetOverlayRight() {
     }
 };
 
-function onSwipeLeft() {
+function onSwipeLeft(ob) {
     removeNoTransition();
     transformUi(-1000, 0, 0, currentElementObj);
     if(useOverlays){
         transformUi(-1000, 0, 0, leftObj); //Move leftOverlay
         transformUi(-1000, 0, 0, topObj); //Move topOverlay
         resetOverlayLeft();
+        if (ob!=undefined)
+            ob.style.zIndex = '1'
     }
     currentPosition = currentPosition + 1;
     updateUi();
@@ -418,13 +420,15 @@ function Init(){
     },150);
 }
 
-function onSwipeTop() {
+function onSwipeTop(ob) {
     removeNoTransition();
     transformUi(0, -1000, 0, currentElementObj);
     if(useOverlays){
         transformUi(0, -1000, 0, leftObj); //Move leftOverlay
         transformUi(0, -1000, 0, topObj); //Move topOverlay
         resetOverlays();
+        if (ob!=undefined)
+            ob.style.zIndex = '1'
     }
 
     currentPosition = currentPosition + 1;
@@ -444,7 +448,7 @@ function onActionTop() {
         }
         
         setTimeout(function(){
-            onSwipeTop();
+            onSwipeTop(topObj);
             resetOverlays();
         },300); //wait animations end
     }
@@ -461,7 +465,7 @@ function onActionLeft() {
         }
         
         setTimeout(function() {
-            onSwipeLeft();
+            onSwipeLeft(leftObj);
             resetOverlayLeft();
         },300);
     }

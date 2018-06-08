@@ -207,16 +207,19 @@ router.post('/finish_pedido', function (req, res) {
 		if (err) return res.json({err})
 		return res.json({mensaje})
 	})
+});
 
-	/*const comprobante = require('../models/ecaja.comprobante')
+router.post('/eliminar_pedido_detalle', function (req, res) {
+    const input = req.body
+	//call Model account
+	const params = [input.pedido_id,input.id_detalle,req.app.locals.usuario]
+
+	const pedido = require('../models/ecaja.pedido')
 	//call Model.login function
-
-
-
-	comprobante.getNumeroSiguiente(params, function (err, numero) {
+	pedido.eliminar_pedido_detalle(params, function (err, mensaje) {
 		if (err) return res.json({err})
-		return res.json({numero})
-	})*/
+		return res.json({mensaje})
+	})
 });
 
 router.post('/save_ecaja_comprobante', function (req, res) {
