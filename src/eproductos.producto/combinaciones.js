@@ -553,8 +553,8 @@ function VerAgregarItem(item,i){
                 var data = {}
                 for(var i = 0 ; i < pro.length ; i++){
                     var p = pro[i]
-                    midata[p.nombre] = p
-                    data[p.nombre] = null
+                    midata[p.nombre+" - "+p.producto_id] = p
+                    data[p.nombre+" - "+p.producto_id] = null
                 }
                 $('input.autocomplete').autocomplete({
                     data,
