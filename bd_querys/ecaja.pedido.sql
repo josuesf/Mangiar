@@ -246,6 +246,7 @@ IF nro_cuentas = 0 THEN
 
 	UPDATE punto_venta SET 
 	estado_accion='LIBRE',
+	usuario_accion = null,
 	usuario_actualizo = pusuario_registro,
 	actualizado_en = now()
 	WHERE cod_punto_venta = pcod_punto_venta;
@@ -256,7 +257,7 @@ RETURN 'El pedido fue actualizado correctamente';
  RAISE;
 END;
 $BODY$
-  LANGUAGE plpgsql VOLATILE
+  LANGUAGE plpgsql VOLATILE;
 
 
 
