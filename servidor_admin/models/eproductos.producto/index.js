@@ -162,6 +162,7 @@ module.exports = {
         query_db+="(select count(*) from eproductos.combinaciones_producto cb where cb.producto_id=p.producto_id) detalles,"
         query_db+="(select count(*) from eproductos.precios_producto prep where prep.producto_id=p.producto_id) precios"
         query_db+=" from eproductos.producto p where estado='ACTIVO' "
+        console.log(query_db);
         db.query(query_db, params, (err, r) => {
             if (err) {
                 return callback(err.name + ":" + err.code + " " + err.routine, undefined)

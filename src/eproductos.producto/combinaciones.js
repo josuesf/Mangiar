@@ -529,6 +529,8 @@ function VerAgregarItem(item,i){
                 var nombre = document.getElementById('nombre_producto_sel').value
                 document.getElementById('nombre_producto').value = nombre;
                 document.getElementById('lnombre_producto').classList.add('active');
+                document.getElementById('precio').value = parseFloat(selpe.valor_precio).toFixed(2);
+                document.getElementById('lprecio').classList.add('active');
                 $('#modalSeleccionarProducto').modal('close')
             }
         }

@@ -3,6 +3,7 @@ var router = express.Router();
 var md5 = require('md5')
 //call Model account
 const combinacion = require('../models/eproductos.combinacion')
+const pro = require('../models/eproductos.producto')
 
 router.post('/delete_combinacion_detalle', function (req, res) {
 	input = req.body

@@ -9,7 +9,7 @@ router.post('/get_all_productos', function (req, res) {
 	//set params
 	const params = []
 	//call Model.login function
-	producto.getAll(params, function (err, productos) {
+	producto.get_productos_todos(params, function (err, productos) {
 		if (err) return res.json({ err })
 		return res.json({ productos })
 	})
