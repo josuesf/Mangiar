@@ -246,6 +246,7 @@ IF nro_cuentas = 0 THEN
 
 	UPDATE punto_venta SET 
 	estado_accion='LIBRE',
+	usuario_accion = null,
 	usuario_actualizo = pusuario_registro,
 	actualizado_en = now()
 	WHERE cod_punto_venta = pcod_punto_venta;
@@ -263,7 +264,7 @@ $BODY$
 /*
 FUNCTION ecaja.fn_EliminarPedidoDetalle
 Descripcion: eliminar detalle de un pedido
-Ejecucion: SELECT * from ecaja.fn_EliminarPedidoDetalle(26,'ME11528066438752','ADMIN')
+Ejecucion: SELECT * from ecaja.fn_EliminarPedidoDetalle(20,'ME11528402728720','ADMIN')
  
 */
 
@@ -279,7 +280,7 @@ DECLARE
    _total decimal;
 BEGIN
 
-DELETE FROM ecaja.pedido_detalle WHERE pedido_id=ppedido_id AND id_detalle=pid_detalle;
+DELETE FROM ecaja.pedido_detalle WHERE (pedido_id=ppedido_id AND id_detalle=pid_detalle) OR (id_referencia=pid_detalle);
 
 _total = (SELECT SUM(d.cantidad*d.precio) FROM ecaja.pedido_detalle d WHERE d.pedido_id=ppedido_id);
 
@@ -302,12 +303,53 @@ IF nro_cuentas = 0 THEN
 	
 	UPDATE punto_venta SET 
 	estado_accion='LIBRE',
+	usuario_accion = null,
 	usuario_actualizo = pusuario_registro,
 	actualizado_en = now()
 	WHERE cod_punto_venta = pcod_punto_venta;
 END IF;
 
 RETURN 'El detalle fue eliminado correctamente';
+
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+
+
+
+
+
+/*
+FUNCTION ecaja.fn_ActualizarCantidadPedidoDetalle
+Descripcion: actualiza cantidad del detalle de un pedido
+Ejecucion: SELECT * from ecaja.fn_ActualizarCantidadPedidoDetalle(20,'ME11528402693570',24,'ADMIN')
+ 
+*/
+
+CREATE OR REPLACE FUNCTION ecaja.fn_ActualizarCantidadPedidoDetalle( 
+    ppedido_id integer,
+    pid_detalle varchar(20),
+    pcantidad int,
+    pusuario_registro varchar(50))
+RETURNS character varying AS
+$BODY$ 
+DECLARE
+   nro_cuentas int;
+   pcod_punto_venta varchar(30);
+   _total decimal;
+BEGIN
+
+UPDATE ecaja.pedido_detalle SET cantidad=pcantidad WHERE (pedido_id=ppedido_id AND id_detalle=pid_detalle);
+
+_total = (SELECT SUM(d.cantidad*d.precio) FROM ecaja.pedido_detalle d WHERE d.pedido_id=ppedido_id);
+
+_total = CASE WHEN _total IS NULL THEN 0 ELSE _total END;
+
+UPDATE  ecaja.pedido SET total = _total,usuario_actualizo=pusuario_registro,actualizado_en=now() WHERE pedido_id=ppedido_id;
+ 
+RETURN 'El detalle fue actualizado correctamente';
 
  EXCEPTION WHEN OTHERS THEN 
  RAISE;

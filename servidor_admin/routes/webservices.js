@@ -222,6 +222,19 @@ router.post('/eliminar_pedido_detalle', function (req, res) {
 	})
 });
 
+router.post('/actualizar_cantidad_pedido_detalle', function (req, res) {
+    const input = req.body
+	//call Model account
+	const params = [input.pedido_id,input.id_detalle,input.cantidad,req.app.locals.usuario]
+
+	const pedido = require('../models/ecaja.pedido')
+	//call Model.login function
+	pedido.actualizar_cantidad_pedido_detalle(params, function (err, mensaje) {
+		if (err) return res.json({err})
+		return res.json({mensaje})
+	})
+});
+
 router.post('/save_ecaja_comprobante', function (req, res) {
     const input = req.body
 	//call Model account
