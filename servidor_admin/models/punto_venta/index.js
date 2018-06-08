@@ -31,8 +31,8 @@ module.exports = {
         })
     },
     getActivos:(params,callback)=>{
-        const nro_cuentas = "(SELECT count(distinct d.pedido_id) from ecaja.pedido_detalle d inner join ecaja.pedido p on d.pedido_id=p.pedido_id where d.cod_punto_venta=pv.cod_punto_venta)"
-        db.query('SELECT cod_punto_venta "cod_mesa",nombre_punto "nombre_mesa",estado_accion,'+nro_cuentas+' "Nro_Cuentas",usuario_accion "Mesero" FROM punto_venta pv where estado=$1', ["ACTIVO"], (err, r) => {
+        const nro_cuentas = "(SELECT count(distinct d.pedido_id) from ecaja.pedido_detalle d inner join ecaja.pedido p on d.pedido_id=p.pedido_id and p.estado_pedido!='TERMINADO' where d.cod_punto_venta=pv.cod_punto_venta)"
+        db.query('SELECT cod_punto_venta "cod_mesa",nombre_punto "nombre_mesa",estado_accion,'+nro_cuentas+' "Nro_Cuentas",usuario_accion "Mesero" FROM punto_venta pv where estado=$1 order by creado_en', ["ACTIVO"], (err, r) => {
             if (err) {
                 return callback(err.name+":"+err.code+" "+err.routine, undefined)
             }
@@ -48,7 +48,7 @@ module.exports = {
         })
     },
     getPedidoDetalle:(params,callback)=>{
-        db.query('SELECT d.*, p.*,pers.*,pr.* FROM ecaja.pedido_detalle d inner join ecaja.pedido p on d.pedido_id=p.pedido_id left join eproductos.producto pr on d.producto_id=pr.producto_id left join persona pers on p.cod_persona=pers.cod_persona where d.pedido_id=$1 and d.cod_punto_venta=$2', params, (err, r) => {
+        db.query('SELECT d.id_detalle,d.producto_id,d.id_referencia,d.almacen_cod,d.cantidad,d.cod_unidad,d.descripcion_detalle,d.precio,d.cod_punto_venta, p.*,pers.*,pr.* FROM ecaja.pedido_detalle d inner join ecaja.pedido p on d.pedido_id=p.pedido_id left join eproductos.producto pr on d.producto_id=pr.producto_id left join persona pers on p.cod_persona=pers.cod_persona where d.pedido_id=$1 and d.cod_punto_venta=$2 order by d.id_detalle,d.id_referencia', params, (err, r) => {
             if (err) {
                 return callback(err.name+":"+err.code+" "+err.routine, undefined)
             } 

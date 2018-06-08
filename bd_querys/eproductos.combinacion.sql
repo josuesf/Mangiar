@@ -33,7 +33,7 @@ CREATE OR REPLACE FUNCTION eproductos.fn_DeleteCombinacion(_combinacion_id INTEG
 RETURNS varchar(100) AS $$
 DECLARE _respuesta varchar(100);
 BEGIN
-IF((select count(*) from eproductos.combinacion where combinacion_id=_combinacion_id) = 1) THEN
+IF((select count(*) from eproductos.combinacion where combinacion_id=_combinacion_id) = 1 AND (select count(*) from eproductos.combinaciones_producto where combinacion_id=_combinacion_id) = 0) THEN
   delete from eproductos.combinacion_detalle where eproductos.combinacion_detalle.combinacion_id=_combinacion_id;
   delete from eproductos.combinacion where eproductos.combinacion.combinacion_id=_combinacion_id;
 	_respuesta='Se elimino correctamente';

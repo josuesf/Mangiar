@@ -43,13 +43,16 @@ function Ver(combinaciones, combinaciones_producto, producto_id) {
         <div id="modalAgregarItem" class="modal col s6 modal-fixed-footer">
             
         </div>
+        <div id="modalSeleccionarProducto" class="modal col s6 modal-fixed-footer">
+            
+        </div>
         <br>
         <div class="col s8">
             
             <div class="row">
                 <a style="font-size:8pt;" 
                 class="waves-effect waves-light btn white teal-text text-accent-4" 
-                onclick="${() => VerCombinaciones()}">
+                onclick="${() => VerCombinaciones()}" id="editarCombinaciones">
                 <i class="material-icons left teal-text text-accent-4">edit</i> Editar Combinaciones</a>
             </div>
             <div class="row">
@@ -123,7 +126,9 @@ function EliminarCombinacion(combinacion){
                     $('#text_error').text(res.err)
                     $('#box_error').show()
                 } else {
-                    console.log('Se elimino hay q hacer algo')
+                    $('#modalNuevaCombinacion').modal('close');
+                    $('#modalCombinaciones').modal('close');
+                   combinaciones(PRODUCTO_ID_G, true)
                 }
                 HideLoader()
             })
@@ -208,6 +213,8 @@ function hideAlMenos(){
         cant.classList.remove('hide')
     }
 }
+
+
 
 function VerNuevaCombinacion(combinacion){
     $('#modalNuevaCombinacion').modal('open');
@@ -316,6 +323,8 @@ function GuardarCombinacion(combinacion){
                 $('#box_error').show()
             } else {
                 $('#modalNuevaCombinacion').modal('close');
+                $('#modalCombinaciones').modal('close');
+                combinaciones(PRODUCTO_ID_G,true);
             }
             HideLoader()
         })
@@ -423,11 +432,12 @@ function VerAgregarItem(item,i){
         <div class="modal-content">
             <h5>${item?'Editar':'Agregar'} Item</h5>
             <div class="row">
-                <div class="col s12">
-                    <div class="input-field col s12">
-                        <input type="text" value="${item? item.nombre_producto:''}" id="nombre_producto" style="text-transform:uppercase" class="autocomplete">
+                    <div class="input-field col s6">
+                        <input type="text" value="${item? item.nombre_producto:''}" id="nombre_producto" style="text-transform:uppercase">
                         <label for="nombre_producto" class="active" id="lnombre_producto">Nombre del item</label>
                     </div>
+                <div class="col s6">
+                    <a href="#!" onclick="${()=>VerSeleccionarProducto()}" class="waves-effect waves-green teal accent-4 btn">Sel. Producto</a>
                 </div>
             </div>
             <div class="row">
@@ -452,7 +462,7 @@ function VerAgregarItem(item,i){
     function guardarItem(item){
         var props = {
             'nombre_producto': {},
-            'precio': {number_msg:'Ingrese monto valido'},
+            'precio': {}
         }
         if (!Validar(props))
             return;
@@ -482,33 +492,76 @@ function VerAgregarItem(item,i){
     empty(container).appendChild(el);
     $('select').material_select();
     var midata = {}
-    const parametros = {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({})
-        
-    }
     
-    fetch(URL+'/eproductos_producto/get_all_productos', parametros)
-        .then(req => req.json())
-        .then(res => {
-            var pro = res.productos
-            var data = {}
-            for(var i = 0 ; i < pro.length ; i++){
-                var p = pro[i]
-                midata[p.nombre] = p
-                data[p.nombre] = null
+    function VerSeleccionarProducto(){
+        $('#modalSeleccionarProducto').modal('open')
+        var el = yo`
+        <div>
+            <div class="modal-content">
+                <h5>Seleccione el Producto</h5>
+                <br>
+                <br>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input type="text" id="nombre_producto_sel" style="text-transform:uppercase" class="autocomplete">
+                        <label for="nombre_producto_sel" class="active" id="lnombre_producto_sel">Busque el producto</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" onclick="${()=>SeleccionarProducto()}" class="waves-effect waves-green teal accent-4 btn">Seleccionar</a>
+                <a href="#!" onclick="${()=>$('#modalSeleccionarProducto').modal('close')}" class="waves-effect waves-green red btn">Cancelar</a>
+            </div>
+        </div>
+        `
+        var container = document.getElementById('modalSeleccionarProducto')
+        empty(container).appendChild(el);
+    
+        function SeleccionarProducto(){
+            var props = {
+                'nombre_producto_sel': {},
             }
-            $('input.autocomplete').autocomplete({
-                data,
-                limit: 5, 
-                minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
-              });
-
-        })
+            if (!Validar(props))
+                return;
+            
+            var selpe = midata[document.getElementById('nombre_producto_sel').value]
+            if(selpe != undefined){
+                var nombre = document.getElementById('nombre_producto_sel').value
+                document.getElementById('nombre_producto').value = nombre;
+                document.getElementById('lnombre_producto').classList.add('active');
+                $('#modalSeleccionarProducto').modal('close')
+            }
+        }
+    
+        
+        const parametros = {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({})
+            
+        }
+        
+        fetch(URL+'/eproductos_producto/get_all_productos', parametros)
+            .then(req => req.json())
+            .then(res => {
+                var pro = res.productos
+                var data = {}
+                for(var i = 0 ; i < pro.length ; i++){
+                    var p = pro[i]
+                    midata[p.nombre] = p
+                    data[p.nombre] = null
+                }
+                $('input.autocomplete').autocomplete({
+                    data,
+                    limit: 5, 
+                    minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
+                  });
+    
+            })
+    }
 }
 
 function reloadTableItems(){
@@ -638,7 +691,9 @@ function Eliminar(u) {
             })
     }
 }
-function combinaciones(producto_id) {
+var PRODUCTO_ID_G;
+function combinaciones(producto_id,modalopen) {
+    PRODUCTO_ID_G = producto_id
     ShowLoader()
     const parametros = {
         method: 'POST',
@@ -659,6 +714,9 @@ function combinaciones(producto_id) {
             } else {
                 COMBINACIONES_PRODUCTO = res.combinaciones
                 Ver(res.combinaciones, res.combinaciones_producto, producto_id)
+                if(modalopen){
+                    document.getElementById("editarCombinaciones").click()
+                }
             }
             HideLoader()
         })

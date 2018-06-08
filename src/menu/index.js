@@ -22,11 +22,27 @@ import { nuevoUbigeo } from '../ubigeos/nuevo'
 import { cajas } from '../ecaja.caja'
 import { nuevaCaja } from '../ecaja.caja/nuevo'
 
+import { empresas } from '../empresa'
+import { nuevaEmpresa } from '../empresa/nuevo'
+
 function menu_administracion() {
    
     var sub_nav = yo`
     <div class="row">
         <ul class="collapsible" data-collapsible="accordion">
+
+            <li>
+                <div class="collapsible-header">
+                    <i class="material-icons">expand_more</i>Empresas
+                </div>
+                <div class="collapsible-body">
+                    <div class="collection">
+                        <a href="#!" onclick="${()=>empresas()}" class="collection-item"> Todas las empresas</a>
+                        <a href="#!" onclick="${()=>nuevaEmpresa()}" class="collection-item">Nueva empresa</a>
+                    </div>
+                </div>
+            </li>
+
             <li>
                 <div class="collapsible-header">
                     <i class="material-icons">expand_more</i>Sucursales

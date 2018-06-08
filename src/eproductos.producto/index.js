@@ -116,6 +116,7 @@ function fetchProductos(tamano_pagina,_numero_pagina,producto_busqueda,callback)
     fetch(URL+'/eproductos_producto/get_productos', parametros)
         .then(req => req.json())
         .then(res => {
+            console.log(res);
             callback(res)
         })
 }

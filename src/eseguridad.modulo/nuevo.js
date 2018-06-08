@@ -23,7 +23,7 @@ function Ver(modulo) {
                                 <div class="switch">
                                     <label>
                                     Inactivo
-                                    <input id="estado" checked="${modulo ? (modulo.estado == "ACTIVO" ? 'true' : 'false') : 'true'}" type="checkbox">
+                                    <input id="estado" ${modulo ? (modulo.estado == "ACTIVO" ? 'checked' : '') : 'checked'} type="checkbox">
                                     <span class="lever"></span>
                                     Activo
                                     </label>

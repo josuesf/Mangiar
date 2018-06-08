@@ -1,44 +1,35 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
 import { URL } from '../constantes_entorno/constantes'
-import {nuevaPersona} from './nuevo'
-function Ver(personas,paginas,pagina_actual) {
+import { nuevaEmpresa } from './nuevo'
+function Ver(empresas,paginas,pagina_actual) {
     var el = yo`
         <div class="card horizontal">
             <div class="card-stacked">
                 <div class="card-content">
-                    <span class="card-title">Lista de Personas</span>
+                    <span class="card-title">Lista de Empresas</span>
                     <div class="row">
                         <div class="input-field col s12">
                             <i class="material-icons prefix">search</i>
-                            <input id="persona_busqueda" onkeyup="${()=>Buscar(1)}" type="text" class="validate">
-                            <label for="persona_busqueda" >Ingrese el nombre de la persona para buscar</label>
+                            <input id="empresa_busqueda" onkeyup="${()=>Buscar(1)}" type="text" class="validate">
+                            <label for="empresa_busqueda" >Ingrese el nombre de la empresa para buscar</label>
                         </div>
                     </div>
                     <div id="div_tabla">                            
-                        ${VerTabla(personas,paginas,pagina_actual)}
-                    </div>
-                </div>
+                        ${VerTabla(empresas,paginas,pagina_actual)}
+                    </div>                    
+                </div>               
             </div>
         </div>`;
     var container = document.getElementById('contenido_principal')
     empty(container).appendChild(el);
-    var sub_nav = yo`
-    <div class="collection">
-        <a href="#!" class="collection-item active">Todas las personas</a>
-        <a href="#!" class="collection-item" onclick="${()=>nuevaPersona()}">Nueva Persona</a>
-    </div>
-        `;
-    var container = document.getElementById('sub_navegador_content')
-    empty(container).appendChild(sub_nav)
-    $(".dropdown-button").dropdown();
 }
 
 function Buscar(pagina_actual){
     // ShowLoader()
     const tamano_pagina = 5
-    const persona_busqueda = document.getElementById('persona_busqueda').value.toUpperCase()
-    fetchPersonas(tamano_pagina,pagina_actual,persona_busqueda,function(res){
+    const empresa_busqueda = document.getElementById('empresa_busqueda').value.toUpperCase()
+    fetchEmpresas(tamano_pagina,pagina_actual,empresa_busqueda,function(res){
         if (res.err) {
             console.log(res.err)
         } else {
@@ -46,37 +37,36 @@ function Buscar(pagina_actual){
             paginas = parseInt(paginas / tamano_pagina) + (paginas % tamano_pagina != 0 ? 1 : 0)
 
             var tabla_content = document.getElementById('div_tabla')
-            empty(tabla_content).appendChild(VerTabla(res.personas,paginas,pagina_actual)) 
+            empty(tabla_content).appendChild(VerTabla(res.empresas,paginas,pagina_actual)) 
         }
     })
 }
 
-function VerTabla(personas,paginas,pagina_actual){
+function VerTabla(empresas,paginas,pagina_actual){
     return yo`
     <div>
         <table class="striped">
             <thead>
                 <tr>
                     <th>Opc.</th>
-                    <th>Cliente</th>
-                    <th>Doc.</th>
+                    <th>Nombre</th>
+                    <th>Direccion</th>
                     <th>Estado</th>
                 </tr>
             </thead>
             <tbody>
-                ${personas.map(p=> yo`
+                ${empresas.map(e=> yo`
                 <tr>
                     <td>
-                        <a onclick=${()=>nuevaPersona(p)} class="dropdown-button btn teal accent-3 btn-floating">
+                        <a onclick=${()=>nuevaEmpresa(e)} class="dropdown-button btn teal accent-3 btn-floating">
                         <i class="material-icons">edit</i>
                         </a>
                     </td>
-                    <td>${p.nombres && p.nombres!=null && p.nombres!=""?p.nombres+" "+p.a_paterno+" "+p.a_materno:p.razon_social}</td>
-                    <td>${p.tipo_doc_ident}</td>
-                    <td>${p.doc_ident}</td>
+                    <td>${e.razon_social}</td>
+                    <td>${e.direccion}</td>
                     <td>
-                        <span class="new badge ${p.estado=="ACTIVO"? 'blue':'red'}" data-badge-caption="${p.estado}"></span>
-                    </td>                   
+                        <span class="new badge ${e.estado=="ACTIVO"? 'blue':'red'}" data-badge-caption="${e.estado}"></span>
+                    </td>
                 </tr>
                 `)}
             </tbody>
@@ -99,7 +89,7 @@ function VerTabla(personas,paginas,pagina_actual){
     </div>`;
 }
 
-function fetchPersonas(tamano_pagina,_numero_pagina,persona_busqueda,callback){
+function fetchEmpresas(tamano_pagina,_numero_pagina,empresa_busqueda,callback){
     const parametros = {
         method: 'POST',
         headers: {
@@ -109,30 +99,30 @@ function fetchPersonas(tamano_pagina,_numero_pagina,persona_busqueda,callback){
         body: JSON.stringify({
             numero_pagina:_numero_pagina||1,
             tamano_pagina,
-            persona_busqueda
+            empresa_busqueda
         })
     }
-    fetch(URL+'/personas_api/get_personas', parametros)
+    fetch(URL+'/empresa_api/get_empresas', parametros)
         .then(req => req.json())
         .then(res => {
             callback(res)
         })
 }
 
-function personas(_numero_pagina) {
+function empresas(_numero_pagina) {
     ShowLoader()
     const tamano_pagina = 5
-    fetchPersonas(tamano_pagina,_numero_pagina,'',function(res){
+    fetchEmpresas(tamano_pagina,_numero_pagina,'',function(res){
         if (res.err) {
             console.log(res.err)
         } else {
             var paginas = parseInt(res.num_filas)
             paginas = parseInt(paginas / tamano_pagina) + (paginas % tamano_pagina != 0 ? 1 : 0)
 
-            Ver(res.personas,paginas,_numero_pagina||1)
+            Ver(res.empresas,paginas,_numero_pagina||1)
         }
         HideLoader()
     })
 }
 
-export { personas }
+export { empresas }

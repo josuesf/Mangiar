@@ -16,7 +16,7 @@ function Ver(documento,serie,sucursales) {
                             <div class="switch">
                                 <label>
                                 Inactivo
-                                <input id="estado" checked="${serie ? (serie.estado=='ACTIVO' ? '1' : '0') : '0'}" type="checkbox">
+                                <input id="estado" ${serie ? (serie.estado=='ACTIVO' ? 'checked' : '') : 'checked'} type="checkbox">
                                 <span class="lever"></span>
                                 Activo
                                 </label>

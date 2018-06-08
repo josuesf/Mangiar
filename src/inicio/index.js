@@ -4,6 +4,7 @@ import { URL } from '../constantes_entorno/constantes'
 import { Init,onActionLeft,onActionTop } from '../utils'
 import { comprobantes } from '../ecaja.comprobante/'
 import { nuevoComprobante } from '../ecaja.comprobante/nuevo'
+import { Socket } from 'net';
 
 var contador = 0 
 var $card = null
@@ -48,14 +49,24 @@ function Ver(puntos_venta) {
                                         </div>
                                         <div class="content">
                                             <div class="main">
+                                                <div class="row" style="display:none">
+                                                    <div class="col m12">
+                                                        <a class="waves-effect yellow black-text btn btn-small btn-block" style="font-size: 12px;width: 100%;padding: 0 0.5rem;" onclick=${()=>VerDetalles(e,"C")}><i class="material-icons left">receipt</i> Comprobante</a>
+                                                    </div>
+                                                </div>
                                                 <div class="row">
                                                     <div class="col m12">
-                                                        <a class="waves-effect yellow black-text btn btn-small btn-block" style="font-size: 12px;width: 100%;padding: 0 0.5rem;" onclick=${()=>VerDetalles(e,"R")}><i class="material-icons left">receipt</i> Comprobante</a>
+                                                        <a class="waves-effect yellow black-text btn btn-small btn-block" style="font-size: 12px;width: 100%;padding: 0 0.5rem;" onclick=${()=>VerDetalles(e,"I")}><i class="material-icons left">print</i> Imprimir voucher</a>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col m12">
                                                         <a class="waves-effect  yellow black-text btn btn-small btn-block" style="font-size: 12px;width: 100%;padding: 0 0.5rem;" onclick=${()=>VerDetalles(e,"D")}><i class="material-icons left">format_list_bulleted</i> Detalles</a>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col m12">
+                                                        <a class="waves-effect yellow black-text btn btn-small btn-block" style="font-size: 12px;width: 100%;padding: 0 0.5rem;" onclick=${()=>VerDetalles(e,"T")}><i class="material-icons left">check_circle</i> Terminar cuenta</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -86,120 +97,85 @@ function Ver(puntos_venta) {
     //$(".dropdown-button").dropdown();
 }
  
-function VerDetalleSeleccion(productos){
+function VerDetalleSeleccion(productos,cuenta,i,punto_venta){
     var el = yo`
     <div class="card">
         <div class="card-content">
-            <span class="card-title center">Detalle del pedido 0001</span> 
+            <span class="card-title center">Detalle de la cuenta ${i} - ${punto_venta.nombre_mesa}</span> 
             <div class="row">
                 <div class="col m6">
-                   
-                <div id="stacked-cards-block" class="stackedcards stackedcards--animatable init">
-                    <div class="stackedcards-container">
-                    <div class="card small">
-                        <div class="card-image">
-                            <img src="https://image.ibb.co/gQsq07/Adventure_and_Outdoor.png">
-                            <span class="card-title">Card Title</span>
-                        </div>
-                        <div class="card-content">
+                    <div id="stacked-cards-block" class="stackedcards stackedcards--animatable init">
+                        <div class="stackedcards-container">
 
-                            <div class="row center">
-                                <div class="col m4 s4">
-                                    <a href="javascript:void(0);" class="waves-effect waves-light btn white-text red"><i class="material-icons">remove</i></a>
-                                </div>
-                                <div class="input-field col m4 s4">
-                                    <input value="0" id="cantidad" type="number" class="validate">
-                                    <label class="active" for="cantidad">Cantidad</label>
-                                </div>
-                                <div class="col m4 s4">
-                                    <a href="javascript:void(0);" class="waves-effect waves-light btn white-text blue"><i class="material-icons">add</i></a>
-                                </div>
-                            </div>
-                            <div class="row center"> 
-                                <h6>Heading h6</h6>
-                                <h6>Heading h6</h6>
-                            </div>
-
-                        </div> 
-                    </div>
-                    <div class="card small">
-                        <div class="card-image"><img src="https://image.ibb.co/fXPg7n/Beach_and_Chill.png"> 
-                            <span class="card-title">Card Title</span>
+                        ${productos.map((e,index)=>yo`
+                            <div class="card">
+                                <div class="card-image">
+                                    <img  src="public/images/${e.imagen_url}" style="background-color: rgba(0, 0, 0, 0.45);">
+                                    <span class="card-title">${e.nombre}</span>
+                                    <a class="btn-floating btn-large halfway-fab waves-effect waves-light red" style="left: 24px;" onclick=${()=>RechazarProducto()}><i class="material-icons">close</i></a>
+                                    <a class="btn-floating btn-large halfway-fab waves-effect waves-light green"  onclick=${()=>AceptarProducto()}><i class="material-icons">check</i></a>
+                                </div> 
+                                <div class="card-content">
+                                    <br>
+                                    <div class="row center">
+                                        <div class="col m4 s4">
+                                            <a href="javascript:void(0);" class="waves-effect waves-light red-text" onclick="${()=>DisminuirCantidad(index)}"><i class="material-icons">remove</i></a>
+                                        </div>
+                                        <div class="col m4 s4">
+                                            <input value="${e.cantidad}" id="${index}" type="number" class="validate" style="text-align: -webkit-center;text-align: center;font-size: 45px;font-style: oblique;font-weight: bold;" > 
+                                        </div>
+                                        <div class="col m4 s4">
+                                            <a href="javascript:void(0);" class="waves-effect waves-light blue-text" onclick="${()=>AumentarCantidad(index)}"><i class="material-icons">add</i></a>
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div>`
+                        )}
+        
                         </div>
-                        <div class="card-content">
-
-                            <div class="row center">
-                                <div class="col m4 s4">
-                                    <a href="javascript:void(0);" class="waves-effect waves-light btn white-text red"><i class="material-icons">remove</i></a>
-                                </div>
-                                <div class="input-field col m4 s4">
-                                    <input value="0" id="cantidad" type="number" class="validate">
-                                    <label class="active" for="cantidad">Cantidad</label>
-                                </div>
-                                <div class="col m4 s4">
-                                    <a href="javascript:void(0);" class="waves-effect waves-light btn white-text blue"><i class="material-icons">add</i></a>
-                                </div>
-                            </div>
-                            <div class="row center"> 
-                                    <h6>Heading h6</h6>
-                                    <h6>Heading h6</h6>
-                            </div>
-                                    
-                        </div>
-                    </div>
-                    <div class="card small">
-                        <div class="card-image"><img src="https://image.ibb.co/c9gTnn/Romantic_Gateways.png">
-                            <span class="card-title">Card Title</span>
-                        </div>
-                        <div class="card-content">
-
-                            <div class="row center">
-                                <div class="col m4 s4">
-                                    <a href="javascript:void(0);" class="waves-effect waves-light btn white-text red"><i class="material-icons">remove</i></a>
-                                </div>
-                                <div class="input-field col m4 s4">
-                                    <input value="0" id="cantidad" type="number" class="validate">
-                                    <label class="active" for="cantidad">Cantidad</label>
-                                </div>
-                                <div class="col m4 s4">
-                                    <a href="javascript:void(0);" class="waves-effect waves-light btn white-text blue"><i class="material-icons">add</i></a>
-                                </div>
-                            </div>
-                            <div class="row center"> 
-                                <h6>Heading h6</h6>
-                                <h6>Heading h6</h6>
-                            </div>
-
-                        </div>
+                        <div class="stackedcards--animatable stackedcards-overlay top"><img src="assets/img/check.png"  width="auto" height="auto"/></div>
                         
+                        <div class="stackedcards--animatable stackedcards-overlay left"><img src="assets/img/close.png" width="auto" height="auto"/></div>
                     </div>
-                    
-                    </div>
-                    <div class="stackedcards--animatable stackedcards-overlay top"><img src="assets/img/check.png"  width="auto" height="auto"/></div>
-                    
-                    <div class="stackedcards--animatable stackedcards-overlay left"><img src="assets/img/close.png" width="auto" height="auto"/></div>
-                </div>
-                <div class="global-actions">
-                    <div class="col m6 s6 center">
-                        <a class="left-action btn-floating btn-large waves-effect waves-light red" onclick=${()=>onActionLeft()}><i class="material-icons">close</i></a> 
-                    </div>
-                    <div class="col m6 s6 center"> 
-                        <a class="top-action btn-floating btn-large waves-effect waves-light green" onclick=${()=>onActionTop()}><i class="material-icons">check</i></a> 
-                    </div>
-                </div>
- 
-
+                
                 </div>
                 <div class="col m6">
                     <div class="row center">
-                        <h5 class="header">Platillos y/o bebidas</h5>
+                        <strong><h5 class="header">Platillos y/o bedidas</h5></strong>
                     </div>
-                    <div class="row">
-                        <div class="collection">
-                            ${productos.map(e=>yo`
-                            <a href="javascript:void();" class="collection-item" onclick=${()=>SeleccionarProducto(e)}>${e.nombre}</a>`
+                    <div class="row" id="listaDetalles">
+                        <ul class="collapsible" data-collapsible="expandable">
+                            ${productos.map((p,index,array)=>
+                                (p.id_referencia=='0' && array[index+1].id_referencia=='0')?
+                                yo`
+                                <li>  
+                                    <div class="collapsible-header" style="display: table;width: 100%;"> 
+                                        <a href="javascript:void();" class="collection-item right-align right" onclick=${()=>SeleccionarProducto(p)}>${p.nombre} <span class="new badge green right-align" data-badge-caption="${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
+                                    </div>
+                                </li>`:
+                                ((p.id_referencia=='0' && array[index+1].id_referencia!='0')?
+                                yo`
+                                <li>
+                                    <div class="collapsible-header" style="display: table;width: 100%;"> 
+                                        <a href="javascript:void();" class="collection-item right-align right" onclick=${()=>SeleccionarProducto(p)}>${p.nombre} <span class="new badge green right-align" data-badge-caption="${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
+                                    </div>
+                                    <div class="collapsible-body" style="display: table;width: 100%;">
+                                        <div class="collection right-align">
+                                            <a href="javascript:void();" class="collection-item">${array[index+1].nombre} <span class="new badge orange right-align" data-badge-caption="${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
+                                        </div>
+                                    </div>
+                                </li>
+                                `:
+                                yo``)
+                               
                             )}
-                        </div>
+
+                            <li>
+                                <div class="collapsible-header" style="display: table;width: 100%;"> 
+                                    <a href="javascript:void();" class="collection-item right-align right"><span class="new badge green right-align" data-badge-caption="Total : ${productos[0].cod_moneda=="PEN"?'S/ ':'USD'} ${parseFloat(productos[0].total).toFixed(2)}"></span></a>  
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>              
@@ -215,14 +191,14 @@ function VerDetalleSeleccion(productos){
     </div>`;
     var container = document.getElementById('sub_navegador_content')
     empty(container).appendChild(sub_nav) 
-
-    Init()
- 
+    $(".collapsible-header").addClass("active");
+    $(".collapsible").collapsible({accordion: false});
+    Init() 
 }
-
+ 
  
 
-function VerSeleccionCuentas(cuentas,tipo){
+function VerSeleccionCuentas(cuentas,tipo,punto_venta){
     var el = yo`
         <div>
             <div class="modal-content">
@@ -232,7 +208,7 @@ function VerSeleccionCuentas(cuentas,tipo){
                 <div class="row">
                     <div class="collection">
                         ${cuentas.map((e,i)=>yo` 
-                            <a href="javascript:void(0);" class="collection-item" onclick=${()=>SeleccionarCuenta(e,tipo)}><i class="material-icons left">label_outline</i> CUENTA : ${i+1}</a>
+                            <a href="javascript:void(0);" class="collection-item" onclick=${()=>SeleccionarCuenta(e,tipo,i+1,punto_venta)}><i class="material-icons left">label_outline</i> CUENTA : ${i+1}</a>
                         `)}
                     </div>
                 </div>
@@ -491,6 +467,26 @@ function CambioTipoDoc(){
     }
 }
 
+function AceptarProducto(){
+    onActionTop()
+}
+
+function RechazarProducto(){
+    onActionLeft()
+}
+
+function DisminuirCantidad(idCantidad){
+    var valor_inicial = parseInt($("input#"+idCantidad).val())
+    valor_inicial = valor_inicial - 1 
+    $("input#"+idCantidad).val(valor_inicial)
+}
+
+function AumentarCantidad(idCantidad){
+    var valor_inicial = parseInt($("input#"+idCantidad).val())
+    valor_inicial = valor_inicial + 1
+    $("input#"+idCantidad).val(valor_inicial)
+}
+
 function CambioDescuento(moneda){
     var descuento = $("#Descuento").text()
     var total = parseFloat($("#SumaTotal").text().trim().replace("S/","").replace("USD",""))*parseFloat(descuento)/100
@@ -599,41 +595,67 @@ function AceptarPedido(pedido_detalle){
     })
 }
 
-function SeleccionarCuenta(cuenta,tipo){
+function SeleccionarCuenta(cuenta,tipo,i,punto_venta){
     contador=0
     try{
         $('#modal-details').modal('close');
     }catch(e){}
 
-    if(tipo=="R"){
-        ShowLoader()
-        fetchPedidoDetalle(cuenta,function(res){
-            if (res.err) {
-                console.log(res.err)
-            } else {
-                console.log(res)
-                if(res.punto_venta.length>0)
-                    VerInvoice(res.punto_venta)
+    switch(tipo){
+        case "C":
+            ShowLoader()
+            fetchPedidoDetalle(cuenta,function(res){
+                if (res.err) {
+                    console.log(res.err)
+                } else {
+                    console.log(res)
+                    if(res.punto_venta.length>0)
+                        VerInvoice(res.punto_venta)
+                }
+                HideLoader()
+            })
+            break
+        case "I":
+            ShowLoader()
+            fetchImprimirVoucher(cuenta,function(res){
+                if (res.err) {
+                    console.log(res.err)
+                } else {
+                    console.log(res) 
+                }
+                HideLoader()
+            }) 
+            break        
+        case "D":
+            ShowLoader() 
+            fetchPedidoDetalle(cuenta,function(res){
+                if (res.err) {
+                    console.log(res.err)
+                } else {
+                    console.log(res)
+                    if(res.punto_venta.length>0)
+                        VerDetalleSeleccion(res.punto_venta,cuenta,i,punto_venta)
+                }
+                HideLoader()
+            })
+            break            
+        case "T":
+            if(confirm('Desea finalizar la cuenta '+i+'?')){
+                ShowLoader() 
+                fetchFinalizarPedido(cuenta,function(res){
+                    if (res.err) {
+                        console.log(res.err)
+                    } else {
+                        console.log(res)
+                        inicio()
+                    }
+                    HideLoader()
+                })
+
             }
-            HideLoader()
-        })
-    }else{
-        //$('#modal-details').modal('close');
-        ShowLoader() 
-
-
-        fetchPedidoDetalle(cuenta,function(res){
-            if (res.err) {
-                console.log(res.err)
-            } else {
-                console.log(res)
-                if(res.punto_venta.length>0)
-                    VerDetalleSeleccion(res.punto_venta)
-            }
-            HideLoader()
-        })
-
+            break         
     }
+ 
 }
 
 function RotarCard(nro_cuentas,idBtn){
@@ -654,7 +676,7 @@ function VerDetalles(punto_venta,tipo){
             if (res.err) {
                 console.log(res.err)
             } else {
-                SeleccionarCuenta(res.punto_venta[0],tipo)
+                SeleccionarCuenta(res.punto_venta[0],tipo,1,punto_venta)
             } 
         })
     }else{
@@ -663,7 +685,7 @@ function VerDetalles(punto_venta,tipo){
             if (res.err) {
                 console.log(res.err)
             } else {
-                VerSeleccionCuentas(res.punto_venta,tipo)
+                VerSeleccionCuentas(res.punto_venta,tipo,punto_venta)
             } 
         })
     }
@@ -688,6 +710,44 @@ function Aceptar1(){
       
     }, 300);*/
 }
+
+function fetchImprimirVoucher(cuenta,callback){
+    const parametros = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            numero : cuenta.numero,
+        })
+    } 
+    fetch(URL+'/ws/impresion_nota_venta', parametros)
+        .then(req => req.json())
+        .then(res => { 
+            callback(res)
+        })
+}
+
+
+function fetchFinalizarPedido(cuenta,callback){
+    const parametros = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            pedido_id : cuenta.pedido_id,
+        })
+    } 
+    fetch(URL+'/ws/finish_pedido', parametros)
+        .then(req => req.json())
+        .then(res => { 
+            callback(res)
+        })
+}
+
 
 function fetchNumeroSiguiente(cod_sucursal){
     var cod_documento = $("#cod_documento").val()
@@ -869,7 +929,16 @@ function TraerSeriesNumeros(cod_documento,cod_sucursal){
 }
 
 function inicio() { 
-    
+    var socket = SocketIOClient(URL)
+    socket.on('NUEVA_COMANDA',function(data){
+        fetchPuntosVentas(function(res){
+            if (res.err) {
+                console.log(res.err)
+            } else {
+                Ver(res.puntos_venta)
+            }
+        })
+    })
     ShowLoader()
     fetchPuntosVentas(function(res){
         if (res.err) {
@@ -1004,7 +1073,6 @@ function generateInvoice() {
  
     return doc.output();
 }
-
 export {
     inicio
 }
