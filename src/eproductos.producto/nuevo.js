@@ -98,7 +98,7 @@ function Ver(categorias,almacenes,p) {
                             <div class="row">
                                 <div class="input-field col s6">
                                     <select id="almacen_cod">
-                                        <option value="" disabled selected></option>
+                                        <option value="" disabled ></option>
                                         ${almacenes.map(c=>
                                         yo`<option value="${c.almacen_cod}" ${p?(p.almacen_cod==c.almacen_cod?'selected':''):''}>${c.descripcion}</option>`
                                         )}
@@ -281,7 +281,7 @@ function Guardar(u) {
     }
     ShowLoader()
     const producto_id = u ? u.producto_id : -1
-    const nombre = document.getElementById('nombre').value.toUpperCase()
+    const nombre = document.getElementById('nombre').value.trim().toUpperCase()
     const cod_producto = document.getElementById('cod_producto').value.toUpperCase()
     const alias = document.getElementById('nombre').value.substring(0,25).toUpperCase()
     const descripcion = document.getElementById('descripcion').value

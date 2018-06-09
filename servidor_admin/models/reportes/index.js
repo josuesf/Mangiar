@@ -1,0 +1,1 @@
+//select pedido_id,id_detalle,cantidad,descripcion_detalle,precio,creado_en from ecaja.pedido_detalle where id_referencia='0'
