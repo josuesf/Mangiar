@@ -593,121 +593,92 @@ function LlenarSeries(series,cod_sucursal){
 }
 
 function SeleccionarProducto(p,productos,cuenta){
-
-    /*
-
-    <div class="card-image">
-        <img  src="public/images/${p.imagen_url}" style="background-color: rgba(0, 0, 0, 0.45);">
-        <span class="card-title">${p.nombre}</span>
-        <a class="col m5 s5 offset-s6 btn-floating btn-small halfway-fab waves-effect waves-light red" style="left: 24px;border-radius: 0%;width: auto;padding-left: 10px;padding-right: 10px;" onclick=${()=>RechazarProducto(p,cuenta)}>Eliminar</a>
-        <a class="btn-floating btn-large halfway-fab waves-effect waves-light green" style="display:none"  onclick=${()=>AceptarProducto(p,cuenta)}><i class="material-icons">check</i></a>
-    </div> 
-    <div class="card-content">
-        <div class="row center">
-                ${LlenarCombinaciones(p,"card",productos)}
-        </div>
-        <div class="row center">
-            <div class="col m4 s4">
-                <a href="javascript:void(0);" class="waves-effect waves-light red-text" onclick="${()=>DisminuirCantidad(index)}"><i class="material-icons">remove</i></a>
-            </div>
-            <div class="col m4 s4">
-                <input value="${p.cantidad}" id="${index}" type="number" class="validate" style="text-align: -webkit-center;text-align: center;font-size: 45px;font-style: oblique;font-weight: bold;"  onkeyup=${()=>CambioCantidad(index)} onchange=${()=>CambioCantidad(index)}> 
-            </div>
-            <div class="col m4 s4">
-                <a href="javascript:void(0);" class="waves-effect waves-light blue-text" onclick="${()=>AumentarCantidad(index)}"><i class="material-icons">add</i></a>
-            </div>
-        </div>
-        <div class="row center">
-            <button class="btn waves-effect waves-light" onclick="${()=>ConfirmarCantidad(p,cuenta,index)}">Guardar Cantidad
-                <i class="material-icons left">save</i>
-            </button>
-        </div>
-    </div> 
-
-    */
+ 
     var idPadre = $(".stackedcards-container").find(".stackedcards-active").attr("id")
     var idCard = p.id_detalle+"-"+p.pedido_id
     
-    if(idPadre!=idCard){
+   
+    var arreglo = idPadre.split("-")
+    var id_detalle_padre = arreglo[0]
+    var pedido_id_padre = parseInt(arreglo[1]) 
 
-        var arreglo = idPadre.split("-")
-        var id_detalle_padre = arreglo[0]
-        var pedido_id_padre = parseInt(arreglo[1]) 
-
-        var contentCard = yo`
+    var contentCard = yo`
+        <div>
+        ${productos.map((p_,index) => 
+            (p_.id_detalle==p.id_detalle && p_.pedido_id==p.pedido_id)? yo`
             <div>
-            ${productos.map((p_,index) => 
-                (p_.id_detalle==p.id_detalle && p_.pedido_id==p.pedido_id)? yo`
-                <div>
-                    <div class="card-image">
-                        <img  src="public/images/${p_.imagen_url}" style="background-color: rgba(0, 0, 0, 0.45);">
-                        <span class="card-title">${p_.nombre}</span>
-                        <a class="col m5 s5 offset-s6 btn-floating btn-small halfway-fab waves-effect waves-light red" style="left: 24px;border-radius: 0%;width: auto;padding-left: 10px;padding-right: 10px;" onclick=${()=>RechazarProducto(p_,cuenta)}>Eliminar</a>
-                        <a class="btn-floating btn-large halfway-fab waves-effect waves-light green" style="display:none"  onclick=${()=>AceptarProducto(p_,cuenta)}><i class="material-icons">check</i></a>
-                    </div> 
-                    <div class="card-content">
-                        <div class="row center">
-                                ${LlenarCombinaciones(p_,"card",productos)}
+                <div class="card-image">
+                    <img  src="public/images/${p_.imagen_url}" style="background-color: rgba(0, 0, 0, 0.45);">
+                    <span class="card-title">${p_.nombre}</span>
+                    <a class="col m5 s5 offset-s6 btn-floating btn-small halfway-fab waves-effect waves-light red" style="left: 24px;border-radius: 0%;width: auto;padding-left: 10px;padding-right: 10px;" onclick=${()=>RechazarProducto(p_,cuenta)}>Eliminar</a>
+                    <a class="btn-floating btn-large halfway-fab waves-effect waves-light green" style="display:none"  onclick=${()=>AceptarProducto(p_,cuenta)}><i class="material-icons">check</i></a>
+                </div> 
+                <div class="card-content">
+                    <div class="row center">
+                            ${LlenarCombinaciones(p_,"card",productos)}
+                    </div>
+                    <div class="row center">
+                        <div class="col m4 s4">
+                            <a href="javascript:void(0);" class="waves-effect waves-light red-text" onclick="${()=>DisminuirCantidad(index)}"><i class="material-icons">remove</i></a>
                         </div>
-                        <div class="row center">
-                            <div class="col m4 s4">
-                                <a href="javascript:void(0);" class="waves-effect waves-light red-text" onclick="${()=>DisminuirCantidad(index)}"><i class="material-icons">remove</i></a>
-                            </div>
-                            <div class="col m4 s4">
-                                <input value="${p_.cantidad}" id="${index}" type="number" class="validate" style="text-align: -webkit-center;text-align: center;font-size: 45px;font-style: oblique;font-weight: bold;"  onkeyup=${()=>CambioCantidad(index)} onchange=${()=>CambioCantidad(index)}> 
-                            </div>
-                            <div class="col m4 s4">
-                                <a href="javascript:void(0);" class="waves-effect waves-light blue-text" onclick="${()=>AumentarCantidad(index)}"><i class="material-icons">add</i></a>
-                            </div>
+                        <div class="col m4 s4">
+                            <input value="${p_.cantidad}" id="${index}" type="number" class="validate" style="text-align: -webkit-center;text-align: center;font-size: 45px;font-style: oblique;font-weight: bold;"  onkeyup=${()=>CambioCantidad(index)} onchange=${()=>CambioCantidad(index)}> 
                         </div>
-                        <div class="row center">
-                            <button class="btn waves-effect waves-light" onclick="${()=>ConfirmarCantidad(p_,cuenta,index)}">Guardar Cantidad
-                                <i class="material-icons left">save</i>
-                            </button>
+                        <div class="col m4 s4">
+                            <a href="javascript:void(0);" class="waves-effect waves-light blue-text" onclick="${()=>AumentarCantidad(index)}"><i class="material-icons">add</i></a>
                         </div>
-                    </div> 
-                </div>`:yo``)}
-            </div>`
-            
+                    </div>
+                    <div class="row center">
+                        <button class="btn waves-effect waves-light" onclick="${()=>ConfirmarCantidad(p_,cuenta,index)}">Guardar Cantidad
+                            <i class="material-icons left">save</i>
+                        </button>
+                    </div>
+                </div> 
+            </div>`:yo``)}
+        </div>`
         
-        var contentPadre = yo`
-            <div>
-            ${productos.map((p_,index) => 
-                (p_.id_detalle==id_detalle_padre && p_.pedido_id==pedido_id_padre)? yo`
-                <div>
-                    <div class="card-image">
-                        <img  src="public/images/${p_.imagen_url}" style="background-color: rgba(0, 0, 0, 0.45);">
-                        <span class="card-title">${p_.nombre}</span>
-                        <a class="col m5 s5 offset-s6 btn-floating btn-small halfway-fab waves-effect waves-light red" style="left: 24px;border-radius: 0%;width: auto;padding-left: 10px;padding-right: 10px;" onclick=${()=>RechazarProducto(p_,cuenta)}>Eliminar</a>
-                        <a class="btn-floating btn-large halfway-fab waves-effect waves-light green" style="display:none"  onclick=${()=>AceptarProducto(p_,cuenta)}><i class="material-icons">check</i></a>
-                    </div> 
-                    <div class="card-content">
-                        <div class="row center">
-                                ${LlenarCombinaciones(p_,"card",productos)}
-                        </div>
-                        <div class="row center">
-                            <div class="col m4 s4">
-                                <a href="javascript:void(0);" class="waves-effect waves-light red-text" onclick="${()=>DisminuirCantidad(index)}"><i class="material-icons">remove</i></a>
-                            </div>
-                            <div class="col m4 s4">
-                                <input value="${p_.cantidad}" id="${index}" type="number" class="validate" style="text-align: -webkit-center;text-align: center;font-size: 45px;font-style: oblique;font-weight: bold;"  onkeyup=${()=>CambioCantidad(index)} onchange=${()=>CambioCantidad(index)}> 
-                            </div>
-                            <div class="col m4 s4">
-                                <a href="javascript:void(0);" class="waves-effect waves-light blue-text" onclick="${()=>AumentarCantidad(index)}"><i class="material-icons">add</i></a>
-                            </div>
-                        </div>
-                        <div class="row center">
-                            <button class="btn waves-effect waves-light" onclick="${()=>ConfirmarCantidad(p_,cuenta,index)}">Guardar Cantidad
-                                <i class="material-icons left">save</i>
-                            </button>
-                        </div>
-                    </div> 
-                </div>`:yo``)}
-            </div>`
-        
-
-    }   
     
+    var contentPadre = yo`
+        <div>
+        ${productos.map((p_,index) => 
+            (p_.id_detalle==id_detalle_padre && p_.pedido_id==pedido_id_padre)? yo`
+            <div>
+                <div class="card-image">
+                    <img  src="public/images/${p_.imagen_url}" style="background-color: rgba(0, 0, 0, 0.45);">
+                    <span class="card-title">${p_.nombre}</span>
+                    <a class="col m5 s5 offset-s6 btn-floating btn-small halfway-fab waves-effect waves-light red" style="left: 24px;border-radius: 0%;width: auto;padding-left: 10px;padding-right: 10px;" onclick=${()=>RechazarProducto(p_,cuenta)}>Eliminar</a>
+                    <a class="btn-floating btn-large halfway-fab waves-effect waves-light green" style="display:none"  onclick=${()=>AceptarProducto(p_,cuenta)}><i class="material-icons">check</i></a>
+                </div> 
+                <div class="card-content">
+                    <div class="row center">
+                            ${LlenarCombinaciones(p_,"card",productos)}
+                    </div>
+                    <div class="row center">
+                        <div class="col m4 s4">
+                            <a href="javascript:void(0);" class="waves-effect waves-light red-text" onclick="${()=>DisminuirCantidad(index)}"><i class="material-icons">remove</i></a>
+                        </div>
+                        <div class="col m4 s4">
+                            <input value="${p_.cantidad}" id="${index}" type="number" class="validate" style="text-align: -webkit-center;text-align: center;font-size: 45px;font-style: oblique;font-weight: bold;"  onkeyup=${()=>CambioCantidad(index)} onchange=${()=>CambioCantidad(index)}> 
+                        </div>
+                        <div class="col m4 s4">
+                            <a href="javascript:void(0);" class="waves-effect waves-light blue-text" onclick="${()=>AumentarCantidad(index)}"><i class="material-icons">add</i></a>
+                        </div>
+                    </div>
+                    <div class="row center">
+                        <button class="btn waves-effect waves-light" onclick="${()=>ConfirmarCantidad(p_,cuenta,index)}">Guardar Cantidad
+                            <i class="material-icons left">save</i>
+                        </button>
+                    </div>
+                </div> 
+            </div>`:yo``)}
+        </div>`
+
+    var containerPadre = document.getElementById(idPadre)
+    empty(containerPadre).appendChild(contentCard)
+
+    var containerHijo = document.getElementById(idCard)
+    empty(containerHijo).appendChild(contentPadre)
+ 
      
 }
 
