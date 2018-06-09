@@ -305,10 +305,11 @@ div[title="PENDIENTE"]{ background-color:rgb(255, 240, 152);}
  }
  
  .stackedcards * {
-     -webkit-user-select: none;
-             -moz-user-select: none;
-              -ms-user-select: none;
-          user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    height: auto;
  }
  
  .stackedcards--animatable {

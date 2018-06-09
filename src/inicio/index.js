@@ -111,7 +111,7 @@ function VerDetalleSeleccion(productos,cuenta,i,punto_venta){
                             array[index+1]!=undefined?
                                 ((p.id_referencia=='0' && array[index+1].id_referencia=='0')?
                                 yo`
-                                <div class="card" id="card${index}">
+                                <div class="card" id="${p.id_detalle+"-"+p.pedido_id}">
                                     <div class="card-image">
                                         <img  src="public/images/${p.imagen_url}" style="background-color: rgba(0, 0, 0, 0.45);">
                                         <span class="card-title">${p.nombre}</span>
@@ -140,7 +140,7 @@ function VerDetalleSeleccion(productos,cuenta,i,punto_venta){
                                 </div>`:
                                 ((p.id_referencia=='0' && array[index+1].id_referencia!='0')?
                                 yo`
-                                <div class="card" id="card${index}">
+                                <div class="card" id="${p.id_detalle+"-"+p.pedido_id}">
                                     <div class="card-image">
                                         <img  src="public/images/${p.imagen_url}" style="background-color: rgba(0, 0, 0, 0.45);">
                                         <span class="card-title">${p.nombre}</span>
@@ -173,7 +173,7 @@ function VerDetalleSeleccion(productos,cuenta,i,punto_venta){
                                 yo``)):
                                 (p.id_referencia=='0'?
                                     yo`
-                                    <div class="card" id="card${index}">
+                                    <div class="card" id="${p.id_detalle+"-"+p.pedido_id}">
                                         <div class="card-image">
                                             <img  src="public/images/${p.imagen_url}" style="background-color: rgba(0, 0, 0, 0.45);">
                                             <span class="card-title">${p.nombre}</span>
@@ -225,14 +225,14 @@ function VerDetalleSeleccion(productos,cuenta,i,punto_venta){
                                     yo`
                                     <li>  
                                         <div class="collapsible-header" style="display: table;width: 100%;"> 
-                                            <a href="javascript:void();" class="collection-item right-align right col s12 col m12" onclick=${()=>SeleccionarProducto(index,productos)}><span class="left">(${p.cantidad}) ${p.nombre}</span> <span class="new badge green right-align" data-badge-caption="${productos[0].cod_moneda=="PEN"?'S/ ':'USD'} ${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
+                                            <a href="javascript:void();" class="collection-item right-align right col s12 col m12" onclick=${()=>SeleccionarProducto(p,productos,cuenta)}><span class="left">(${p.cantidad}) ${p.nombre}</span> <span class="new badge green right-align" data-badge-caption="${productos[0].cod_moneda=="PEN"?'S/ ':'USD'} ${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
                                         </div>
                                     </li>`:
                                     ((p.id_referencia=='0' && array[index+1].id_referencia!='0')?
                                     yo`
                                     <li>
                                         <div class="collapsible-header" style="display: table;width: 100%;"> 
-                                            <a href="javascript:void();" class="collection-item right-align right col s12 col m12" onclick=${()=>SeleccionarProducto(index,productos)}><span class="left">(${p.cantidad}) ${p.nombre}</span> <span class="new badge green right-align" data-badge-caption="${productos[0].cod_moneda=="PEN"?'S/ ':'USD'} ${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
+                                            <a href="javascript:void();" class="collection-item right-align right col s12 col m12" onclick=${()=>SeleccionarProducto(p,productos,cuenta)}><span class="left">(${p.cantidad}) ${p.nombre}</span> <span class="new badge green right-align" data-badge-caption="${productos[0].cod_moneda=="PEN"?'S/ ':'USD'} ${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
                                         </div>
                                         <div class="collapsible-body" style="display: table;width: 100%;">
 
@@ -246,7 +246,7 @@ function VerDetalleSeleccion(productos,cuenta,i,punto_venta){
                                         yo`
                                         <li>  
                                             <div class="collapsible-header" style="display: table;width: 100%;"> 
-                                                <a href="javascript:void();" class="collection-item right-align right col s12 col m12" onclick=${()=>SeleccionarProducto(index,productos)}><span class="left">(${p.cantidad}) ${p.nombre}</span> <span class="new badge green right-align" data-badge-caption="${productos[0].cod_moneda=="PEN"?'S/ ':'USD'} ${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
+                                                <a href="javascript:void();" class="collection-item right-align right col s12 col m12" onclick=${()=>SeleccionarProducto(p,productos,cuenta)}><span class="left">(${p.cantidad}) ${p.nombre}</span> <span class="new badge green right-align" data-badge-caption="${productos[0].cod_moneda=="PEN"?'S/ ':'USD'} ${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
                                             </div>
                                         </li>`:
                                         yo``
@@ -282,7 +282,7 @@ function VerDetalleSeleccion(productos,cuenta,i,punto_venta){
     Init() 
 }
  
-function ActualizarDetallePedido(productos){
+function ActualizarDetallePedido(productos,cuenta){
     var el =yo` 
         <ul class="collapsible" data-collapsible="expandable">
             ${productos.map((p,index,array)=>
@@ -291,14 +291,14 @@ function ActualizarDetallePedido(productos){
                     yo`
                     <li>  
                         <div class="collapsible-header" style="display: table;width: 100%;"> 
-                            <a href="javascript:void();" class="collection-item right-align right col s12 col m12" onclick=${()=>SeleccionarProducto(index,productos)}><span class="left">(${p.cantidad}) ${p.nombre}</span> <span class="new badge green right-align" data-badge-caption="${productos[0].cod_moneda=="PEN"?'S/ ':'USD'} ${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
+                            <a href="javascript:void();" class="collection-item right-align right col s12 col m12" onclick=${()=>SeleccionarProducto(p,productos,cuenta)}><span class="left">(${p.cantidad}) ${p.nombre}</span> <span class="new badge green right-align" data-badge-caption="${productos[0].cod_moneda=="PEN"?'S/ ':'USD'} ${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
                         </div>
                     </li>`:
                     ((p.id_referencia=='0' && array[index+1].id_referencia!='0')?
                     yo`
                     <li>
                         <div class="collapsible-header" style="display: table;width: 100%;"> 
-                            <a href="javascript:void();" class="collection-item right-align right col s12 col m12" onclick=${()=>SeleccionarProducto(index,productos)}><span class="left">(${p.cantidad}) ${p.nombre}</span> <span class="new badge green right-align" data-badge-caption="${productos[0].cod_moneda=="PEN"?'S/ ':'USD'} ${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
+                            <a href="javascript:void();" class="collection-item right-align right col s12 col m12" onclick=${()=>SeleccionarProducto(p,productos,cuenta)}><span class="left">(${p.cantidad}) ${p.nombre}</span> <span class="new badge green right-align" data-badge-caption="${productos[0].cod_moneda=="PEN"?'S/ ':'USD'} ${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
                         </div>
                         <div class="collapsible-body" style="display: table;width: 100%;">
 
@@ -312,7 +312,7 @@ function ActualizarDetallePedido(productos){
                         yo`
                         <li>  
                             <div class="collapsible-header" style="display: table;width: 100%;"> 
-                                <a href="javascript:void();" class="collection-item right-align right col s12 col m12" onclick=${()=>SeleccionarProducto(index,productos)}><span class="left">(${p.cantidad}) ${p.nombre}</span> <span class="new badge green right-align" data-badge-caption="${productos[0].cod_moneda=="PEN"?'S/ ':'USD'} ${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
+                                <a href="javascript:void();" class="collection-item right-align right col s12 col m12" onclick=${()=>SeleccionarProducto(p,productos,cuenta)}><span class="left">(${p.cantidad}) ${p.nombre}</span> <span class="new badge green right-align" data-badge-caption="${productos[0].cod_moneda=="PEN"?'S/ ':'USD'} ${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>
                             </div>
                         </li>`:
                         yo``
@@ -557,7 +557,7 @@ function LlenarCombinaciones(producto,tipo,productos,index){
                 ${productos.map(p => 
                     (producto.id_detalle==p.id_referencia && p.id_referencia!="0")?
                     yo`
-                    <a href="javascript:void();" style="color: #2c2c54;font-size: 12px;font-weight: bold;" class="collection-item" onclick=${()=>SeleccionarProducto(index,productos)}>(${p.cantidad}) ${p.nombre} <span class="new badge orange right-align" data-badge-caption="${productos[0].cod_moneda=="PEN"?'S/ ':'USD'} ${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>`
+                    <a href="javascript:void();" style="color: #2c2c54;font-size: 12px;font-weight: bold;" class="collection-item" onclick=${()=>SeleccionarProducto(p,productos)}>(${p.cantidad}) ${p.nombre} <span class="new badge orange right-align" data-badge-caption="${productos[0].cod_moneda=="PEN"?'S/ ':'USD'} ${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>`
                     :yo``
                 )}
             </div>`             
@@ -592,7 +592,8 @@ function LlenarSeries(series,cod_sucursal){
     CambioSerie(cod_sucursal)
 }
 
-function SeleccionarProducto(idCard,productos){
+function SeleccionarProducto(p,productos,cuenta){
+
     /*
 
     <div class="card-image">
@@ -610,7 +611,7 @@ function SeleccionarProducto(idCard,productos){
                 <a href="javascript:void(0);" class="waves-effect waves-light red-text" onclick="${()=>DisminuirCantidad(index)}"><i class="material-icons">remove</i></a>
             </div>
             <div class="col m4 s4">
-                <input value="${p.cantidad}" id="${index}" type="number" class="validate" style="text-align: -webkit-center;text-align: center;font-size: 45px;font-style: oblique;font-weight: bold;" > 
+                <input value="${p.cantidad}" id="${index}" type="number" class="validate" style="text-align: -webkit-center;text-align: center;font-size: 45px;font-style: oblique;font-weight: bold;"  onkeyup=${()=>CambioCantidad(index)} onchange=${()=>CambioCantidad(index)}> 
             </div>
             <div class="col m4 s4">
                 <a href="javascript:void(0);" class="waves-effect waves-light blue-text" onclick="${()=>AumentarCantidad(index)}"><i class="material-icons">add</i></a>
@@ -623,11 +624,91 @@ function SeleccionarProducto(idCard,productos){
         </div>
     </div> 
 
-
     */
+    var idPadre = $(".stackedcards-container").find(".stackedcards-active").attr("id")
+    var idCard = p.id_detalle+"-"+p.pedido_id
+    
+    if(idPadre!=idCard){
 
+        var arreglo = idPadre.split("-")
+        var id_detalle_padre = arreglo[0]
+        var pedido_id_padre = parseInt(arreglo[1]) 
 
+        var contentCard = yo`
+            <div>
+            ${productos.map((p_,index) => 
+                (p_.id_detalle==p.id_detalle && p_.pedido_id==p.pedido_id)? yo`
+                <div>
+                    <div class="card-image">
+                        <img  src="public/images/${p_.imagen_url}" style="background-color: rgba(0, 0, 0, 0.45);">
+                        <span class="card-title">${p_.nombre}</span>
+                        <a class="col m5 s5 offset-s6 btn-floating btn-small halfway-fab waves-effect waves-light red" style="left: 24px;border-radius: 0%;width: auto;padding-left: 10px;padding-right: 10px;" onclick=${()=>RechazarProducto(p_,cuenta)}>Eliminar</a>
+                        <a class="btn-floating btn-large halfway-fab waves-effect waves-light green" style="display:none"  onclick=${()=>AceptarProducto(p_,cuenta)}><i class="material-icons">check</i></a>
+                    </div> 
+                    <div class="card-content">
+                        <div class="row center">
+                                ${LlenarCombinaciones(p_,"card",productos)}
+                        </div>
+                        <div class="row center">
+                            <div class="col m4 s4">
+                                <a href="javascript:void(0);" class="waves-effect waves-light red-text" onclick="${()=>DisminuirCantidad(index)}"><i class="material-icons">remove</i></a>
+                            </div>
+                            <div class="col m4 s4">
+                                <input value="${p_.cantidad}" id="${index}" type="number" class="validate" style="text-align: -webkit-center;text-align: center;font-size: 45px;font-style: oblique;font-weight: bold;"  onkeyup=${()=>CambioCantidad(index)} onchange=${()=>CambioCantidad(index)}> 
+                            </div>
+                            <div class="col m4 s4">
+                                <a href="javascript:void(0);" class="waves-effect waves-light blue-text" onclick="${()=>AumentarCantidad(index)}"><i class="material-icons">add</i></a>
+                            </div>
+                        </div>
+                        <div class="row center">
+                            <button class="btn waves-effect waves-light" onclick="${()=>ConfirmarCantidad(p_,cuenta,index)}">Guardar Cantidad
+                                <i class="material-icons left">save</i>
+                            </button>
+                        </div>
+                    </div> 
+                </div>`:yo``)}
+            </div>`
+            
+        
+        var contentPadre = yo`
+            <div>
+            ${productos.map((p_,index) => 
+                (p_.id_detalle==id_detalle_padre && p_.pedido_id==pedido_id_padre)? yo`
+                <div>
+                    <div class="card-image">
+                        <img  src="public/images/${p_.imagen_url}" style="background-color: rgba(0, 0, 0, 0.45);">
+                        <span class="card-title">${p_.nombre}</span>
+                        <a class="col m5 s5 offset-s6 btn-floating btn-small halfway-fab waves-effect waves-light red" style="left: 24px;border-radius: 0%;width: auto;padding-left: 10px;padding-right: 10px;" onclick=${()=>RechazarProducto(p_,cuenta)}>Eliminar</a>
+                        <a class="btn-floating btn-large halfway-fab waves-effect waves-light green" style="display:none"  onclick=${()=>AceptarProducto(p_,cuenta)}><i class="material-icons">check</i></a>
+                    </div> 
+                    <div class="card-content">
+                        <div class="row center">
+                                ${LlenarCombinaciones(p_,"card",productos)}
+                        </div>
+                        <div class="row center">
+                            <div class="col m4 s4">
+                                <a href="javascript:void(0);" class="waves-effect waves-light red-text" onclick="${()=>DisminuirCantidad(index)}"><i class="material-icons">remove</i></a>
+                            </div>
+                            <div class="col m4 s4">
+                                <input value="${p_.cantidad}" id="${index}" type="number" class="validate" style="text-align: -webkit-center;text-align: center;font-size: 45px;font-style: oblique;font-weight: bold;"  onkeyup=${()=>CambioCantidad(index)} onchange=${()=>CambioCantidad(index)}> 
+                            </div>
+                            <div class="col m4 s4">
+                                <a href="javascript:void(0);" class="waves-effect waves-light blue-text" onclick="${()=>AumentarCantidad(index)}"><i class="material-icons">add</i></a>
+                            </div>
+                        </div>
+                        <div class="row center">
+                            <button class="btn waves-effect waves-light" onclick="${()=>ConfirmarCantidad(p_,cuenta,index)}">Guardar Cantidad
+                                <i class="material-icons left">save</i>
+                            </button>
+                        </div>
+                    </div> 
+                </div>`:yo``)}
+            </div>`
+        
 
+    }   
+    
+     
 }
 
 function CambioCantidad(idCantidad){
@@ -688,7 +769,7 @@ function RechazarProducto(e,cuenta){
                     } else {
                         console.log(res)
                         if(res.punto_venta.length>0)
-                            ActualizarDetallePedido(res.punto_venta)
+                            ActualizarDetallePedido(res.punto_venta,cuenta)
                         else
                             inicio()
                     }
@@ -711,7 +792,7 @@ function ConfirmarCantidad(e,cuenta,idCantidad){
                         console.log(res.err)
                     } else {
                         if(res.punto_venta.length>0)
-                            ActualizarDetallePedido(res.punto_venta)
+                            ActualizarDetallePedido(res.punto_venta,cuenta)
                         else
                             inicio()
                     }
