@@ -62,6 +62,14 @@ module.exports = {
             callback(err, r.rows[0].mensaje) 
         })
     }, 
+    actualizar_cantidad_pedido_detalle: (params, callback) => {
+        db.query('SELECT * FROM ecaja.fn_ActualizarCantidadPedidoDetalle($1,$2,$3,$4) AS Mensaje', params, (err, r) => {
+            if (err) {
+                return callback(err, undefined)
+            }
+            callback(err, r.rows[0].mensaje) 
+        })
+    },
     getPedidobyNumero:(params,callback)=>{
         db.query('select pedido_id,numero,nombre_cliente,cod_moneda,total,usuario_creacion from ecaja.pedido where numero=$1', params, (err, r) => {
             if (err) {
