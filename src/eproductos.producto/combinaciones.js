@@ -188,12 +188,13 @@ function VerEditarCombinacion(combinacion){
                     var dic = {
                         'detalle_id': e.detalle_id,
                         'producto_id': e.producto_id,
-                        'nombre_producto': e.nombre_producto,
+                        'nombre_producto': e.nombre_producto + (e.producto_id?' - ' +e.producto_id:''),
                         'cod_moneda': e.cod_moneda,
                         'precio': e.precio
                     }
                     ITEMS.push(dic)
                 }
+                console.log(ITEMS)
                 VerNuevaCombinacion(combinacion)
             }
             HideLoader()
@@ -300,6 +301,12 @@ function GuardarCombinacion(combinacion){
     var cantidad_maxima = document.getElementById('tipo_combinacion').value == 'OBLIGATORIO'? 0 : document.getElementById('tipo_combinacion').value == 'OPCIONAL'? 1 : 50
     var estado = 'ACTIVO'
 
+    for(var i = 0 ; i < ITEMS.length ; i++){
+        if(ITEMS[i].producto_id != null){
+            ITEMS[i].nombre_producto = ITEMS[i].nombre_producto.split(' - ')[0]
+        }
+    }
+    console.log(ITEMS)
     const parametros = {
         method: 'POST',
         headers: {
