@@ -10,6 +10,7 @@ import {cuentas} from '../eseguridad.cuenta'
 import { modulos } from '../eseguridad.modulo'
 import { perfiles } from '../eseguridad.perfil'
 import { personas } from '../personas'
+import {reportes} from '../reportes'
 function Ver(login,modulos_cuenta) {
     var el = login ? yo`
         <nav>
@@ -17,6 +18,9 @@ function Ver(login,modulos_cuenta) {
                 <ul class="right hide-on-med-and-down">
                     <li>
                         <a onclick="${() => inicio()}">Inicio</a>
+                    </li>
+                    <li>
+                        <a onclick="${() => reportes()}">Reportes</a>
                     </li>
                     <li>
                         <a class="dropdown-button" href="#!" data-activates="Opciones">Configuracion
