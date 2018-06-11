@@ -137,7 +137,6 @@ function EliminarCombinacion(combinacion){
 }
 
 function GuardarCombinaciones(producto_id) {
-    console.log(COMBINACIONES_PRODUCTO.filter(c => c.producto_id != null))
     ShowLoader()
     const parametros = {
         method: 'POST',
@@ -194,7 +193,6 @@ function VerEditarCombinacion(combinacion){
                     }
                     ITEMS.push(dic)
                 }
-                console.log(ITEMS)
                 VerNuevaCombinacion(combinacion)
             }
             HideLoader()
@@ -306,7 +304,6 @@ function GuardarCombinacion(combinacion){
             ITEMS[i].nombre_producto = ITEMS[i].nombre_producto.split(' - ')[0]
         }
     }
-    console.log(ITEMS)
     const parametros = {
         method: 'POST',
         headers: {
@@ -444,7 +441,7 @@ function VerAgregarItem(item,i){
                         <label for="nombre_producto" class="active" id="lnombre_producto">Nombre del item</label>
                     </div>
                 <div class="col s6">
-                    <a href="#!" onclick="${()=>VerSeleccionarProducto()}" class="waves-effect waves-green teal accent-4 btn">Sel. Producto</a>
+                    <a href="#!" onclick="${()=>VerSeleccionarProducto1()}" class="waves-effect waves-green teal accent-4 btn">Sel. Producto</a>
                 </div>
             </div>
             <div class="row">
@@ -455,7 +452,7 @@ function VerAgregarItem(item,i){
                     <label>Tipo de moneda</label>
                 </div>
                 <div class="input-field col s6">
-                    <input value="${item? item.precio:''}" id="precio" type="text" class="validate">
+                    <input value="${item? parseFloat(item.precio).toFixed(2):''}" id="precio" type="text" class="validate">
                     <label for="precio" id="lprecio" class="active" data-error="Ejem: 10.00" data-success="Correcto">Valor Precio</label>
                 </div>
             </div>
@@ -499,9 +496,15 @@ function VerAgregarItem(item,i){
     empty(container).appendChild(el);
     $('select').material_select();
     var midata = {}
+    VerSeleccionarProducto()
+
+    function VerSeleccionarProducto1(){
+        $('#modalSeleccionarProducto').modal('open')
+        VerSeleccionarProducto()
+    }
     
     function VerSeleccionarProducto(){
-        $('#modalSeleccionarProducto').modal('open')
+        //$('#modalSeleccionarProducto').modal('open')
         var el = yo`
         <div>
             <div class="modal-content">
