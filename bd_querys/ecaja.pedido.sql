@@ -357,3 +357,38 @@ RETURN 'El detalle fue actualizado correctamente';
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
+
+
+
+
+ /*
+FUNCTION ecaja.GetVentasMes
+Descripcion: recupera ventas del mes
+Parametros: necesarios para un pedido
+Fecha:17052018
+Ejecucion: SELECT * from ecaja.GetVentasMes(2018,6)
+ DROP FUNCTION ecaja.getventasmes(integer,integer)
+*/
+CREATE OR REPLACE FUNCTION ecaja.GetVentasMes
+(
+ anio int,
+ mes int
+)
+RETURNS TABLE(
+pedido_id int,
+id_detalle varchar(20),
+cantidad int,
+descripcion_detalle varchar(256),
+precio numeric(18,4)
+) AS
+$$
+BEGIN
+
+
+ RETURN QUERY
+ SELECT d.pedido_id,d.id_detalle,d.cantidad,d.descripcion_detalle,d.precio from ecaja.pedido_detalle d where d.id_referencia='0' and EXTRACT(year from d.creado_en)=anio and EXTRACT(month from d.creado_en)=mes;
+ EXCEPTION WHEN OTHERS THEN 
+ RAISE;
+END;
+$$
+LANGUAGE plpgsql;

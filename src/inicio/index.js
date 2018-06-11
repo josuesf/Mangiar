@@ -89,8 +89,6 @@ function Ver(puntos_venta) {
     var sub_nav = yo `
     <div class="collection">
         <a href="#!" class="collection-item active">Todas las mesas</a>
-        <a href="#!" class="collection-item">Mesas Ocupadas</a>
-        <a href="#!" class="collection-item">Mesas Libres</a>
     </div>`;
     var container = document.getElementById('sub_navegador_content')
     empty(container).appendChild(sub_nav) 
@@ -874,7 +872,8 @@ function AceptarPedido(pedido_detalle){
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    data : pdf
+                    data : pdf,
+                    nombre_pdf : 'recibo'
                 })
             }
             fetch(URL+'/ws/save_pdf', parametros)
