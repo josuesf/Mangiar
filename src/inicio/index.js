@@ -547,7 +547,7 @@ function LlenarCombinaciones(producto,tipo,productos,index){
                     ${productos.map(p => 
                         (producto.id_detalle==p.id_referencia && p.id_referencia!="0")?
                         yo`
-                        <li class="collection-item">(${p.cantidad}) ${p.nombre}</li>`
+                        <li class="collection-item">(${p.cantidad}) ${(p.nombre!="" && p.nombre!=null)?p.nombre:p.descripcion_detalle}</li>`
                         :yo``             
                     )}
                 </ul>`
@@ -557,7 +557,7 @@ function LlenarCombinaciones(producto,tipo,productos,index){
                 ${productos.map(p => 
                     (producto.id_detalle==p.id_referencia && p.id_referencia!="0")?
                     yo`
-                    <a href="javascript:void();" style="color: #2c2c54;font-size: 12px;font-weight: bold;" class="collection-item" onclick=${()=>SeleccionarProducto(p,productos)}>(${p.cantidad}) ${p.nombre} <span class="new badge orange right-align" data-badge-caption="${productos[0].cod_moneda=="PEN"?'S/ ':'USD'} ${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>`
+                    <a href="javascript:void();" style="color: #2c2c54;font-size: 12px;font-weight: bold;" class="collection-item" onclick=${()=>SeleccionarProducto(p,productos)}>(${p.cantidad}) ${(p.nombre!="" && p.nombre!=null)?p.nombre:p.descripcion_detalle} <span class="new badge orange right-align" data-badge-caption="${productos[0].cod_moneda=="PEN"?'S/ ':'USD'} ${(parseFloat(p.cantidad)*parseFloat(p.precio)).toFixed(2)}"></span></a>`
                     :yo``
                 )}
             </div>`             
