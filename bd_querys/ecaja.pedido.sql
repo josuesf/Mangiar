@@ -356,7 +356,7 @@ RETURN 'El detalle fue actualizado correctamente';
  RAISE;
 END;
 $BODY$
-  LANGUAGE plpgsql VOLATILE
+  LANGUAGE plpgsql VOLATILE;
 
 
 
