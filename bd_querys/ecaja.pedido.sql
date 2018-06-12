@@ -187,6 +187,7 @@ cantidad int,
 nombre varchar(256),
 simbolo unknown,
 valor_precio numeric(18,4),
+cod_moneda varchar(5),
 cod_mesa varchar(30),
 estado_detalle varchar(25),
 imagen_url varchar(110)
@@ -198,9 +199,10 @@ BEGIN
  RETURN QUERY
  SELECT d.pedido_id,p.numero,d.id_detalle,d.producto_id,d.id_referencia,
  d.almacen_cod,d.cantidad,d.descripcion_detalle "nombre",
- 'S/.' "simbolo",d.precio "valor_precio",
+ 'S/.' "simbolo",d.precio "valor_precio",p.cod_moneda,
  d.cod_punto_venta "cod_mesa",d.estado_detalle
- ,(select pro.imagen_url from eproductos.producto pro where pro.producto_id=d.producto_id) 
+ ,(select pro.imagen_url from eproductos.producto pro where pro.producto_id=d.producto_id)
+ 
  FROM ecaja.pedido_detalle d 
  inner join ecaja.pedido p on d.pedido_id=p.pedido_id and p.estado_pedido='EN ATENCION'
  where d.cod_punto_venta=pcod_mesa
