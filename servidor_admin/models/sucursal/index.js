@@ -2,9 +2,10 @@ const db = require('../../../connectionbd')
 module.exports = {
     getSucursales: (params, callback) => {
         console.log(params)
-        db.query('SELECT * FROM fn_GetSucursales($1,$2,$3)', params, (err, r) => {
+        db.query('SELECT * FROM fn_GetSucursalesAll($1,$2,$3)', params, (err, r) => {
             console.log(r)
             if (err) {
+                console.log(err)
                 return callback(err.name+":"+err.code+" "+err.routine, undefined)
             }
             db.query('SELECT fn_getRowsSucursales($1) AS Filas', [params[2]], (err, filas) => {

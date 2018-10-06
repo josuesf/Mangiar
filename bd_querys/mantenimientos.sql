@@ -10,7 +10,7 @@ DROP: DROP FUNCTION fn_GetSucursales
 */
 
  
-CREATE OR REPLACE FUNCTION fn_GetSucursales
+CREATE OR REPLACE FUNCTION fn_GetSucursalesAll
 (
  tamano_pagina INTEGER = NULL
  ,numero_pagina INTEGER = NULL
