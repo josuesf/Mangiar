@@ -1248,16 +1248,16 @@ function TraerSeriesNumeros(cod_documento,cod_sucursal){
 }
 
 function inicio() { 
-    var socket = SocketIOClient(URL)
-    socket.on('NUEVA_COMANDA',function(data){
-        fetchPuntosVentas(function(res){
-            if (res.err) {
-                console.log(res.err)
-            } else {
-                Ver(res.puntos_venta)
-            }
-        })
-    })
+    // var socket = SocketIOClient(URL)
+    // socket.on('NUEVA_COMANDA',function(data){
+    //     fetchPuntosVentas(function(res){
+    //         if (res.err) {
+    //             console.log(res.err)
+    //         } else {
+    //             Ver(res.puntos_venta)
+    //         }
+    //     })
+    // })
     ShowLoader()
     fetchPuntosVentas(function(res){
         if (res.err) {

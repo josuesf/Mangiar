@@ -290,7 +290,8 @@ router.post('/impresion_nota_venta', function (req, res) {
 function ImpresionComanda(param, numero, posicion_impresora,IMPRESORAS_RUTAS) {
 	if (IMPRESORAS_RUTAS.length > 0) {
 		const productos = (param.productos.filter(p => p.almacen_cod == IMPRESORAS_RUTAS[posicion_impresora].nombre_variable)).filter(p => parseInt(p.producto_id) != 0)
-		var productos_detalles = (param.productos.filter(p => p.almacen_cod == IMPRESORAS_RUTAS[posicion_impresora].nombre_variable)).filter(p => parseInt(p.producto_id) == 0)
+		// var productos_detalles = (param.productos.filter(p => p.almacen_cod == IMPRESORAS_RUTAS[posicion_impresora].nombre_variable)).filter(p => parseInt(p.producto_id) == 0)
+		var productos_detalles = (param.productos.filter(p => parseInt(p.producto_id) == 0))
 
 		if (productos.length > 0) {
 			//Impresion de Comanda
