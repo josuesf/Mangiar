@@ -171,7 +171,7 @@ router.post('/save_pdf', function (req, res) {
 	const input = req.body
 	var b64string = input.data
 	var buf = Buffer.from(b64string, 'base64');
-	fs.writeFile(__dirname + '/../../assets/media/recibo.pdf', buf , function(err) {
+	fs.writeFile(__dirname + '/../../assets/media/'+input.nombre_pdf+'.pdf', buf , function(err) {
 		if(err) {
 			return res.json({respuesta:err});
 		}else{
@@ -290,7 +290,8 @@ router.post('/impresion_nota_venta', function (req, res) {
 function ImpresionComanda(param, numero, posicion_impresora,IMPRESORAS_RUTAS) {
 	if (IMPRESORAS_RUTAS.length > 0) {
 		const productos = (param.productos.filter(p => p.almacen_cod == IMPRESORAS_RUTAS[posicion_impresora].nombre_variable)).filter(p => parseInt(p.producto_id) != 0)
-		var productos_detalles = (param.productos.filter(p => p.almacen_cod == IMPRESORAS_RUTAS[posicion_impresora].nombre_variable)).filter(p => parseInt(p.producto_id) == 0)
+		// var productos_detalles = (param.productos.filter(p => p.almacen_cod == IMPRESORAS_RUTAS[posicion_impresora].nombre_variable)).filter(p => parseInt(p.producto_id) == 0)
+		var productos_detalles = (param.productos.filter(p => parseInt(p.producto_id) == 0))
 
 		if (productos.length > 0) {
 			//Impresion de Comanda
@@ -470,4 +471,19 @@ function ImpresionNotaVenta(param, numero,datos_empresa,impresora_principal) {
 	}); // Print PNG image (uses callback)
 
 }
+
+
+router.post('/get_reporte_by_anio_mes', function (req, res) {
+    const input = req.body
+	//call Model account
+	const params = [input.anio,input.mes]
+	const reporte = require('../models/reportes')
+	//call Model.login function 
+	reporte.getPedidosByAnioMes(params, function (err, datos) {
+		if (err) return res.json({err})
+		return res.json({datos})
+	})
+});
+
+
 module.exports = router;

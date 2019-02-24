@@ -1,6 +1,6 @@
 {
   "name": "mangiar",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,7 @@
   "license": "ISC",
   "build": {
     "appId": "com.josuesf.mangiar",
-    "productName": "Mangiar 1.0.0"
+    "productName": "Mangiar 1.0.1"
   },
   "repository": {
     "type": "git",

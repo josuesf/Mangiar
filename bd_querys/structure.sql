@@ -9,10 +9,6 @@ obs_variable varchar(140) NULL
 CREATE TABLE empresa--Omar --DROP table empresa
 ( 
 cod_empresa     varchar(30)  NOT NULL ,
-<<<<<<< HEAD
-ruc 			varchar(20) NOT NULL,
-=======
->>>>>>> 0264b07e5ebb4cb90f96495bb3eb1b8893698a0f
 nombre_corto    varchar(100)  NULL ,
 ruc 			varchar(20) NOT NULL,
 razon_social	varchar(256) NULL,
@@ -31,11 +27,7 @@ actualizado_en TIMESTAMP,
 usuario_actualizo varchar(50),
  PRIMARY KEY (cod_empresa)
 );
-<<<<<<< HEAD
-CREATE TABLE EmpresaSucursal--Omar drop table empresasucursal
-=======
 CREATE TABLE empresa_sucursal--Omar
->>>>>>> 0264b07e5ebb4cb90f96495bb3eb1b8893698a0f
 ( 
  cod_empresa     varchar(30)  NOT NULL ,
  cod_sucursal    varchar(30)  NOT NULL ,
