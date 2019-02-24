@@ -946,6 +946,9 @@ function SeleccionarCuenta(cuenta,tipo,i,punto_venta){
                         console.log(res.err)
                     } else {
                         console.log(res)
+                        if(!ENV_WEB){
+                            socket.emit("FIN_CUENTA")
+                        }
                         inicio()
                     }
                     HideLoader()
@@ -1246,10 +1249,11 @@ function TraerSeriesNumeros(cod_documento,cod_sucursal){
         }
     })
 }
-
+if(!ENV_WEB){
+    var socket = SocketIOClient(URL)
+}
 function inicio() { 
     if(!ENV_WEB){
-        var socket = SocketIOClient(URL)
         socket.on('NUEVA_COMANDA',function(data){
             fetchPuntosVentas(function(res){
                 if (res.err) {

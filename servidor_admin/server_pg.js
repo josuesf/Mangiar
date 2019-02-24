@@ -104,6 +104,9 @@ var server = app.listen(5000, function (err) {
 var io = require('socket.io')(server);
 io.sockets.on('connection', function (socket) {
 	console.log(socket.id)
+	socket.on("FIN_CUENTA",function(){
+		io.sockets.emit("FIN_CUENTA_MOB")
+	})
 });
 app.use(function (req, res, next) {
 	req.io = io;
