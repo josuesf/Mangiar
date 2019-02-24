@@ -1,6 +1,6 @@
 var yo = require('yo-yo')
 var empty = require('empty-element');
-import { URL } from '../constantes_entorno/constantes'
+import { URL,ENV_WEB } from '../constantes_entorno/constantes'
 import { Init,onActionLeft,onActionTop } from '../utils'
 import { comprobantes } from '../ecaja.comprobante/'
 import { nuevoComprobante } from '../ecaja.comprobante/nuevo'
@@ -1249,16 +1249,18 @@ function TraerSeriesNumeros(cod_documento,cod_sucursal){
 }
 
 function inicio() { 
-    var socket = SocketIOClient(URL)
-    socket.on('NUEVA_COMANDA',function(data){
-        fetchPuntosVentas(function(res){
-            if (res.err) {
-                console.log(res.err)
-            } else {
-                Ver(res.puntos_venta)
-            }
+    if(!ENV_WEB){
+        var socket = SocketIOClient(URL)
+        socket.on('NUEVA_COMANDA',function(data){
+            fetchPuntosVentas(function(res){
+                if (res.err) {
+                    console.log(res.err)
+                } else {
+                    Ver(res.puntos_venta)
+                }
+            })
         })
-    })
+    }
     ShowLoader()
     fetchPuntosVentas(function(res){
         if (res.err) {
