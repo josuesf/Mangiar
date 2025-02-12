@@ -2,7 +2,7 @@ var yo = require('yo-yo')
 var empty = require('empty-element');
 import { URL } from '../constantes_entorno/constantes'
 import { navegador } from '../navegador'
-import { inicio } from '../Inicio'
+import { inicio } from '../inicio'
 function Ver() {
     var el = yo`
     <div class="card horizontal">
@@ -58,6 +58,8 @@ function Ingresar() {
             contrasena: document.getElementById('contrasena').value
         })
     }
+    console.log('entro aqui');
+    
     fetch(URL+'/login_', parametros)
         .then(req => req.json())
         .then(res => {
@@ -69,7 +71,8 @@ function Ingresar() {
                 inicio()
             }
             HideLoader()
-        })
+        }).catch((err)=>console.log('err', err)
+        ).finally(()=>{HideLoader()})
 
 }
 function login() {

@@ -185,7 +185,7 @@ id_referencia varchar(20),
 almacen_cod varchar(50),
 cantidad int,
 nombre varchar(256),
-simbolo unknown,
+simbolo varchar(10),
 valor_precio numeric(18,4),
 cod_moneda varchar(5),
 cod_mesa varchar(30),
@@ -199,7 +199,7 @@ BEGIN
  RETURN QUERY
  SELECT d.pedido_id,p.numero,d.id_detalle,d.producto_id,d.id_referencia,
  d.almacen_cod,d.cantidad,d.descripcion_detalle "nombre",
- 'S/.' "simbolo",d.precio "valor_precio",p.cod_moneda,
+ varchar(10) 'S/.' as "simbolo",d.precio "valor_precio",p.cod_moneda,
  d.cod_punto_venta "cod_mesa",d.estado_detalle
  ,(select pro.imagen_url from eproductos.producto pro where pro.producto_id=d.producto_id)
  

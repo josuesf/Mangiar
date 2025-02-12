@@ -343,7 +343,7 @@ function nuevaSucursal(sucursal) {
             sucursal_busqueda: ''
         })
     }
-    fetch('http://localhost:5000/sucursales_api/get_sucursales', parametros)
+    fetch('http://localhost:5500/sucursales_api/get_sucursales', parametros)
         .then(req => req.json())
         .then(res => {
             console.log(res)

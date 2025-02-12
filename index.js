@@ -23,6 +23,11 @@ app.on('ready', function () {
     // maxHeight:800,
     // maxWidth:800,
     frame: false,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
+    },
   });
 
   //mainWindow.setMenu(null);
@@ -33,5 +38,5 @@ app.on('ready', function () {
     mainWindow = null;
   });
 
-  //mainWindow.toggleDevTools()
+  mainWindow.toggleDevTools()
 });

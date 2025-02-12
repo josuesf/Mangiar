@@ -62,9 +62,9 @@ gulp.task('compress', function () {
 });
 
 gulp.task('watch-css', function () {
-    return gulp.watch('index.scss', ['styles']);
+    return gulp.watch('index.scss', gulp.series('styles'));
   });
 
 gulp.task('watch-js', function () { return compile(true); });
 
-gulp.task('default', ['styles', 'build']);
+gulp.task('default', gulp.parallel('styles', 'build'));
